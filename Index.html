@@ -1,0 +1,2499 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AlignIQ — Hybrid Gematria & Matchup Engine</title>
+  <style>
+    /* =====================================================================
+       1. DESIGN TOKENS & RESET (100% Self-Contained Dark Mode Mobile UI)
+       ===================================================================== */
+    :root {
+      --bg-outer: #04070d;
+      --bg-app: #080d17;
+      --bg-surface: #0f1726;
+      --bg-card: #131d31;
+      --bg-card-hover: #18253e;
+      --border: #1e2d47;
+      --border-strong: #2b3f63;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --emerald: #10b981;
+      --emerald-soft: rgba(16, 185, 129, 0.14);
+      --emerald-border: rgba(16, 185, 129, 0.35);
+      --cyan: #06b6d4;
+      --cyan-soft: rgba(6, 182, 212, 0.14);
+      --cyan-border: rgba(6, 182, 212, 0.35);
+      --amber: #f59e0b;
+      --amber-soft: rgba(245, 158, 11, 0.14);
+      --amber-border: rgba(245, 158, 11, 0.35);
+      --rose: #f43f5e;
+      --rose-soft: rgba(244, 63, 94, 0.14);
+      --rose-border: rgba(244, 63, 94, 0.35);
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-full: 9999px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg-outer);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    button, input, select {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Centered Mobile-App Shell on Desktop, Full Width on Mobile */
+    .app-shell {
+      width: 100%;
+      max-width: 500px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background-color: var(--bg-app);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.75);
+    }
+
+    @media (min-width: 540px) {
+      .app-shell {
+        border-left: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+      }
+    }
+
+    /* =====================================================================
+       2. SIGN-IN SCREEN
+       ===================================================================== */
+    .signin-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .orb-1 {
+      width: 240px;
+      height: 240px;
+      background: var(--emerald);
+      top: -60px;
+      left: -60px;
+      animation: floatOrb 9s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 260px;
+      height: 260px;
+      background: var(--cyan);
+      bottom: -80px;
+      right: -70px;
+      animation: floatOrb 11s ease-in-out infinite reverse;
+    }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(16px, -14px) scale(1.08); }
+    }
+
+    .signin-card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      background: rgba(15, 23, 38, 0.88);
+      border: 1px solid var(--border-strong);
+      border-radius: 26px;
+      padding: 32px 24px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand-mark-wrap {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #10b981, #06b6d4, #3b82f6);
+      padding: 2px;
+      box-shadow: 0 10px 28px rgba(16, 185, 129, 0.28);
+    }
+    .brand-mark-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      background: var(--bg-app);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .live-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      color: #6ee7b7;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+      animation: pulseDot 1.6s infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .signin-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .signin-title {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+    .signin-title span {
+      background: linear-gradient(90deg, #34d399, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .signin-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .feature-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .feature-box {
+      background: rgba(8, 13, 23, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 6px;
+      text-align: center;
+    }
+    .feature-box strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .feature-box span {
+      display: block;
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .oauth-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .btn-oauth {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: transform 0.14s ease, opacity 0.14s ease, background 0.14s ease;
+    }
+    .btn-oauth:active {
+      transform: scale(0.98);
+    }
+    .btn-google {
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+    .btn-google:hover {
+      background: #f1f5f9;
+    }
+    .btn-apple {
+      background: #111827;
+      color: #ffffff;
+      border: 1px solid #334155;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+    }
+    .btn-apple:hover {
+      background: #1e293b;
+    }
+
+    .signin-loader {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      color: #6ee7b7;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(110, 231, 183, 0.25);
+      border-top-color: #34d399;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .signin-footnote {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* =====================================================================
+       3. DASHBOARD HEADER & NAVIGATION
+       ===================================================================== */
+    .dashboard-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 32px;
+    }
+
+    .top-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(8, 13, 23, 0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px 12px;
+    }
+
+    .header-row-1 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .brand-inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-mini-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+    .brand-name span {
+      color: var(--emerald);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 11px;
+      border-radius: 11px;
+      font-size: 11px;
+      font-weight: 700;
+      transition: transform 0.12s ease, background 0.15s ease;
+    }
+    .btn-pill:active { transform: scale(0.95); }
+
+    .btn-weights {
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      color: #fcd34d;
+    }
+    .btn-weights.active {
+      background: var(--amber);
+      color: #080d17;
+    }
+
+    .btn-scan {
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      color: #6ee7b7;
+    }
+    .btn-scan:hover {
+      background: rgba(16, 185, 129, 0.24);
+    }
+
+    .btn-signout {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      padding: 7px 9px;
+    }
+    .btn-signout:hover {
+      color: #fda4af;
+      border-color: var(--rose-border);
+    }
+
+    .header-row-2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .date-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 9px;
+      border-radius: var(--radius-full);
+      background: var(--cyan-soft);
+      border: 1px solid var(--cyan-border);
+      color: #67e8f9;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .user-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px 3px 4px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    .user-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      color: #080d17;
+      font-size: 10px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Horizontal Scrollable Sports Crossbar */
+    .sports-crossbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      margin-top: 12px;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+    .sports-crossbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sport-pill {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+    .sport-pill.active {
+      background: var(--emerald);
+      border-color: var(--emerald);
+      color: #04120c;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+    .sport-count {
+      padding: 2px 6px;
+      border-radius: var(--radius-full);
+      font-size: 10px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+    }
+    .sport-pill.active .sport-count {
+      background: rgba(4, 18, 12, 0.2);
+      color: #04120c;
+    }
+
+    /* =====================================================================
+       4. MAIN CONTENT: WEIGHT TUNER & GAMES FEED
+       ===================================================================== */
+    .main-body {
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Collapsible Weight Tuner */
+    .tuner-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: fadeSlide 0.18s ease-out;
+    }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .tuner-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tuner-head h3 {
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .btn-reset {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .slider-labels .val {
+      color: var(--text-primary);
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: #1e2d47;
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--bg-app);
+      cursor: pointer;
+    }
+    .range-emerald::-webkit-slider-thumb { background: var(--emerald); }
+    .range-cyan::-webkit-slider-thumb { background: var(--cyan); }
+    .range-amber::-webkit-slider-thumb { background: var(--amber); }
+
+    .tuner-note {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Feed Section Header */
+    .feed-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2px;
+    }
+    .feed-title {
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .feed-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .feed-count {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    /* Game Cards */
+    .games-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .game-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 15px;
+      cursor: pointer;
+      transition: transform 0.14s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .game-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-strong);
+    }
+    .game-card:active {
+      transform: scale(0.985);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+    }
+    .sport-tag {
+      padding: 3px 7px;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-strong);
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--text-primary);
+      flex-shrink: 0;
+    }
+    .venue-text {
+      font-size: 11px;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ref-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 10px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    .ref-active {
+      background: var(--cyan-soft);
+      border: 1px solid var(--cyan-border);
+      color: #67e8f9;
+    }
+    .ref-ignored {
+      background: rgba(100, 116, 139, 0.15);
+      border: 1px solid rgba(100, 116, 139, 0.3);
+      color: #94a3b8;
+    }
+
+    .card-body {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .teams-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .team-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .team-name-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .pick-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #2b3f63;
+      flex-shrink: 0;
+    }
+    .pick-dot.picked {
+      background: var(--emerald);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.75);
+    }
+    .team-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .team-name.picked {
+      color: #ffffff;
+      font-weight: 800;
+    }
+    .team-rec {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .conf-box {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: var(--bg-app);
+      border: 1.5px solid var(--border-strong);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .conf-box.high { border-color: var(--emerald-border); }
+    .conf-box.mid { border-color: var(--amber-border); }
+    .conf-num {
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .conf-num span { font-size: 11px; font-weight: 700; }
+    .conf-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .text-high { color: #34d399; }
+    .text-mid { color: #fbbf24; }
+    .text-low { color: #94a3b8; }
+
+    .card-footer {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(30, 45, 71, 0.8);
+    }
+    .pick-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 7px;
+      font-size: 12px;
+    }
+    .pick-label {
+      font-weight: 800;
+    }
+    .decode-cta {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+    }
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: #1a263d;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+    .fill-high { background: linear-gradient(90deg, #10b981, #22d3ee); }
+    .fill-mid { background: linear-gradient(90deg, #f59e0b, #fde047); }
+    .fill-low { background: #64748b; }
+
+    /* =====================================================================
+       5. MODALS (DATE NUMEROLOGY, GAME BREAKDOWN, CUSTOM SCANNER)
+       ===================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(3, 6, 12, 0.82);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 12px;
+    }
+    @media (min-width: 540px) {
+      .modal-backdrop {
+        align-items: center;
+      }
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+      animation: sheetUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes sheetUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(8, 13, 23, 0.45);
+    }
+    .modal-title {
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .modal-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    .btn-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .btn-close:hover {
+      color: #ffffff;
+      border-color: var(--border-strong);
+    }
+
+    .modal-body {
+      padding: 16px 18px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Date Grid */
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .date-tile {
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .date-tile-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .date-tile-val {
+      font-size: 22px;
+      font-weight: 900;
+      margin-top: 4px;
+    }
+
+    /* Breakdown Pillar Strip & Tabs */
+    .pillar-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 12px 18px;
+      background: rgba(8, 13, 23, 0.45);
+      border-bottom: 1px solid var(--border);
+    }
+    .pillar-mini {
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+    }
+    .pillar-mini span {
+      display: block;
+      font-size: 10px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .pillar-mini strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 900;
+      margin-top: 2px;
+    }
+
+    .tabs-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      padding: 10px 14px;
+      background: var(--bg-app);
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      padding: 9px 6px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      transition: all 0.14s ease;
+    }
+    .tab-btn.active {
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      color: #6ee7b7;
+    }
+
+    .callout-box {
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .callout-emerald {
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      color: #a7f3d0;
+    }
+    .callout-amber {
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      color: #fde68a;
+    }
+    .callout-cyan {
+      background: var(--cyan-soft);
+      border: 1px solid var(--cyan-border);
+      color: #a5f3fc;
+    }
+
+    .section-kicker {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .proof-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .proof-item {
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 11px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .proof-main {
+      min-width: 0;
+    }
+    .proof-entity {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .proof-meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+    .proof-meta span {
+      color: #67e8f9;
+      font-weight: 600;
+    }
+    .proof-val {
+      padding: 5px 10px;
+      border-radius: 9px;
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      color: #34d399;
+      font-size: 14px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .empty-box {
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(8, 13, 23, 0.5);
+      border: 1px dashed var(--border-strong);
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .health-pill {
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-size: 10px;
+      font-weight: 800;
+    }
+    .h-healthy { background: var(--emerald-soft); border: 1px solid var(--emerald-border); color: #6ee7b7; }
+    .h-probable { background: var(--cyan-soft); border: 1px solid var(--cyan-border); color: #67e8f9; }
+    .h-questionable { background: var(--amber-soft); border: 1px solid var(--amber-border); color: #fcd34d; }
+    .h-out { background: var(--rose-soft); border: 1px solid var(--rose-border); color: #fda4af; }
+
+    /* Form Styles (Custom Scanner) */
+    .form-group-card {
+      background: var(--bg-app);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 10px;
+    }
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    .field input, .field select {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 11px;
+      padding: 9px 11px;
+      font-size: 13px;
+      color: #ffffff;
+      outline: none;
+    }
+    .field input:focus, .field select:focus {
+      border-color: var(--emerald);
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      background: linear-gradient(90deg, #10b981, #06b6d4);
+      color: #04120c;
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.28);
+    }
+    .btn-submit:active {
+      transform: scale(0.985);
+    }
+
+    /* Toast */
+    .toast-wrap {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      width: 90%;
+      max-width: 360px;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .toast-msg {
+      padding: 11px 14px;
+      border-radius: 14px;
+      background: rgba(15, 23, 38, 0.96);
+      border: 1px solid var(--emerald-border);
+      color: #a7f3d0;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="toast-wrap" id="toast-wrap"></div>
+
+  <div class="app-shell">
+
+    <!-- ==================== 1. SIGN-IN SCREEN ==================== -->
+    <section id="signin-screen" class="signin-screen">
+      <div class="ambient-orb orb-1"></div>
+      <div class="ambient-orb orb-2"></div>
+
+      <div class="signin-card">
+        <div class="signin-header">
+          <div class="brand-mark-wrap">
+            <div class="brand-mark-inner">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
+                <line x1="12" y1="22" x2="12" y2="15.5"></line>
+                <polyline points="22 8.5 12 15.5 2 8.5"></polyline>
+                <polyline points="2 15.5 12 8.5 22 15.5"></polyline>
+                <line x1="12" y1="2" x2="12" y2="8.5"></line>
+              </svg>
+            </div>
+          </div>
+          <div class="live-pill">
+            <span class="pulse-dot"></span>
+            LIVE SLATE · WED, NOV 18, 2026
+          </div>
+          <h1 class="signin-title">Align<span>IQ</span></h1>
+          <p class="signin-subtitle">Hybrid Gematria &amp; Matchup Engine</p>
+        </div>
+
+        <div class="feature-strip">
+          <div class="feature-box">
+            <strong style="color:#34d399;">4 Ciphers</strong>
+            <span>Strict 2+ Refs</span>
+          </div>
+          <div class="feature-box">
+            <strong style="color:#22d3ee;">Coach H2H</strong>
+            <span>Series History</span>
+          </div>
+          <div class="feature-box">
+            <strong style="color:#fbbf24;">Roster IQ</strong>
+            <span>Health &amp; Def</span>
+          </div>
+        </div>
+
+        <div class="oauth-stack">
+          <button id="btn-google" class="btn-oauth btn-google" onclick="signInWith('Google')">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            <span>Continue with Google</span>
+          </button>
+
+          <button id="btn-apple" class="btn-oauth btn-apple" onclick="signInWith('Apple')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+            <span>Continue with Apple</span>
+          </button>
+        </div>
+
+        <div id="signin-loader" class="signin-loader hidden">
+          <div class="spinner"></div>
+          <span id="signin-loader-text">Syncing account &amp; decoding slate...</span>
+        </div>
+
+        <p class="signin-footnote">
+          Syncs your custom scans and weight profiles across devices. For analytics &amp; entertainment purposes only.
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== 2. MAIN DASHBOARD ==================== -->
+    <section id="dashboard-screen" class="dashboard-screen hidden">
+      <header class="top-header">
+        <div class="header-row-1">
+          <div class="brand-inline">
+            <div class="brand-mini-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#080d17" stroke-width="2.6">
+                <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
+              </svg>
+            </div>
+            <div class="brand-name">Align<span>IQ</span></div>
+          </div>
+
+          <div class="header-actions">
+            <button id="btn-toggle-weights" class="btn-pill btn-weights" onclick="toggleWeightsPanel()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+              <span>Weights</span>
+            </button>
+            <button class="btn-pill btn-scan" onclick="openCustomModal()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Scan</span>
+            </button>
+            <button class="btn-pill btn-signout" onclick="signOut()" title="Sign Out">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="header-row-2">
+          <button class="date-trigger" onclick="openDateModal()">
+            <span>Wed, Nov 18, 2026</span>
+            <span class="date-badge">
+              Date: 75 · 55 · 21
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </button>
+
+          <div class="user-chip">
+            <div id="user-avatar" class="user-avatar">G</div>
+            <span id="user-label">Google</span>
+          </div>
+        </div>
+
+        <!-- Horizontal Scrollable Sports Crossbar -->
+        <div id="sports-crossbar" class="sports-crossbar"></div>
+      </header>
+
+      <main class="main-body">
+        <!-- Collapsible Algorithm Weight Tuner -->
+        <div id="tuner-panel" class="tuner-panel hidden">
+          <div class="tuner-head">
+            <h3>Algorithm Weight Tuner</h3>
+            <button class="btn-reset" onclick="resetWeights()">Reset 50 / 20 / 30</button>
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-labels">
+              <span style="color:#34d399;">Gematria Convergence (2+ Refs)</span>
+              <span class="val" id="val-g">50%</span>
+            </div>
+            <input id="slider-g" class="range-emerald" type="range" min="0" max="100" value="50" oninput="onWeightsChanged()" />
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-labels">
+              <span style="color:#22d3ee;">Coach &amp; Team H2H History</span>
+              <span class="val" id="val-h">20%</span>
+            </div>
+            <input id="slider-h" class="range-cyan" type="range" min="0" max="100" value="20" oninput="onWeightsChanged()" />
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-labels">
+              <span style="color:#fbbf24;">Roster Health &amp; Matchups</span>
+              <span class="val" id="val-p">30%</span>
+            </div>
+            <input id="slider-p" class="range-amber" type="range" min="0" max="100" value="30" oninput="onWeightsChanged()" />
+          </div>
+
+          <div class="tuner-note">Sliders auto-normalize to 100% and re-rank all games live.</div>
+        </div>
+
+        <!-- Feed Header -->
+        <div class="feed-header">
+          <div>
+            <div id="feed-title" class="feed-title">Today's Top Alignments</div>
+            <div class="feed-sub">Sorted highest confidence % first · Tap any game to decode</div>
+          </div>
+          <div id="feed-count" class="feed-count">12 Games</div>
+        </div>
+
+        <!-- Games Feed -->
+        <div id="games-list" class="games-list"></div>
+      </main>
+    </section>
+  </div>
+
+  <!-- ==================== 3. DATE NUMEROLOGY MODAL ==================== -->
+  <div id="date-modal" class="modal-backdrop hidden" onclick="backdropClose(event, 'date-modal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Date Numerology</div>
+          <div class="modal-sub">Wednesday, November 18, 2026 (11/18/2026)</div>
+        </div>
+        <button class="btn-close" onclick="closeModal('date-modal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="date-grid">
+          <div class="date-tile">
+            <div class="date-tile-label">Full Date (11+18+20+26)</div>
+            <div class="date-tile-val" style="color:#34d399;">75</div>
+          </div>
+          <div class="date-tile">
+            <div class="date-tile-label">Short Date (11+18+26)</div>
+            <div class="date-tile-val" style="color:#22d3ee;">55</div>
+          </div>
+          <div class="date-tile">
+            <div class="date-tile-label">Digit Sum (1+1+1+8+2+0+2+6)</div>
+            <div class="date-tile-val" style="color:#fbbf24;">21</div>
+          </div>
+          <div class="date-tile">
+            <div class="date-tile-label">Mixed Sum (11+18+2+0+2+6)</div>
+            <div class="date-tile-val" style="color:#6ee7b7;">39</div>
+          </div>
+          <div class="date-tile">
+            <div class="date-tile-label">Day of Year</div>
+            <div class="date-tile-val" style="color:#67e8f9;">322</div>
+          </div>
+          <div class="date-tile">
+            <div class="date-tile-label">Days Left in 2026</div>
+            <div class="date-tile-val" style="color:#fcd34d;">43</div>
+          </div>
+        </div>
+        <p style="font-size:12px; color:var(--text-secondary); line-height:1.5;">
+          Every game on today's slate compares its next Win and Loss record targets against these 6 date numbers alongside all 4 base gematria ciphers.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 4. GAME BREAKDOWN MODAL ==================== -->
+  <div id="breakdown-modal" class="modal-backdrop hidden" onclick="backdropClose(event, 'breakdown-modal')">
+    <div class="modal-sheet">
+      <div id="bd-header" class="modal-header"></div>
+      <div id="bd-pillars" class="pillar-strip"></div>
+      <div class="tabs-bar">
+        <button id="tab-gematria" class="tab-btn active" onclick="setBreakdownTab('gematria')">Gematria Proof</button>
+        <button id="tab-history" class="tab-btn" onclick="setBreakdownTab('history')">Coach &amp; H2H</button>
+        <button id="tab-roster" class="tab-btn" onclick="setBreakdownTab('roster')">Roster &amp; Health</button>
+      </div>
+      <div id="bd-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ==================== 5. CUSTOM GAME SCANNER MODAL ==================== -->
+  <div id="custom-modal" class="modal-backdrop hidden" onclick="backdropClose(event, 'custom-modal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Custom Game Scanner</div>
+          <div class="modal-sub">Pre-loaded with a 20-2 record test — edit any field</div>
+        </div>
+        <button class="btn-close" onclick="closeModal('custom-modal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="custom-form" class="modal-body" onsubmit="submitCustomGame(event)">
+        <div class="form-grid-2">
+          <div class="field">
+            <label>Sport</label>
+            <select id="cg-sport">
+              <option value="NBA">NBA</option>
+              <option value="NHL">NHL</option>
+              <option value="NCAAF">NCAAF</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Start Time</label>
+            <input id="cg-time" type="text" value="8:00 PM EST" required />
+          </div>
+        </div>
+
+        <div class="form-group-card">
+          <div style="font-size:11px; font-weight:800; color:#22d3ee; text-transform:uppercase;">Away Team (20-2 Example)</div>
+          <div class="form-grid-3">
+            <div class="field">
+              <label>Team Name</label>
+              <input id="cg-away-name" type="text" value="Detroit Pistons" required />
+            </div>
+            <div class="field">
+              <label>Record (W-L)</label>
+              <input id="cg-away-rec" type="text" value="20-2" pattern="\d+-\d+" required />
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="field">
+              <label>Head Coach</label>
+              <input id="cg-away-coach" type="text" value="JB Bickerstaff" required />
+            </div>
+            <div class="field">
+              <label>Star Player</label>
+              <input id="cg-away-star" type="text" value="Cade Cunningham" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group-card">
+          <div style="font-size:11px; font-weight:800; color:#34d399; text-transform:uppercase;">Home Team</div>
+          <div class="form-grid-3">
+            <div class="field">
+              <label>Team Name</label>
+              <input id="cg-home-name" type="text" value="Chicago Bulls" required />
+            </div>
+            <div class="field">
+              <label>Record (W-L)</label>
+              <input id="cg-home-rec" type="text" value="18-4" pattern="\d+-\d+" required />
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="field">
+              <label>Head Coach</label>
+              <input id="cg-home-coach" type="text" value="Billy Donovan" required />
+            </div>
+            <div class="field">
+              <label>Star Player</label>
+              <input id="cg-home-star" type="text" value="Josh Giddey" required />
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Stadium / Arena Name</label>
+          <input id="cg-venue" type="text" value="United Center" required />
+        </div>
+
+        <button type="submit" class="btn-submit">Run 4-Cipher Engine &amp; View Decode</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT ENGINE ==================== -->
+  <script>
+    /* =====================================================================
+       1. DATE NUMEROLOGY (WED, NOV 18, 2026)
+       ===================================================================== */
+    const DATE_NUMEROLOGY = [
+      { label: 'Full Date (11+18+20+26)', value: 75 },
+      { label: 'Short Date (11+18+26)', value: 55 },
+      { label: 'Digit Sum', value: 21 },
+      { label: 'Mixed Sum', value: 39 },
+      { label: 'Day of Year', value: 322 },
+      { label: 'Days Left in 2026', value: 43 }
+    ];
+
+    /* =====================================================================
+       2. REAL 4-BASE GEMATRIA CIPHERS
+       ===================================================================== */
+    function singleDigit(n) {
+      while (n > 9) {
+        let sum = 0;
+        while (n > 0) {
+          sum += n % 10;
+          n = Math.floor(n / 10);
+        }
+        n = sum;
+      }
+      return n;
+    }
+
+    function computeCiphers(text) {
+      const clean = (text || '').toUpperCase().replace(/[^A-Z]/g, '');
+      let ord = 0, red = 0, rev = 0, revRed = 0;
+      for (let i = 0; i < clean.length; i++) {
+        const v = clean.charCodeAt(i) - 64; // A=1..Z=26
+        const r = 27 - v;                   // Z=1..A=26
+        ord += v;
+        red += singleDigit(v);
+        rev += r;
+        revRed += singleDigit(r);
+      }
+      return {
+        'English Ordinal': ord,
+        'Full Reduction': red,
+        'Reverse Ordinal': rev,
+        'Reverse Full Reduction': revRed
+      };
+    }
+
+    /* =====================================================================
+       3. TARGET RECORD GENERATOR (e.g., 10-4 -> Win 11-4: 114, 11, 4)
+       ===================================================================== */
+    function buildRecordTargets(wins, losses, isWin) {
+      const nw = isWin ? wins + 1 : wins;
+      const nl = isWin ? losses : losses + 1;
+      const recStr = `${nw}-${nl}`;
+      const list = [];
+      const seen = new Set();
+
+      const push = (val, desc) => {
+        if (val > 0 && !seen.has(val)) {
+          seen.add(val);
+          list.push({ value: val, desc, recStr });
+        }
+      };
+
+      // Concatenated record: 11-4 -> 114, 20-3 -> 203
+      const concatStr = `${nw}${nl}`;
+      push(parseInt(concatStr, 10), `Concat ${recStr}`);
+
+      // Zero-dropped record: 20-3 -> 203 -> 23, 10-5 -> 105 -> 15
+      if (concatStr.includes('0')) {
+        const noZero = concatStr.replace(/0/g, '');
+        if (noZero.length > 0) {
+          push(parseInt(noZero, 10), `Zero-Drop ${recStr}`);
+        }
+      }
+
+      // Changing digit & companion digit (e.g. 11th win -> 11, 4 losses -> 4)
+      push(isWin ? nw : nl, isWin ? `${nw}th Win` : `${nl}th Loss`);
+      const other = isWin ? nl : nw;
+      if (other >= 10) {
+        push(other, isWin ? `${nl} Losses` : `${nw} Wins`);
+      }
+
+      return { recStr, targets: list };
+    }
+
+    /* =====================================================================
+       4. STRICT 2+ REFERENCE PROGRESSIVE WEIGHTING CURVE
+          0 or 1 ref -> 0 (Ignored)
+          2 refs     -> 45
+          3 refs     -> 62
+          4 refs     -> 76
+          5 refs     -> 88
+          6 refs     -> 96
+          7+ refs    -> 100
+       ===================================================================== */
+    function progressiveGematriaScore(count) {
+      if (count < 2) return 0;
+      if (count === 2) return 45;
+      if (count === 3) return 62;
+      if (count === 4) return 76;
+      if (count === 5) return 88;
+      if (count === 6) return 96;
+      return 100;
+    }
+
+    /* =====================================================================
+       5. REAL NOV 18, 2026 SLATE (12 GAMES: 7 NBA, 3 NHL, 2 NCAAF)
+       ===================================================================== */
+    let GAMES = [
+      // --- NBA (7) ---
+      {
+        id: 'nba-bos-den',
+        sport: 'NBA',
+        time: '9:30 PM EST',
+        venue: 'Ball Arena',
+        away: {
+          fullName: 'Boston Celtics', city: 'Boston', mascot: 'Celtics', wins: 10, losses: 3, coach: 'Joe Mazzulla',
+          players: [
+            { name: 'Jayson Tatum', pos: 'SF', health: 'Healthy', matchup: 'vs. Aaron Gordon', rating: 92 },
+            { name: 'Jaylen Brown', pos: 'SG', health: 'Healthy', matchup: 'vs. Christian Braun', rating: 88 },
+            { name: 'Derrick White', pos: 'PG', health: 'Probable', matchup: 'vs. Jamal Murray', rating: 83 },
+            { name: 'Kristaps Porzingis', pos: 'C', health: 'Questionable', matchup: 'vs. Nikola Jokic', rating: 79 }
+          ]
+        },
+        home: {
+          fullName: 'Denver Nuggets', city: 'Denver', mascot: 'Nuggets', wins: 9, losses: 4, coach: 'David Adelman',
+          players: [
+            { name: 'Nikola Jokic', pos: 'C', health: 'Healthy', matchup: 'vs. Kristaps Porzingis', rating: 96 },
+            { name: 'Jamal Murray', pos: 'PG', health: 'Healthy', matchup: 'vs. Derrick White', rating: 85 },
+            { name: 'Aaron Gordon', pos: 'PF', health: 'Probable', matchup: 'vs. Jayson Tatum', rating: 81 },
+            { name: 'Michael Porter Jr', pos: 'SF', health: 'Healthy', matchup: 'vs. Jaylen Brown', rating: 80 }
+          ]
+        },
+        h2h: {
+          awayWins: 3, homeWins: 2,
+          note: 'Joe Mazzulla holds a 3-2 edge over Denver across the last 5 meetings.',
+          games: ['Mar 02, 2026: BOS 114 - DEN 108', 'Jan 07, 2026: BOS 118 - DEN 106', 'Mar 07, 2025: DEN 115 - BOS 109']
+        }
+      },
+      {
+        id: 'nba-uta-lal',
+        sport: 'NBA',
+        time: '10:00 PM EST',
+        venue: 'Crypto.com Arena',
+        away: {
+          fullName: 'Utah Jazz', city: 'Utah', mascot: 'Jazz', wins: 4, losses: 9, coach: 'Will Hardy',
+          players: [
+            { name: 'Lauri Markkanen', pos: 'PF', health: 'Healthy', matchup: 'vs. LeBron James', rating: 84 },
+            { name: 'Keyonte George', pos: 'PG', health: 'Healthy', matchup: 'vs. Austin Reaves', rating: 75 },
+            { name: 'Walker Kessler', pos: 'C', health: 'Questionable', matchup: 'vs. Anthony Davis', rating: 74 },
+            { name: 'Collin Sexton', pos: 'SG', health: 'Healthy', matchup: 'vs. Dalton Knecht', rating: 76 }
+          ]
+        },
+        home: {
+          fullName: 'Los Angeles Lakers', city: 'Los Angeles', mascot: 'Lakers', wins: 9, losses: 4, coach: 'JJ Redick',
+          players: [
+            { name: 'Anthony Davis', pos: 'C', health: 'Healthy', matchup: 'vs. Walker Kessler', rating: 94 },
+            { name: 'LeBron James', pos: 'SF', health: 'Probable', matchup: 'vs. Lauri Markkanen', rating: 90 },
+            { name: 'Austin Reaves', pos: 'SG', health: 'Healthy', matchup: 'vs. Keyonte George', rating: 82 },
+            { name: 'Rui Hachimura', pos: 'PF', health: 'Healthy', matchup: 'vs. John Collins', rating: 78 }
+          ]
+        },
+        h2h: {
+          awayWins: 1, homeWins: 4,
+          note: 'JJ Redick and the Lakers have taken 4 of the last 5 against Will Hardy.',
+          games: ['Feb 12, 2026: LAL 124 - UTA 109', 'Nov 19, 2025: LAL 121 - UTA 114', 'Feb 14, 2025: LAL 138 - UTA 122']
+        }
+      },
+      {
+        id: 'nba-phx-sac',
+        sport: 'NBA',
+        time: '10:00 PM EST',
+        venue: 'Golden 1 Center',
+        away: {
+          fullName: 'Phoenix Suns', city: 'Phoenix', mascot: 'Suns', wins: 8, losses: 5, coach: 'Mike Budenholzer',
+          players: [
+            { name: 'Kevin Durant', pos: 'PF', health: 'Healthy', matchup: 'vs. Keegan Murray', rating: 93 },
+            { name: 'Devin Booker', pos: 'SG', health: 'Healthy', matchup: 'vs. DeMar DeRozan', rating: 90 },
+            { name: 'Bradley Beal', pos: 'PG', health: 'Questionable', matchup: 'vs. DeAaron Fox', rating: 78 },
+            { name: 'Tyus Jones', pos: 'PG', health: 'Healthy', matchup: 'vs. Malik Monk', rating: 76 }
+          ]
+        },
+        home: {
+          fullName: 'Sacramento Kings', city: 'Sacramento', mascot: 'Kings', wins: 7, losses: 6, coach: 'Doug Christie',
+          players: [
+            { name: 'DeAaron Fox', pos: 'PG', health: 'Healthy', matchup: 'vs. Tyus Jones', rating: 90 },
+            { name: 'Domantas Sabonis', pos: 'C', health: 'Healthy', matchup: 'vs. Jusuf Nurkic', rating: 89 },
+            { name: 'DeMar DeRozan', pos: 'SF', health: 'Probable', matchup: 'vs. Devin Booker', rating: 83 },
+            { name: 'Keegan Murray', pos: 'PF', health: 'Healthy', matchup: 'vs. Kevin Durant', rating: 77 }
+          ]
+        },
+        h2h: {
+          awayWins: 3, homeWins: 3,
+          note: 'Pacific rivals are deadlocked 3-3 across their last 6 matchups.',
+          games: ['Apr 12, 2026: PHX 108 - SAC 107', 'Nov 13, 2025: SAC 127 - PHX 104', 'Nov 10, 2025: SAC 127 - PHX 118']
+        }
+      },
+      {
+        id: 'nba-phi-orl',
+        sport: 'NBA',
+        time: '7:00 PM EST',
+        venue: 'Kia Center',
+        away: {
+          fullName: 'Philadelphia 76ers', city: 'Philadelphia', mascot: '76ers', wins: 6, losses: 7, coach: 'Nick Nurse',
+          players: [
+            { name: 'Tyrese Maxey', pos: 'PG', health: 'Healthy', matchup: 'vs. Jalen Suggs', rating: 88 },
+            { name: 'Paul George', pos: 'SF', health: 'Probable', matchup: 'vs. Franz Wagner', rating: 85 },
+            { name: 'Joel Embiid', pos: 'C', health: 'Questionable', matchup: 'vs. Wendell Carter Jr', rating: 92 },
+            { name: 'Jared McCain', pos: 'SG', health: 'Healthy', matchup: 'vs. Kentavious Caldwell-Pope', rating: 79 }
+          ]
+        },
+        home: {
+          fullName: 'Orlando Magic', city: 'Orlando', mascot: 'Magic', wins: 8, losses: 6, coach: 'Jamahl Mosley',
+          players: [
+            { name: 'Paolo Banchero', pos: 'PF', health: 'Probable', matchup: 'vs. Caleb Martin', rating: 90 },
+            { name: 'Franz Wagner', pos: 'SF', health: 'Healthy', matchup: 'vs. Paul George', rating: 88 },
+            { name: 'Jalen Suggs', pos: 'PG', health: 'Healthy', matchup: 'vs. Tyrese Maxey', rating: 84 },
+            { name: 'Wendell Carter Jr', pos: 'C', health: 'Healthy', matchup: 'vs. Joel Embiid', rating: 78 }
+          ]
+        },
+        h2h: {
+          awayWins: 3, homeWins: 2,
+          note: 'Nick Nurse leads Jamahl Mosley 3-2 in the last 5 Eastern Conference clashes.',
+          games: ['Nov 15, 2025: ORL 98 - PHI 86', 'Apr 12, 2025: PHI 125 - ORL 113', 'Jan 19, 2025: PHI 124 - ORL 109']
+        }
+      },
+      {
+        id: 'nba-mil-mia',
+        sport: 'NBA',
+        time: '7:00 PM EST',
+        venue: 'Kaseya Center',
+        away: {
+          fullName: 'Milwaukee Bucks', city: 'Milwaukee', mascot: 'Bucks', wins: 7, losses: 7, coach: 'Doc Rivers',
+          players: [
+            { name: 'Giannis Antetokounmpo', pos: 'PF', health: 'Healthy', matchup: 'vs. Bam Adebayo', rating: 95 },
+            { name: 'Damian Lillard', pos: 'PG', health: 'Probable', matchup: 'vs. Terry Rozier', rating: 87 },
+            { name: 'Brook Lopez', pos: 'C', health: 'Healthy', matchup: 'vs. Nikola Jovic', rating: 78 },
+            { name: 'Khris Middleton', pos: 'SF', health: 'Out', matchup: 'vs. Jimmy Butler', rating: 80 }
+          ]
+        },
+        home: {
+          fullName: 'Miami Heat', city: 'Miami', mascot: 'Heat', wins: 7, losses: 6, coach: 'Erik Spoelstra',
+          players: [
+            { name: 'Jimmy Butler', pos: 'SF', health: 'Healthy', matchup: 'vs. Taurean Prince', rating: 88 },
+            { name: 'Bam Adebayo', pos: 'C', health: 'Healthy', matchup: 'vs. Giannis Antetokounmpo', rating: 86 },
+            { name: 'Tyler Herro', pos: 'SG', health: 'Healthy', matchup: 'vs. Gary Trent Jr', rating: 85 },
+            { name: 'Terry Rozier', pos: 'PG', health: 'Questionable', matchup: 'vs. Damian Lillard', rating: 76 }
+          ]
+        },
+        h2h: {
+          awayWins: 2, homeWins: 3,
+          note: 'Erik Spoelstra holds a 3-2 series edge over Doc Rivers in recent meetings.',
+          games: ['Nov 26, 2025: MIL 106 - MIA 103', 'Feb 13, 2025: MIA 123 - MIL 97', 'Nov 28, 2024: MIL 131 - MIA 124']
+        }
+      },
+      {
+        id: 'nba-atl-okc',
+        sport: 'NBA',
+        time: '8:00 PM EST',
+        venue: 'Paycom Center',
+        away: {
+          fullName: 'Atlanta Hawks', city: 'Atlanta', mascot: 'Hawks', wins: 6, losses: 8, coach: 'Quin Snyder',
+          players: [
+            { name: 'Trae Young', pos: 'PG', health: 'Healthy', matchup: 'vs. Lu Dort', rating: 86 },
+            { name: 'Jalen Johnson', pos: 'PF', health: 'Healthy', matchup: 'vs. Jalen Williams', rating: 83 },
+            { name: 'Dyson Daniels', pos: 'SG', health: 'Healthy', matchup: 'vs. Shai Gilgeous-Alexander', rating: 80 },
+            { name: 'DeAndre Hunter', pos: 'SF', health: 'Out', matchup: 'vs. Cason Wallace', rating: 76 }
+          ]
+        },
+        home: {
+          fullName: 'Oklahoma City Thunder', city: 'Oklahoma City', mascot: 'Thunder', wins: 11, losses: 2, coach: 'Mark Daigneault',
+          players: [
+            { name: 'Shai Gilgeous-Alexander', pos: 'PG', health: 'Healthy', matchup: 'vs. Dyson Daniels', rating: 96 },
+            { name: 'Jalen Williams', pos: 'SF', health: 'Healthy', matchup: 'vs. Jalen Johnson', rating: 89 },
+            { name: 'Chet Holmgren', pos: 'C', health: 'Probable', matchup: 'vs. Clint Capela', rating: 88 },
+            { name: 'Lu Dort', pos: 'SG', health: 'Healthy', matchup: 'vs. Trae Young', rating: 82 }
+          ]
+        },
+        h2h: {
+          awayWins: 1, homeWins: 4,
+          note: 'Mark Daigneault’s Thunder have won 4 of the last 5 vs. Quin Snyder.',
+          games: ['Oct 27, 2025: OKC 128 - ATL 104', 'Jan 03, 2025: ATL 141 - OKC 138', 'Nov 06, 2024: OKC 126 - ATL 117']
+        }
+      },
+      {
+        id: 'nba-gsw-dal',
+        sport: 'NBA',
+        time: '8:00 PM EST',
+        venue: 'American Airlines Center',
+        away: {
+          fullName: 'Golden State Warriors', city: 'Golden State', mascot: 'Warriors', wins: 9, losses: 4, coach: 'Steve Kerr',
+          players: [
+            { name: 'Stephen Curry', pos: 'PG', health: 'Healthy', matchup: 'vs. Kyrie Irving', rating: 93 },
+            { name: 'Draymond Green', pos: 'PF', health: 'Healthy', matchup: 'vs. PJ Washington', rating: 82 },
+            { name: 'Andrew Wiggins', pos: 'SF', health: 'Probable', matchup: 'vs. Klay Thompson', rating: 79 },
+            { name: 'Jonathan Kuminga', pos: 'PF', health: 'Healthy', matchup: 'vs. Naji Marshall', rating: 80 }
+          ]
+        },
+        home: {
+          fullName: 'Dallas Mavericks', city: 'Dallas', mascot: 'Mavericks', wins: 8, losses: 6, coach: 'Jason Kidd',
+          players: [
+            { name: 'Luka Doncic', pos: 'PG', health: 'Probable', matchup: 'vs. Andrew Wiggins', rating: 95 },
+            { name: 'Kyrie Irving', pos: 'SG', health: 'Healthy', matchup: 'vs. Stephen Curry', rating: 89 },
+            { name: 'Klay Thompson', pos: 'SF', health: 'Healthy', matchup: 'vs. Buddy Hield', rating: 80 },
+            { name: 'Dereck Lively II', pos: 'C', health: 'Healthy', matchup: 'vs. Trayce Jackson-Davis', rating: 81 }
+          ]
+        },
+        h2h: {
+          awayWins: 2, homeWins: 3,
+          note: 'Jason Kidd leads Steve Kerr 3-2 in the last 5 head-to-head matchups.',
+          games: ['Nov 12, 2025: GSW 120 - DAL 117', 'Apr 05, 2025: DAL 108 - GSW 106', 'Apr 02, 2025: GSW 104 - DAL 100']
+        }
+      },
+
+      // --- NHL (3) ---
+      {
+        id: 'nhl-col-uta',
+        sport: 'NHL',
+        time: '10:00 PM EST',
+        venue: 'Delta Center',
+        away: {
+          fullName: 'Colorado Avalanche', city: 'Colorado', mascot: 'Avalanche', wins: 11, losses: 7, coach: 'Jared Bednar',
+          players: [
+            { name: 'Nathan MacKinnon', pos: 'C', health: 'Healthy', matchup: 'vs. Mikhail Sergachev', rating: 96 },
+            { name: 'Cale Makar', pos: 'D', health: 'Healthy', matchup: 'vs. Clayton Keller', rating: 94 },
+            { name: 'Mikko Rantanen', pos: 'RW', health: 'Healthy', matchup: 'vs. Logan Cooley', rating: 90 },
+            { name: 'Alexandar Georgiev', pos: 'G', health: 'Probable', matchup: 'vs. Utah Top 6', rating: 79 }
+          ]
+        },
+        home: {
+          fullName: 'Utah Mammoth', city: 'Utah', mascot: 'Mammoth', wins: 8, losses: 9, coach: 'Andre Tourigny',
+          players: [
+            { name: 'Clayton Keller', pos: 'RW', health: 'Healthy', matchup: 'vs. Cale Makar', rating: 86 },
+            { name: 'Logan Cooley', pos: 'C', health: 'Healthy', matchup: 'vs. Nathan MacKinnon', rating: 82 },
+            { name: 'Mikhail Sergachev', pos: 'D', health: 'Healthy', matchup: 'vs. Mikko Rantanen', rating: 83 },
+            { name: 'Sean Durzi', pos: 'D', health: 'Out', matchup: 'vs. Devon Toews', rating: 77 }
+          ]
+        },
+        h2h: {
+          awayWins: 4, homeWins: 1,
+          note: 'Jared Bednar’s Avalanche are 4-1 against Andre Tourigny over the last 5.',
+          games: ['Oct 24, 2025: COL 5 - UTA 1', 'Dec 27, 2024: COL 4 - UTA 1', 'Nov 30, 2024: COL 4 - UTA 3']
+        }
+      },
+      {
+        id: 'nhl-bos-det',
+        sport: 'NHL',
+        time: '7:30 PM EST',
+        venue: 'Little Caesars Arena',
+        away: {
+          fullName: 'Boston Bruins', city: 'Boston', mascot: 'Bruins', wins: 10, losses: 8, coach: 'Joe Sacco',
+          players: [
+            { name: 'David Pastrnak', pos: 'RW', health: 'Healthy', matchup: 'vs. Moritz Seider', rating: 92 },
+            { name: 'Brad Marchand', pos: 'LW', health: 'Healthy', matchup: 'vs. Lucas Raymond', rating: 84 },
+            { name: 'Charlie McAvoy', pos: 'D', health: 'Probable', matchup: 'vs. Dylan Larkin', rating: 86 },
+            { name: 'Jeremy Swayman', pos: 'G', health: 'Healthy', matchup: 'vs. Detroit PP', rating: 85 }
+          ]
+        },
+        home: {
+          fullName: 'Detroit Red Wings', city: 'Detroit', mascot: 'Red Wings', wins: 8, losses: 9, coach: 'Todd McLellan',
+          players: [
+            { name: 'Dylan Larkin', pos: 'C', health: 'Healthy', matchup: 'vs. Charlie McAvoy', rating: 87 },
+            { name: 'Lucas Raymond', pos: 'RW', health: 'Healthy', matchup: 'vs. Brad Marchand', rating: 85 },
+            { name: 'Moritz Seider', pos: 'D', health: 'Healthy', matchup: 'vs. David Pastrnak', rating: 85 },
+            { name: 'Alex DeBrincat', pos: 'LW', health: 'Questionable', matchup: 'vs. Brandon Carlo', rating: 82 }
+          ]
+        },
+        h2h: {
+          awayWins: 3, homeWins: 2,
+          note: 'Boston holds a 3-2 edge over Detroit in their last 5 Original Six meetings.',
+          games: ['Nov 23, 2025: BOS 2 - DET 1', 'Dec 31, 2024: BOS 5 - DET 3', 'Nov 24, 2024: DET 5 - BOS 2']
+        }
+      },
+      {
+        id: 'nhl-mtl-njd',
+        sport: 'NHL',
+        time: '7:30 PM EST',
+        venue: 'Prudential Center',
+        away: {
+          fullName: 'Montreal Canadiens', city: 'Montreal', mascot: 'Canadiens', wins: 7, losses: 10, coach: 'Martin St Louis',
+          players: [
+            { name: 'Nick Suzuki', pos: 'C', health: 'Healthy', matchup: 'vs. Nico Hischier', rating: 85 },
+            { name: 'Cole Caufield', pos: 'RW', health: 'Healthy', matchup: 'vs. Dougie Hamilton', rating: 84 },
+            { name: 'Juraj Slafkovsky', pos: 'LW', health: 'Probable', matchup: 'vs. Jonas Siegenthaler', rating: 79 },
+            { name: 'Mike Matheson', pos: 'D', health: 'Healthy', matchup: 'vs. Jack Hughes', rating: 80 }
+          ]
+        },
+        home: {
+          fullName: 'New Jersey Devils', city: 'New Jersey', mascot: 'Devils', wins: 12, losses: 6, coach: 'Sheldon Keefe',
+          players: [
+            { name: 'Jack Hughes', pos: 'C', health: 'Healthy', matchup: 'vs. Mike Matheson', rating: 93 },
+            { name: 'Nico Hischier', pos: 'C', health: 'Healthy', matchup: 'vs. Nick Suzuki', rating: 88 },
+            { name: 'Jesper Bratt', pos: 'LW', health: 'Healthy', matchup: 'vs. Kaiden Guhle', rating: 88 },
+            { name: 'Jacob Markstrom', pos: 'G', health: 'Healthy', matchup: 'vs. Montreal Top Line', rating: 84 }
+          ]
+        },
+        h2h: {
+          awayWins: 1, homeWins: 4,
+          note: 'Sheldon Keefe’s Devils have taken 4 of the last 5 vs. Martin St. Louis.',
+          games: ['Nov 07, 2025: NJD 5 - MTL 3', 'Feb 24, 2025: NJD 4 - MTL 3', 'Jan 17, 2025: MTL 3 - NJD 2']
+        }
+      },
+
+      // --- NCAAF (2) ---
+      {
+        id: 'ncaaf-akr-umass',
+        sport: 'NCAAF',
+        time: '7:00 PM EST',
+        venue: 'McGuirk Alumni Stadium',
+        away: {
+          fullName: 'Akron Zips', city: 'Akron', mascot: 'Zips', wins: 3, losses: 7, coach: 'Joe Moorhead',
+          players: [
+            { name: 'Ben Finley', pos: 'QB', health: 'Healthy', matchup: 'vs. UMass Secondary', rating: 76 },
+            { name: 'Adrian Norton', pos: 'WR', health: 'Healthy', matchup: 'vs. Isaiah Rutherford', rating: 79 },
+            { name: 'Jordon Simmons', pos: 'RB', health: 'Questionable', matchup: 'vs. UMass Front 7', rating: 74 },
+            { name: 'Bryan McCoy', pos: 'LB', health: 'Healthy', matchup: 'vs. Jalen John', rating: 81 }
+          ]
+        },
+        home: {
+          fullName: 'UMass Minutemen', city: 'UMass', mascot: 'Minutemen', wins: 2, losses: 8, coach: 'Joe Harasymiak',
+          players: [
+            { name: 'Taisun Phommachanh', pos: 'QB', health: 'Probable', matchup: 'vs. Akron Pass Rush', rating: 73 },
+            { name: 'Jalen John', pos: 'RB', health: 'Healthy', matchup: 'vs. Bryan McCoy', rating: 76 },
+            { name: 'Jakobie Keeney-James', pos: 'WR', health: 'Healthy', matchup: 'vs. Devonte Golden-Nelson', rating: 77 },
+            { name: 'Tyler Rudolph', pos: 'S', health: 'Healthy', matchup: 'vs. Adrian Norton', rating: 75 }
+          ]
+        },
+        h2h: {
+          awayWins: 2, homeWins: 1,
+          note: 'Akron leads the recent series 2-1 in hard-fought MAC/Independent tilts.',
+          games: ['Sep 14, 2025: AKR 24 - UMASS 17', 'Sep 28, 2019: UMASS 37 - AKR 29', 'Nov 18, 2015: AKR 17 - UMASS 13']
+        }
+      },
+      {
+        id: 'ncaaf-cmu-buf',
+        sport: 'NCAAF',
+        time: '7:30 PM EST',
+        venue: 'Broadview Stadium',
+        away: {
+          fullName: 'Central Michigan Chippewas', city: 'Central Michigan', mascot: 'Chippewas', wins: 5, losses: 5, coach: 'Matt Drinkall',
+          players: [
+            { name: 'Joe Labas', pos: 'QB', health: 'Probable', matchup: 'vs. Shaun Dolac', rating: 77 },
+            { name: 'Marion Lukes', pos: 'RB', health: 'Healthy', matchup: 'vs. Buffalo Front 7', rating: 81 },
+            { name: 'Chris Parker', pos: 'WR', health: 'Healthy', matchup: 'vs. Marcus Fuqua', rating: 78 },
+            { name: 'Donte Kent', pos: 'CB', health: 'Healthy', matchup: 'vs. Victor Snow', rating: 80 }
+          ]
+        },
+        home: {
+          fullName: 'Buffalo Bulls', city: 'Buffalo', mascot: 'Bulls', wins: 6, losses: 4, coach: 'Pete Lembo',
+          players: [
+            { name: 'CJ Ogbonna', pos: 'QB', health: 'Healthy', matchup: 'vs. CMU Secondary', rating: 80 },
+            { name: 'Al-Jay Henderson', pos: 'RB', health: 'Healthy', matchup: 'vs. CMU Linebackers', rating: 82 },
+            { name: 'Shaun Dolac', pos: 'LB', health: 'Healthy', matchup: 'vs. Marion Lukes', rating: 88 },
+            { name: 'Victor Snow', pos: 'WR', health: 'Probable', matchup: 'vs. Donte Kent', rating: 79 }
+          ]
+        },
+        h2h: {
+          awayWins: 3, homeWins: 2,
+          note: 'Central Michigan leads the last 5 MAC matchups 3-2 against Buffalo.',
+          games: ['Nov 09, 2025: BUF 27 - CMU 21', 'Nov 09, 2024: CMU 31 - BUF 27', 'Nov 09, 2022: CMU 31 - BUF 27']
+        }
+      }
+    ];
+
+    /* =====================================================================
+       6. HYBRID SCORING ENGINE
+       ===================================================================== */
+    const HEALTH_MULT = { Healthy: 1.0, Probable: 0.85, Questionable: 0.55, Out: 0.0 };
+
+    function evaluateGame(game, weights) {
+      // Collect all scannable entities
+      const rawEntities = [
+        { name: game.away.fullName, role: 'Away Team' },
+        { name: game.away.city, role: 'Away City' },
+        { name: game.away.mascot, role: 'Away Mascot' },
+        { name: game.home.fullName, role: 'Home Team' },
+        { name: game.home.city, role: 'Home City' },
+        { name: game.home.mascot, role: 'Home Mascot' },
+        { name: game.venue, role: 'Stadium' },
+        { name: game.away.coach, role: 'Away Coach' },
+        { name: game.home.coach, role: 'Home Coach' }
+      ];
+      game.away.players.slice(0, 2).forEach(p => rawEntities.push({ name: p.name, role: 'Away Star' }));
+      game.home.players.slice(0, 2).forEach(p => rawEntities.push({ name: p.name, role: 'Home Star' }));
+
+      // Deduplicate and compute all 4 ciphers
+      const entities = [];
+      const seen = new Set();
+      for (const e of rawEntities) {
+        const key = (e.name || '').trim().toLowerCase();
+        if (key && !seen.has(key)) {
+          seen.add(key);
+          entities.push({ ...e, ciphers: computeCiphers(e.name) });
+        }
+      }
+
+      // Build win/loss record targets for both sides
+      const awayWin = buildRecordTargets(game.away.wins, game.away.losses, true);
+      const homeLoss = buildRecordTargets(game.home.wins, game.home.losses, false);
+      const homeWin = buildRecordTargets(game.home.wins, game.home.losses, true);
+      const awayLoss = buildRecordTargets(game.away.wins, game.away.losses, false);
+
+      function scanSide(groups) {
+        const matches = [];
+        // 1. Check Date Numerology
+        for (const dn of DATE_NUMEROLOGY) {
+          for (const g of groups) {
+            for (const t of g.targets) {
+              if (dn.value === t.value) {
+                matches.push({
+                  entity: `Date: ${dn.label}`,
+                  cipher: 'Date Numerology',
+                  value: dn.value,
+                  target: `${g.label} (${t.desc})`
+                });
+                break;
+              }
+            }
+          }
+        }
+        // 2. Check every entity across all 4 base ciphers (max 1 hit per entity)
+        for (const ent of entities) {
+          let hit = false;
+          for (const [cipherName, val] of Object.entries(ent.ciphers)) {
+            if (hit) break;
+            for (const g of groups) {
+              if (hit) break;
+              for (const t of g.targets) {
+                if (val === t.value) {
+                  matches.push({
+                    entity: `${ent.name} (${ent.role})`,
+                    cipher: cipherName,
+                    value: val,
+                    target: `${g.label} (${t.desc})`
+                  });
+                  hit = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
+        return matches;
+      }
+
+      const awayMatches = scanSide([
+        { label: `${game.away.mascot} Win`, targets: awayWin.targets },
+        { label: `${game.home.mascot} Loss`, targets: homeLoss.targets }
+      ]);
+      const homeMatches = scanSide([
+        { label: `${game.home.mascot} Win`, targets: homeWin.targets },
+        { label: `${game.away.mascot} Loss`, targets: awayLoss.targets }
+      ]);
+
+      // Apply strict 2+ reference rule
+      const rawGemA = progressiveGematriaScore(awayMatches.length);
+      const rawGemH = progressiveGematriaScore(homeMatches.length);
+      let gemA = rawGemA;
+      let gemH = rawGemH;
+      if (rawGemA > 0 && rawGemH > 0) {
+        gemA = Math.max(25, Math.round(rawGemA - rawGemH * 0.25));
+        gemH = Math.max(25, Math.round(rawGemH - rawGemA * 0.25));
+      }
+
+      // Pillar B: Coach & Team H2H
+      const totH2H = game.h2h.awayWins + game.h2h.homeWins;
+      const h2hA = totH2H > 0 ? Math.round((game.h2h.awayWins / totH2H) * 100) : 50;
+      const h2hH = totH2H > 0 ? Math.round((game.h2h.homeWins / totH2H) * 100) : 50;
+
+      // Pillar C: Active Roster Health & Matchup Score
+      const teamRosterPower = (players) => {
+        if (!players.length) return 75;
+        return players.reduce((s, p) => s + p.rating * (HEALTH_MULT[p.health] ?? 0.8), 0) / players.length;
+      };
+      const powA = teamRosterPower(game.away.players);
+      const powH = teamRosterPower(game.home.players);
+      const diff = powA - powH;
+      const rosA = Math.max(15, Math.min(95, Math.round(50 + diff * 2.2)));
+      const rosH = Math.max(15, Math.min(95, Math.round(50 - diff * 2.2)));
+
+      // Weighted Composite (auto-normalized to 100%)
+      const wSum = weights.g + weights.h + weights.p || 1;
+      const wg = weights.g / wSum;
+      const wh = weights.h / wSum;
+      const wp = weights.p / wSum;
+
+      const confA = Math.min(100, Math.max(0, Math.round(wg * gemA + wh * h2hA + wp * rosA)));
+      const confH = Math.min(100, Math.max(0, Math.round(wg * gemH + wh * h2hH + wp * rosH)));
+
+      const pickAway = confA >= confH;
+      const finalConfidence = pickAway ? confA : confH;
+      const pickedTeam = pickAway ? game.away : game.home;
+      const pickedRec = pickAway ? awayWin.recStr : homeWin.recStr;
+      const winMatches = pickAway ? awayMatches : homeMatches;
+      const oppMatches = pickAway ? homeMatches : awayMatches;
+
+      return {
+        game,
+        finalConfidence,
+        pickAway,
+        predictedLabel: `${pickedTeam.mascot} Win → ${pickedRec}`,
+        gematria: {
+          score: pickAway ? gemA : gemH,
+          rawScore: pickAway ? rawGemA : rawGemH,
+          count: winMatches.length,
+          oppCount: oppMatches.length,
+          ignored: winMatches.length < 2,
+          winMatches,
+          oppMatches,
+          awayCount: awayMatches.length,
+          homeCount: homeMatches.length
+        },
+        history: {
+          score: pickAway ? h2hA : h2hH
+        },
+        roster: {
+          score: pickAway ? rosA : rosH
+        }
+      };
+    }
+
+    /* =====================================================================
+       7. APP STATE & UI CONTROLLERS
+       ===================================================================== */
+    const state = {
+      sport: 'All',
+      weights: { g: 50, h: 20, p: 30 },
+      evaluated: [],
+      activeGameId: null,
+      activeTab: 'gematria'
+    };
+
+    function toast(msg) {
+      const wrap = document.getElementById('toast-wrap');
+      const el = document.createElement('div');
+      el.className = 'toast-msg';
+      el.textContent = msg;
+      wrap.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(8px)';
+        setTimeout(() => el.remove(), 260);
+      }, 2400);
+    }
+
+    // --- Sign-In / Sign-Out ---
+    function signInWith(provider) {
+      const loader = document.getElementById('signin-loader');
+      const loaderText = document.getElementById('signin-loader-text');
+      document.getElementById('btn-google').disabled = true;
+      document.getElementById('btn-apple').disabled = true;
+      loader.classList.remove('hidden');
+      loaderText.textContent = `Syncing ${provider} & decoding Nov 18 slate...`;
+
+      setTimeout(() => {
+        document.getElementById('user-avatar').textContent = provider === 'Google' ? 'G' : 'A';
+        document.getElementById('user-label').textContent = provider;
+        document.getElementById('signin-screen').classList.add('hidden');
+        document.getElementById('dashboard-screen').classList.remove('hidden');
+        document.getElementById('btn-google').disabled = false;
+        document.getElementById('btn-apple').disabled = false;
+        loader.classList.add('hidden');
+        recomputeAndRender();
+        toast(`Synced with ${provider} · ${GAMES.length} games ranked`);
+      }, 700);
+    }
+
+    function signOut() {
+      document.getElementById('dashboard-screen').classList.add('hidden');
+      document.getElementById('signin-screen').classList.remove('hidden');
+      toast('Signed out');
+    }
+
+    // --- Weight Tuner ---
+    function toggleWeightsPanel() {
+      const panel = document.getElementById('tuner-panel');
+      const btn = document.getElementById('btn-toggle-weights');
+      panel.classList.toggle('hidden');
+      btn.classList.toggle('active');
+    }
+
+    function onWeightsChanged() {
+      const g = parseInt(document.getElementById('slider-g').value, 10);
+      const h = parseInt(document.getElementById('slider-h').value, 10);
+      const p = parseInt(document.getElementById('slider-p').value, 10);
+      state.weights = { g, h, p };
+
+      const sum = g + h + p || 1;
+      const ng = Math.round((g / sum) * 100);
+      const nh = Math.round((h / sum) * 100);
+      const np = Math.max(0, 100 - ng - nh);
+
+      document.getElementById('val-g').textContent = `${ng}%`;
+      document.getElementById('val-h').textContent = `${nh}%`;
+      document.getElementById('val-p').textContent = `${np}%`;
+
+      recomputeAndRender();
+    }
+
+    function resetWeights() {
+      document.getElementById('slider-g').value = 50;
+      document.getElementById('slider-h').value = 20;
+      document.getElementById('slider-p').value = 30;
+      onWeightsChanged();
+      toast('Weights reset to 50% / 20% / 30%');
+    }
+
+    // --- Render Sports Crossbar & Games Feed ---
+    function selectSport(sp) {
+      state.sport = sp;
+      renderCrossbar();
+      renderFeed();
+    }
+
+    function renderCrossbar() {
+      const counts = {};
+      GAMES.forEach(g => { counts[g.sport] = (counts[g.sport] || 0) + 1; });
+      const sports = ['All', ...Object.keys(counts)];
+      const el = document.getElementById('sports-crossbar');
+
+      el.innerHTML = sports.map(sp => {
+        const active = state.sport === sp;
+        const cnt = sp === 'All' ? GAMES.length : counts[sp];
+        return `
+          <button class="sport-pill ${active ? 'active' : ''}" onclick="selectSport('${sp}')">
+            <span>${sp}</span>
+            <span class="sport-count">${cnt}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function recomputeAndRender() {
+      state.evaluated = GAMES
+        .map(g => evaluateGame(g, state.weights))
+        .sort((a, b) => b.finalConfidence - a.finalConfidence);
+      renderCrossbar();
+      renderFeed();
+    }
+
+    function confTier(score) {
+      if (score >= 72) return { box: 'high', text: 'text-high', fill: 'fill-high' };
+      if (score >= 55) return { box: 'mid', text: 'text-mid', fill: 'fill-mid' };
+      return { box: 'low', text: 'text-low', fill: 'fill-low' };
+    }
+
+    function renderFeed() {
+      const list = state.sport === 'All'
+        ? state.evaluated
+        : state.evaluated.filter(x => x.game.sport === state.sport);
+
+      document.getElementById('feed-title').textContent = state.sport === 'All'
+        ? "Today's Top Alignments"
+        : `${state.sport} Top Alignments`;
+      document.getElementById('feed-count').textContent = `${list.length} ${list.length === 1 ? 'Game' : 'Games'}`;
+
+      const container = document.getElementById('games-list');
+      container.innerHTML = list.map(item => {
+        const { game, finalConfidence, pickAway, predictedLabel, gematria } = item;
+        const tier = confTier(finalConfidence);
+        const refTag = gematria.ignored
+          ? `<span class="ref-badge ref-ignored">Ignored (&lt;2 Refs)</span>`
+          : `<span class="ref-badge ref-active">${gematria.count} Refs Matched</span>`;
+
+        return `
+          <article class="game-card" onclick="openBreakdown('${game.id}')">
+            <div class="card-meta">
+              <div class="meta-left">
+                <span class="sport-tag">${game.sport}</span>
+                <span class="venue-text">${game.time} · ${game.venue}</span>
+              </div>
+              ${refTag}
+            </div>
+
+            <div class="card-body">
+              <div class="teams-col">
+                <div class="team-row">
+                  <div class="team-name-wrap">
+                    <span class="pick-dot ${pickAway ? 'picked' : ''}"></span>
+                    <span class="team-name ${pickAway ? 'picked' : ''}">${game.away.fullName}</span>
+                  </div>
+                  <span class="team-rec">${game.away.wins}-${game.away.losses}</span>
+                </div>
+                <div class="team-row">
+                  <div class="team-name-wrap">
+                    <span class="pick-dot ${!pickAway ? 'picked' : ''}"></span>
+                    <span class="team-name ${!pickAway ? 'picked' : ''}">${game.home.fullName}</span>
+                  </div>
+                  <span class="team-rec">${game.home.wins}-${game.home.losses}</span>
+                </div>
+              </div>
+
+              <div class="conf-box ${tier.box}">
+                <div class="conf-num ${tier.text}">${finalConfidence}<span>%</span></div>
+                <div class="conf-label">Conf</div>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="pick-line">
+                <span class="pick-label ${tier.text}">Pick: ${predictedLabel}</span>
+                <span class="decode-cta">
+                  Decode
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill ${tier.fill}" style="width:${finalConfidence}%;"></div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    /* =====================================================================
+       8. MODALS (DATE, BREAKDOWN, CUSTOM SCANNER)
+       ===================================================================== */
+    function openDateModal() {
+      document.getElementById('date-modal').classList.remove('hidden');
+    }
+    function openCustomModal() {
+      document.getElementById('custom-modal').classList.remove('hidden');
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+    function backdropClose(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    function openBreakdown(gameId) {
+      state.activeGameId = gameId;
+      state.activeTab = 'gematria';
+      renderBreakdown();
+      document.getElementById('breakdown-modal').classList.remove('hidden');
+    }
+
+    function setBreakdownTab(tab) {
+      state.activeTab = tab;
+      renderBreakdown();
+    }
+
+    function renderBreakdown() {
+      const item = state.evaluated.find(x => x.game.id === state.activeGameId);
+      if (!item) return;
+
+      const { game, finalConfidence, predictedLabel, gematria, history, roster } = item;
+      const tier = confTier(finalConfidence);
+
+      document.getElementById('bd-header').innerHTML = `
+        <div>
+          <div style="display:flex; align-items:center; gap:7px; margin-bottom:4px;">
+            <span class="sport-tag">${game.sport}</span>
+            <span style="font-size:11px; color:var(--text-secondary);">${game.time} · ${game.venue}</span>
+          </div>
+          <div class="modal-title">${game.away.fullName} @ ${game.home.fullName}</div>
+          <div style="margin-top:6px; font-size:13px; font-weight:800;" class="${tier.text}">
+            ${predictedLabel} · ${finalConfidence}% Confidence
+          </div>
+        </div>
+        <button class="btn-close" onclick="closeModal('breakdown-modal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      `;
+
+      document.getElementById('bd-pillars').innerHTML = `
+        <div class="pillar-mini"><span>Gematria</span><strong style="color:#34d399;">${gematria.score}%</strong></div>
+        <div class="pillar-mini"><span>Coach H2H</span><strong style="color:#22d3ee;">${history.score}%</strong></div>
+        <div class="pillar-mini"><span>Roster IQ</span><strong style="color:#fbbf24;">${roster.score}%</strong></div>
+      `;
+
+      ['gematria', 'history', 'roster'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.toggle('active', t === state.activeTab);
+      });
+
+      const body = document.getElementById('bd-body');
+
+      if (state.activeTab === 'gematria') {
+        const banner = gematria.ignored
+          ? `<div class="callout-box callout-amber"><strong>2+ Reference Rule (Ignored):</strong> Only ${gematria.count} reference matched. Because AlignIQ strictly ignores 0 or 1 hits, Gematria scores <strong>0%</strong> and the pick relies on Coach H2H &amp; Roster Health.</div>`
+          : `<div class="callout-box callout-emerald"><strong>Convergence Activated (${gematria.count} Refs):</strong> Cleared the 2+ reference threshold with progressive weighting (raw ${gematria.rawScore}/100${gematria.oppCount >= 2 ? `, adjusted to ${gematria.score}/100 for ${gematria.oppCount} opposing refs` : ''}).</div>`;
+
+        const renderMatches = (arr, emptyTxt) => {
+          if (!arr.length) return `<div class="empty-box">${emptyTxt}</div>`;
+          return `<div class="proof-list">${arr.map(m => `
+            <div class="proof-item">
+              <div class="proof-main">
+                <div class="proof-entity">${m.entity}</div>
+                <div class="proof-meta">${m.cipher} · <span>${m.target}</span></div>
+              </div>
+              <div class="proof-val">${m.value}</div>
+            </div>
+          `).join('')}</div>`;
+        };
+
+        body.innerHTML = `
+          ${banner}
+          <div class="date-grid">
+            <div class="date-tile" style="text-align:center;">
+              <div class="date-tile-label">${game.away.mascot} Win / ${game.home.mascot} Loss</div>
+              <div class="date-tile-val" style="color:${gematria.awayCount >= 2 ? '#34d399' : '#64748b'};">${gematria.awayCount} Refs</div>
+            </div>
+            <div class="date-tile" style="text-align:center;">
+              <div class="date-tile-label">${game.home.mascot} Win / ${game.away.mascot} Loss</div>
+              <div class="date-tile-val" style="color:${gematria.homeCount >= 2 ? '#22d3ee' : '#64748b'};">${gematria.homeCount} Refs</div>
+            </div>
+          </div>
+          <div>
+            <div class="section-kicker" style="color:#34d399;">Matched References (${predictedLabel})</div>
+            ${renderMatches(gematria.winMatches, 'No references matched for this outcome.')}
+          </div>
+          <div>
+            <div class="section-kicker">Opposing References (${gematria.oppMatches.length})</div>
+            ${renderMatches(gematria.oppMatches, 'No opposing references detected.')}
+          </div>
+        `;
+      } else if (state.activeTab === 'history') {
+        body.innerHTML = `
+          <div class="date-grid">
+            <div class="date-tile">
+              <div class="date-tile-label" style="color:#22d3ee;">Away Head Coach</div>
+              <div style="font-size:14px; font-weight:800; margin-top:4px;">${game.away.coach}</div>
+              <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">H2H Wins: <strong style="color:#fff;">${game.h2h.awayWins}</strong></div>
+            </div>
+            <div class="date-tile">
+              <div class="date-tile-label" style="color:#34d399;">Home Head Coach</div>
+              <div style="font-size:14px; font-weight:800; margin-top:4px;">${game.home.coach}</div>
+              <div style="font-size:12px; color:var(--text-secondary); margin-top:4px;">H2H Wins: <strong style="color:#fff;">${game.h2h.homeWins}</strong></div>
+            </div>
+          </div>
+          <div class="callout-box callout-cyan">${game.h2h.note}</div>
+          <div>
+            <div class="section-kicker">Recent Meetings (Same Coaches/Teams)</div>
+            <div class="proof-list">
+              ${game.h2h.games.map(g => `<div class="proof-item"><div class="proof-entity" style="font-size:12px;">${g}</div></div>`).join('')}
+            </div>
+          </div>
+        `;
+      } else {
+        const hClass = (s) => s === 'Healthy' ? 'h-healthy' : s === 'Probable' ? 'h-probable' : s === 'Questionable' ? 'h-questionable' : 'h-out';
+        const renderTeamRoster = (team, color) => `
+          <div>
+            <div class="section-kicker" style="color:${color};">${team.fullName} Active Starters</div>
+            <div class="proof-list">
+              ${team.players.map(p => `
+                <div class="proof-item">
+                  <div class="proof-main">
+                    <div class="proof-entity">${p.name} <span style="font-size:10px; color:var(--text-muted);">${p.pos}</span></div>
+                    <div class="proof-meta">${p.matchup}</div>
+                  </div>
+                  <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                    <span class="health-pill ${hClass(p.health)}">${p.health}</span>
+                    <strong style="font-size:13px; width:22px; text-align:right;">${p.rating}</strong>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        body.innerHTML = renderTeamRoster(game.away, '#22d3ee') + renderTeamRoster(game.home, '#34d399');
+      }
+    }
+
+    // --- Custom Game Scanner Submit ---
+    function splitTeam(full) {
+      const parts = full.trim().split(/\s+/);
+      if (parts.length === 1) return { city: parts[0], mascot: parts[0] };
+      return { city: parts.slice(0, -1).join(' '), mascot: parts[parts.length - 1] };
+    }
+
+    function submitCustomGame(e) {
+      e.preventDefault();
+      const sport = document.getElementById('cg-sport').value;
+      const time = document.getElementById('cg-time').value.trim();
+      const awayName = document.getElementById('cg-away-name').value.trim();
+      const homeName = document.getElementById('cg-home-name').value.trim();
+      const [aw, al] = document.getElementById('cg-away-rec').value.trim().split('-').map(Number);
+      const [hw, hl] = document.getElementById('cg-home-rec').value.trim().split('-').map(Number);
+      const awayCoach = document.getElementById('cg-away-coach').value.trim();
+      const homeCoach = document.getElementById('cg-home-coach').value.trim();
+      const awayStar = document.getElementById('cg-away-star').value.trim();
+      const homeStar = document.getElementById('cg-home-star').value.trim();
+      const venue = document.getElementById('cg-venue').value.trim();
+
+      const aParts = splitTeam(awayName);
+      const hParts = splitTeam(homeName);
+      const id = `custom-${Date.now()}`;
+
+      GAMES.unshift({
+        id,
+        sport,
+        time,
+        venue,
+        away: {
+          fullName: awayName, city: aParts.city, mascot: aParts.mascot,
+          wins: isNaN(aw) ? 20 : aw, losses: isNaN(al) ? 2 : al, coach: awayCoach,
+          players: [{ name: awayStar, pos: 'STAR', health: 'Healthy', matchup: `vs. ${homeStar}`, rating: 86 }]
+        },
+        home: {
+          fullName: homeName, city: hParts.city, mascot: hParts.mascot,
+          wins: isNaN(hw) ? 18 : hw, losses: isNaN(hl) ? 4 : hl, coach: homeCoach,
+          players: [{ name: homeStar, pos: 'STAR', health: 'Healthy', matchup: `vs. ${awayStar}`, rating: 85 }]
+        },
+        h2h: {
+          awayWins: 2, homeWins: 2,
+          note: `Custom scan baseline (2-2 neutral H2H) for ${awayCoach} vs. ${homeCoach}.`,
+          games: ['Baseline H2H initialized for custom matchup']
+        }
+      });
+
+      state.sport = 'All';
+      closeModal('custom-modal');
+      recomputeAndRender();
+      openBreakdown(id);
+      toast(`Decoded ${awayName} (${aw}-${al}) @ ${homeName}`);
+    }
+  </script>
+</body>
+</html>
+```
