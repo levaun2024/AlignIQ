@@ -1,0 +1,26 @@
+{
+  "id": "/AlignIQ/",
+  "name": "AlignIQ — Hybrid Gematria & Matchup Engine",
+  "short_name": "AlignIQ",
+  "description": "Live multi-sport gematria convergence, coach H2H, and roster matchup analytics.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080d17",
+  "theme_color": "#080d17",
+  "icons": [
+    {
+      "src": "./icon.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
