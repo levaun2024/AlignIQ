@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -103,7 +103,6 @@
     }
     .pulse-dot.red { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
-    @keyframes blinkShift { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
     .auth-title { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 6px; }
     .auth-title span { color: var(--accent); }
@@ -316,22 +315,16 @@
     .team-score { font-size: 15px; font-weight: 900; color: var(--text-main); min-width: 22px; text-align: right; }
 
     .conf-box {
-      width: 68px; height: 58px; border-radius: 12px;
+      width: 66px; height: 56px; border-radius: 12px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       flex-shrink: 0; border: 1.5px solid var(--border-strong); background: rgba(8,13,23,0.55);
-      transition: transform 0.2s, box-shadow 0.2s;
     }
     .conf-box.high { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
     .conf-box.mid { border-color: var(--amber); color: var(--amber); background: var(--amber-soft); }
     .conf-box.low { border-color: var(--text-dim); color: var(--text-muted); }
-    .conf-box.live-up { box-shadow: 0 0 12px rgba(16, 185, 129, 0.35); }
-    .conf-box.live-down { box-shadow: 0 0 12px rgba(239, 68, 68, 0.35); }
     .conf-num { font-size: 18px; font-weight: 900; line-height: 1; }
     .conf-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.4px; margin-top: 2px; opacity: 0.9; }
-    .shift-mini {
-      font-size: 10px; font-weight: 800; margin-top: 2px;
-      animation: blinkShift 1.1s ease-in-out infinite;
-    }
+    .shift-mini { font-size: 9px; font-weight: 800; margin-top: 1px; }
 
     .card-sub-info {
       display: flex; align-items: center; justify-content: space-between; gap: 6px;
@@ -347,7 +340,7 @@
     .pick-text.high { color: var(--accent); }
     .decode-link { font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
     .meter-track { height: 4px; background: rgba(255,255,255,0.07); border-radius: 999px; margin-top: 7px; overflow: hidden; }
-    .meter-fill { height: 100%; border-radius: 999px; transition: width 0.35s ease; }
+    .meter-fill { height: 100%; border-radius: 999px; }
 
     /* MODALS */
     .modal-backdrop {
@@ -543,7 +536,7 @@
         <div class="feed-header">
           <div>
             <div class="feed-title">Popular Games · Highest Confidence</div>
-            <div class="feed-sub" id="feed-sub">Auto-sorted live by CONF % · 30s sync</div>
+            <div class="feed-sub" id="feed-sub">Sorted highest % first · Live 30s auto-sync</div>
           </div>
           <div class="status-badge"><span class="pulse-dot"></span><span id="live-count-badge">Loading...</span></div>
         </div>
@@ -781,7 +774,6 @@
       const awayGem = progressiveScore(awayHits.length);
       const homeGem = progressiveScore(homeHits.length);
 
-      // Pillar 2: Vegas Odds + Home/Away Splits
       const aPct = awayRec && (awayRec.w + awayRec.l) > 0 ? awayRec.w / (awayRec.w + awayRec.l) : 0.5;
       const hPct = homeRec && (homeRec.w + homeRec.l) > 0 ? homeRec.w / (homeRec.w + homeRec.l) : 0.5;
       const aSplit = parseRecord(game.away.roadRecord);
@@ -806,25 +798,17 @@
       const vegasBoost = pickSide === 'home' ? vegasHomeBoost : -vegasHomeBoost;
       const h2hScore = Math.min(95, Math.max(15, Math.round(50 + splitDiff * 38 + vegasBoost)));
 
-      // Pillar 3: Injuries
       let injuryPenalty = 0;
       let oppInjuryBonus = 0;
       if (sumData?.injuries?.length) {
         sumData.injuries.forEach(inj => {
           const pts = /out/i.test(inj.status) ? 7 : /doubtful/i.test(inj.status) ? 5 : /questionable/i.test(inj.status) ? 2 : 0;
-          if (inj.teamSide === pickSide) injuryPenalty += pts;
+          const isPickedTeam = inj.teamSide === pickSide;
+          if (isPickedTeam) injuryPenalty += pts;
           else oppInjuryBonus += pts;
         });
       }
-      const rosScore = Math.min(98, Math.max(10, Math.round(58 - injuryPenalty + oppInjuryBonus)));
 
-      // Pre-game Base Confidence
-      const totalW = (weights.gem + weights.h2h + weights.ros) || 1;
-      const baseConf = Math.min(99, Math.max(8, Math.round(
-        (gemScore * weights.gem + h2hScore * weights.h2h + rosScore * weights.ros) / totalW
-      )));
-
-      // Live In-Game Shift applied DIRECTLY to main CONF %
       let liveShift = 0;
       const liveEvents = sumData?.liveEvents || [];
       if (game.state === 'in') {
@@ -833,21 +817,25 @@
         const margin = pickSide === 'home' ? (hScore - aScore) : (aScore - hScore);
         if (sumData?.liveHomeWP != null) {
           const pickedWP = pickSide === 'home' ? sumData.liveHomeWP : (1 - sumData.liveHomeWP);
-          liveShift = Math.round((pickedWP - 0.5) * 36);
+          liveShift = Math.round((pickedWP - 0.5) * 44);
         } else {
-          liveShift = Math.max(-20, Math.min(20, Math.round(margin * 2.5)));
+          liveShift = Math.max(-22, Math.min(22, Math.round(margin * 2.2)));
         }
         liveEvents.forEach(ev => { liveShift += ev.impact; });
-        liveShift = Math.max(-25, Math.min(25, liveShift));
+        liveShift = Math.max(-28, Math.min(28, liveShift));
       }
 
-      const conf = Math.min(99, Math.max(5, baseConf + liveShift));
+      const rosScore = Math.min(98, Math.max(10, Math.round(58 - injuryPenalty + oppInjuryBonus + liveShift)));
+
+      const totalW = (weights.gem + weights.h2h + weights.ros) || 1;
+      const conf = Math.min(99, Math.max(8, Math.round(
+        (gemScore * weights.gem + h2hScore * weights.h2h + rosScore * weights.ros) / totalW
+      )));
 
       const pickedTeam = pickSide === 'home' ? game.home : game.away;
       const pRec = parseRecord(pickedTeam.record);
       const nextRecStr = pRec && game.state !== 'post' ? ` → ${pRec.w + 1}-${pRec.l}` : '';
 
-      // Auto-grade completed games
       let grade = null;
       if (game.state === 'post') {
         const aS = Number(game.away.score || 0);
@@ -863,7 +851,6 @@
         pickSide,
         pickedTeam,
         pickLabel: `${pickedTeam.short || pickedTeam.name} Win${nextRecStr}`,
-        baseConf,
         confidence: conf,
         hitsCount: primaryHits.length,
         primaryHits,
@@ -905,7 +892,7 @@
 
       const results = await Promise.all(LEAGUES.map(async (lg) => {
         try {
-          const res = await fetch(`[https://site.api.espn.com/apis/site/v2/sports/$](https://site.api.espn.com/apis/site/v2/sports/$){lg.path}/scoreboard?dates=${ymd}`);
+          const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard?dates=${ymd}`);
           if (!res.ok) return [];
           const data = await res.json();
           return (data.events || []).map(ev => {
@@ -972,11 +959,10 @@
       renderFeed();
       setupLivePolling();
 
-      // Auto-fetch live play-by-play & win probability for currently live games (top 8)
       const liveGames = allGames.filter(g => g.state === 'in').slice(0, 8);
       if (liveGames.length) {
         await Promise.all(liveGames.map(g => fetchGameSummary(g, true)));
-        renderFeed(); // Re-sorts boxes automatically after live shifts update
+        renderFeed();
       }
     }
 
@@ -991,7 +977,7 @@
     async function fetchGameSummary(game, silent = false) {
       if (!game.path) return null;
       try {
-        const res = await fetch(`[https://site.api.espn.com/apis/site/v2/sports/$](https://site.api.espn.com/apis/site/v2/sports/$){game.path}/summary?event=${game.id}`);
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${game.path}/summary?event=${game.id}`);
         if (!res.ok) return null;
         const data = await res.json();
 
@@ -1040,7 +1026,7 @@
         if (!news.length) {
           if (!leagueNewsCache[game.path]) {
             try {
-              const nr = await fetch(`[https://site.api.espn.com/apis/site/v2/sports/$](https://site.api.espn.com/apis/site/v2/sports/$){game.path}/news?limit=25`);
+              const nr = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${game.path}/news?limit=25`);
               if (nr.ok) {
                 const nd = await nr.json();
                 leagueNewsCache[game.path] = nd.articles || [];
@@ -1060,7 +1046,7 @@
         const formattedNews = news.map(a => ({
           headline: a.headline || 'ESPN Story',
           description: a.description || '',
-          url: a.links?.web?.href || a.links?.mobile?.href || '[https://www.espn.com](https://www.espn.com)',
+          url: a.links?.web?.href || a.links?.mobile?.href || 'https://www.espn.com',
           published: a.published ? new Date(a.published).toLocaleDateString() : ''
         }));
 
@@ -1135,9 +1121,7 @@
         );
       }
 
-      // Always sort highest live confidence first
       list = list.sort((a, b) => b.confidence - a.confidence);
-
       const feed = document.getElementById('games-feed');
       if (!list.length) {
         feed.innerHTML = '<div class="empty-state">No games match this filter. Try another date, tab, or use <strong>+ Scan</strong>.</div>';
@@ -1150,7 +1134,6 @@
         const hitsText = g.hitsCount >= 2 ? `${g.hitsCount} Hits` : `< 2 Refs`;
         const isSaved = savedIds.has(g.id);
         const showScore = g.state === 'in' || g.state === 'post';
-        const liveGlow = g.state === 'in' && g.liveShift > 0 ? 'live-up' : (g.state === 'in' && g.liveShift < 0 ? 'live-down' : '');
         const shiftHtml = g.state === 'in' && g.liveShift !== 0
           ? `<span class="shift-mini" style="color:${g.liveShift > 0 ? '#10b981' : '#ef4444'}">${g.liveShift > 0 ? '▲+' : '▼'}${g.liveShift}%</span>`
           : `<span class="conf-lbl">CONF</span>`;
@@ -1195,7 +1178,7 @@
                   </div>
                 </div>
               </div>
-              <div class="conf-box ${tier} ${liveGlow}">
+              <div class="conf-box ${tier}">
                 <span class="conf-num">${g.confidence}%</span>
                 ${shiftHtml}
               </div>
@@ -1261,8 +1244,8 @@
 
         body.innerHTML = `
           <div class="proof-item">
-            <strong>Live CONF: ${g.confidence}%</strong> (Pre-game: ${g.baseConf}% ${g.liveShift !== 0 ? (g.liveShift > 0 ? `+ ${g.liveShift}% live` : `${g.liveShift}% live`) : ''})
-            <div class="proof-sub">Gematria: ${g.gemScore}% (${g.entitiesCount} variables) · Odds/H2H: ${g.h2hScore}% · Health: ${g.rosScore}%</div>
+            <strong>Composite: ${g.confidence}%</strong> (${g.pickLabel})
+            <div class="proof-sub">Gematria: ${g.gemScore}% (${g.entitiesCount} variables scanned) · Odds/H2H: ${g.h2hScore}% · Health/Live: ${g.rosScore}%</div>
           </div>
           <div class="context-box">
             <h4>+ Add Halftime Show, Song Title, Refs or Coaches</h4>
@@ -1288,7 +1271,7 @@
             <div class="proof-sub">${g.away.short} Road: ${g.away.roadRecord || g.away.record || '—'} · ${g.home.short} Home: ${g.home.homeRecord || g.home.record || '—'}</div>
           </div>
           <div class="proof-item">
-            <strong>Live Shift: ${g.liveShift > 0 ? '+' : ''}${g.liveShift}%</strong> (Base ${g.baseConf}% → Live ${g.confidence}%)
+            <strong>Live Shift: ${g.liveShift > 0 ? '+' : ''}${g.liveShift}%</strong>
             <div class="proof-sub">${liveWpStr}</div>
           </div>
           ${sum?.officials?.length ? `<div class="proof-item"><strong>Officials (Auto-Decoded):</strong> ${sum.officials.join(', ')}</div>` : ''}
@@ -1325,7 +1308,7 @@
     async function shareSelectedGame() {
       const g = allGames.find(x => x.id === selectedGameId);
       if (!g) return;
-      const text = `AlignIQ Pick (${g.league}): ${g.pickLabel} — ${g.confidence}% Confidence (${g.hitsCount} Gematria Hits) | ${g.away.short} @ ${g.home.short}\n[https://levaun2024.github.io/AlignIQ/](https://levaun2024.github.io/AlignIQ/)`;
+      const text = `AlignIQ Pick (${g.league}): ${g.pickLabel} — ${g.confidence}% Confidence (${g.hitsCount} Gematria Hits) | ${g.away.short} @ ${g.home.short}\nhttps://levaun2024.github.io/AlignIQ/`;
       if (navigator.share) {
         try { await navigator.share({ title: 'AlignIQ Pick', text }); return; } catch {}
       }
