@@ -108,26 +108,31 @@ def fetch_completed_games_for_date(dt):
     for lg in LEAGUES:
         url = f"https://site.api.espn.com/apis/site/v2/sports/{lg['path']}/scoreboard?dates={ymd}"
         data = fetch_json(url)
-        if not data:
+        if not isinstance(data, dict):
             continue
 
-        for ev in data.get("events", []):
-            comp = (ev.get("competitions") or [{}])[0]
+        for ev in data.get("events") or []:
+            if not isinstance(ev, dict):
+                continue
+            comps = ev.get("competitions") or []
+            comp = comps[0] if (comps and isinstance(comps[0], dict)) else {}
             competitors = comp.get("competitors") or []
             if len(competitors) < 2:
                 continue
 
-            status_state = comp.get("status", {}).get("type", {}).get("state")
+            status_state = ((comp.get("status") or {}).get("type") or {}).get("state")
             if status_state != "post":
                 continue
 
-            home = next((c for c in competitors if c.get("homeAway") == "home"), competitors[0])
-            away = next((c for c in competitors if c.get("homeAway") == "away"), competitors[1])
+            home = next((c for c in competitors if isinstance(c, dict) and c.get("homeAway") == "home"), competitors[0])
+            away = next((c for c in competitors if isinstance(c, dict) and c.get("homeAway") == "away"), competitors[1])
+            if not isinstance(home, dict) or not isinstance(away, dict):
+                continue
 
             try:
                 h_score = int(float(home.get("score", 0)))
                 a_score = int(float(away.get("score", 0)))
-            except ValueError:
+            except (ValueError, TypeError):
                 continue
 
             if h_score == a_score:
@@ -136,16 +141,16 @@ def fetch_completed_games_for_date(dt):
             actual_winner = "home" if h_score > a_score else "away"
 
             def get_rec(team_obj, rtype):
-                for r in team_obj.get("records") or []:
-                    if r.get("type") == rtype:
-                        return r.get("summary", "")
                 recs = team_obj.get("records") or []
-                return recs[0].get("summary", "") if recs and rtype == "total" else ""
+                for r in recs:
+                    if isinstance(r, dict) and r.get("type") == rtype:
+                        return r.get("summary", "")
+                return recs[0].get("summary", "") if (recs and isinstance(recs[0], dict) and rtype == "total") else ""
 
             h_team = home.get("team") or {}
             a_team = away.get("team") or {}
-            h_name = h_team.get("displayName") or home.get("athlete", {}).get("displayName") or "Home"
-            a_name = a_team.get("displayName") or away.get("athlete", {}).get("displayName") or "Away"
+            h_name = h_team.get("displayName") or (home.get("athlete") or {}).get("displayName") or "Home"
+            a_name = a_team.get("displayName") or (away.get("athlete") or {}).get("displayName") or "Away"
             h_short = h_team.get("shortDisplayName") or h_team.get("name") or h_name
             a_short = a_team.get("shortDisplayName") or a_team.get("name") or a_name
 
@@ -153,25 +158,32 @@ def fetch_completed_games_for_date(dt):
             h_rec_post = parse_record(get_rec(home, "total"))
             a_rec_post = parse_record(get_rec(away, "total"))
             if h_rec_post:
-                h_pre = (max(0, h_rec_post[0] - (1 if actual_winner == "home" else 0)),
-                         max(0, h_rec_post[1] - (1 if actual_winner == "away" else 0)))
+                h_pre = (
+                    max(0, h_rec_post[0] - (1 if actual_winner == "home" else 0)),
+                    max(0, h_rec_post[1] - (1 if actual_winner == "away" else 0)),
+                )
             else:
                 h_pre = None
+
             if a_rec_post:
-                a_pre = (max(0, a_rec_post[0] - (1 if actual_winner == "away" else 0)),
-                         max(0, a_rec_post[1] - (1 if actual_winner == "home" else 0)))
+                a_pre = (
+                    max(0, a_rec_post[0] - (1 if actual_winner == "away" else 0)),
+                    max(0, a_rec_post[1] - (1 if actual_winner == "home" else 0)),
+                )
             else:
                 a_pre = None
 
-            venue = comp.get("venue", {}).get("fullName", "")
-            broadcast = (comp.get("broadcasts") or [{}])[0].get("names", [""])[0] if comp.get("broadcasts") else ""
+            venue = (comp.get("venue") or {}).get("fullName", "")
+            broadcasts = comp.get("broadcasts") or []
+            b_names = (broadcasts[0].get("names") or []) if (broadcasts and isinstance(broadcasts[0], dict)) else []
+            broadcast = b_names[0] if b_names else ""
 
             entities = list({
                 t.strip() for t in [
                     a_name, a_team.get("location", ""), a_team.get("name", ""),
                     h_name, h_team.get("location", ""), h_team.get("name", ""),
                     venue, broadcast
-                ] if t and t.strip()
+                ] if t and isinstance(t, str) and t.strip()
             })
 
             a_win_t = build_targets(a_pre[0] + 1, a_pre[1]) if a_pre else set()
@@ -195,12 +207,13 @@ def fetch_completed_games_for_date(dt):
             away_gem = progressive_score(away_hits)
             home_gem = progressive_score(home_hits)
 
-            # Odds & Splits
-            odds_obj = (comp.get("odds") or [{}])[0]
+            # Odds & Splits (null-safe)
+            odds_list = comp.get("odds") or []
+            odds_obj = odds_list[0] if (odds_list and isinstance(odds_list[0], dict)) else {}
             odds_fav = None
-            if odds_obj.get("homeTeamOdds", {}).get("favorite"):
+            if (odds_obj.get("homeTeamOdds") or {}).get("favorite"):
                 odds_fav = "home"
-            elif odds_obj.get("awayTeamOdds", {}).get("favorite"):
+            elif (odds_obj.get("awayTeamOdds") or {}).get("favorite"):
                 odds_fav = "away"
 
             a_pct = (a_pre[0] / (a_pre[0] + a_pre[1])) if (a_pre and (a_pre[0] + a_pre[1]) > 0) else 0.5
