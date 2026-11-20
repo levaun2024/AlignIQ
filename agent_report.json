@@ -1,20 +1,20 @@
 {
-  "last_updated": "2026-11-20 16:04 UTC",
-  "new_games_logged": 1104,
+  "last_updated": "2026-11-20 19:34 UTC",
+  "new_games_logged": 0,
   "rolling_window_days": 60,
   "total_games_graded": 1104,
   "overall_win_rate": 63.7,
   "overall_record": "703-401",
-  "retuned_this_run": true,
+  "retuned_this_run": false,
   "active_weights": {
     "gem": 42,
     "h2h": 21,
     "ros": 37
   },
   "ideal_target_weights": {
-    "gem": 0,
-    "h2h": 0,
-    "ros": 100
+    "gem": 42,
+    "h2h": 21,
+    "ros": 37
   },
   "confidence_tiers": {
     "60%+": {
