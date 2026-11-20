@@ -103,7 +103,6 @@
     }
     .pulse-dot.red { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
-    @keyframes liveBlink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.2; transform: scale(0.95); } }
 
     .auth-title { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 6px; }
     .auth-title span { color: var(--accent); }
@@ -316,853 +315,16 @@
     .team-score { font-size: 15px; font-weight: 900; color: var(--text-main); min-width: 22px; text-align: right; }
 
     .conf-box {
-      width: 70px; min-height: 62px; padding: 5px 4px; border-radius: 12px;
+      width: 66px; height: 56px; border-radius: 12px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       flex-shrink: 0; border: 1.5px solid var(--border-strong); background: rgba(8,13,23,0.55);
-      gap: 2px;
     }
     .conf-box.high { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
     .conf-box.mid { border-color: var(--amber); color: var(--amber); background: var(--amber-soft); }
     .conf-box.low { border-color: var(--text-dim); color: var(--text-muted); }
-    .conf-num { font-size: 18px; font-weight: 900; line-height: 1; }
-    .conf-lbl { font-size: 8.5px; font-weight: 700; letter-spacing: 0.4px; opacity: 0.85; line-height: 1; }
-    .shift-mini {
-      font-size: 10px; font-weight: 900; line-height: 1;
-      animation: liveBlink 1.1s ease-in-out infinite;
-    }
-
-    .card-sub-info {
-      display: flex; align-items: center; justify-content: space-between; gap: 6px;
-      font-size: 10px; color: var(--text-dim); margin-bottom: 7px;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-
-    .card-foot {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-      padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.05); font-size: 12px;
-    }
-    .pick-text { font-weight: 700; color: var(--amber); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .pick-text.high { color: var(--accent); }
-    .decode-link { font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
-    .meter-track { height: 4px; background: rgba(255,255,255,0.07); border-radius: 999px; margin-top: 7px; overflow: hidden; }
-    .meter-fill { height: 100%; border-radius: 999px; transition: width 0.35s ease; }
-
-    /* MODALS */
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(2, 6, 14, 0.8);
-      backdrop-filter: blur(5px); z-index: 60;
-      display: none; align-items: flex-end; justify-content: center;
-    }
-    .modal-backdrop.open { display: flex; }
-    .modal-sheet {
-      width: 100%; max-width: 480px; max-height: 90vh;
-      background: var(--bg-surface); border-top: 1px solid var(--border-strong);
-      border-radius: 20px 20px 0 0; padding: 16px 15px 28px; overflow-y: auto;
-    }
-    .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .modal-head h2 { font-size: 15px; font-weight: 800; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .modal-head-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .close-btn {
-      width: 30px; height: 30px; border-radius: 8px;
-      border: 1px solid var(--border); background: var(--bg-card);
-      color: var(--text-main); font-size: 16px; cursor: pointer;
-    }
-
-    .tabs-row {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;
-      background: var(--bg-app); padding: 4px; border-radius: 10px; margin-bottom: 12px;
-    }
-    .tab-btn {
-      padding: 8px 3px; border-radius: 7px; border: none;
-      background: transparent; color: var(--text-muted);
-      font-size: 11px; font-weight: 700; cursor: pointer;
-    }
-    .tab-btn.active { background: var(--bg-card); color: var(--text-main); }
-
-    .proof-item {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; font-size: 12px; line-height: 1.4;
-    }
-    .proof-item strong { color: var(--accent); }
-    .proof-item.warn strong { color: var(--amber); }
-    .proof-item.danger strong { color: #fca5a5; }
-    .proof-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-
-    .news-card {
-      display: block; text-decoration: none; color: var(--text-main);
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 11px 12px; margin-bottom: 8px;
-    }
-    .news-card:active { background: var(--bg-card-hover); }
-    .news-title { font-size: 13px; font-weight: 700; color: var(--blue); margin-bottom: 4px; line-height: 1.35; }
-    .news-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
-    .news-meta { font-size: 10px; color: var(--text-dim); margin-top: 5px; }
-
-    .context-box {
-      background: rgba(8, 13, 23, 0.7); border: 1px dashed var(--border-strong);
-      border-radius: 11px; padding: 11px; margin-bottom: 10px;
-    }
-    .context-box h4 { font-size: 12px; font-weight: 800; color: var(--purple); margin-bottom: 6px; }
-
-    .form-group { margin-bottom: 8px; }
-    .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 3px; }
-    .form-input {
-      width: 100%; padding: 9px 11px; border-radius: 8px;
-      border: 1px solid var(--border); background: var(--bg-app);
-      color: var(--text-main); font-size: 12px;
-    }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .primary-btn {
-      width: 100%; padding: 11px; border-radius: 9px; border: none;
-      background: var(--accent); color: #04130d; font-size: 13px; font-weight: 800; cursor: pointer; margin-top: 4px;
-    }
-
-    .empty-state { text-align: center; padding: 36px 16px; color: var(--text-muted); font-size: 13px; }
-  </style>
-</head>
-<body>
-  <div id="app">
-    <!-- SIGN-IN SCREEN -->
-    <section id="auth-screen">
-      <div class="glow-orb glow-1"></div>
-      <div class="glow-orb glow-2"></div>
-      <div class="auth-card">
-        <div class="logo-badge">
-          <svg width="34" height="34" viewBox="0 0 36 36" fill="none">
-            <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" stroke="#10b981" stroke-width="2.4" fill="rgba(16,185,129,0.1)"/>
-            <line x1="18" y1="18" x2="31" y2="10.5" stroke="#34d399" stroke-width="2"/>
-            <line x1="18" y1="18" x2="18" y2="33" stroke="#34d399" stroke-width="2"/>
-            <line x1="18" y1="18" x2="5" y2="10.5" stroke="#34d399" stroke-width="2"/>
-            <circle cx="18" cy="18" r="2.8" fill="#34d399"/>
-          </svg>
-        </div>
-        <div class="live-pill"><span class="pulse-dot"></span><span id="auth-date-badge">LIVE MULTI-SPORT ENGINE</span></div>
-        <h1 class="auth-title">Align<span>IQ</span></h1>
-        <p class="auth-sub">Full-Context Gematria, Live Play Impact &amp; Matchup Engine</p>
-
-        <div class="feature-row">
-          <div class="feature-box"><strong>Win &amp; Loss</strong><span>2+ Ref Sync</span></div>
-          <div class="feature-box"><strong>Live Shift</strong><span>Plays &amp; Fouls</span></div>
-          <div class="feature-box"><strong>Odds + News</strong><span>12 Leagues</span></div>
-        </div>
-
-        <button class="oauth-btn btn-google" onclick="signIn('Google')">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.6 2.8C6.1 7.2 8.8 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.2 14.8c-.2-.8-.4-1.8-.4-2.8s.2-2 .4-2.8L1.6 6.4C.6 8.1 0 10 0 12s.6 3.9 1.6 5.6l3.6-2.8z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.2 0-5.9-2.2-6.8-5.1l-3.6 2.8C3.5 19.8 7.4 23 12 23z"/></svg>
-          Continue with Google
-        </button>
-        <button class="oauth-btn btn-apple" onclick="signIn('Apple')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-          Continue with Apple
-        </button>
-        <p class="auth-note">For entertainment &amp; analytical modeling only. Auto-syncs live scores, plays, odds &amp; news.</p>
-      </div>
-    </section>
-
-    <!-- MAIN DASHBOARD -->
-    <section id="dashboard">
-      <div class="sticky-top">
-        <div class="top-bar">
-          <div class="brand-left">
-            <div class="brand-icon">
-              <svg width="18" height="18" viewBox="0 0 36 36" fill="none">
-                <polygon points="18,4 30,11 30,25 18,32 6,25 6,11" stroke="#04130d" stroke-width="3.2" fill="none"/>
-                <circle cx="18" cy="18" r="3.5" fill="#04130d"/>
-              </svg>
-            </div>
-            <div class="brand-name">Align<span>IQ</span></div>
-          </div>
-          <div class="top-actions">
-            <button class="icon-btn" onclick="toggleTuner()">⚙ Weights</button>
-            <button class="icon-btn accent" onclick="openScanModal()">+ Scan</button>
-            <button class="icon-btn" onclick="signOut()" title="Sign Out">↪</button>
-          </div>
-        </div>
-
-        <div class="date-bar">
-          <button class="date-nav-btn" onclick="shiftDate(-1)">‹</button>
-          <div class="date-center">
-            <button class="date-label-btn">
-              <span id="date-display">Today</span>
-              <input type="date" id="date-picker" class="date-input-hidden" onchange="onPickDate(this.value)" />
-            </button>
-            <button id="today-btn" class="today-chip" style="display:none;" onclick="goToday()">Today</button>
-          </div>
-          <button class="date-nav-btn" onclick="shiftDate(1)">›</button>
-          <button class="date-nav-btn" onclick="loadSlate(false)" title="Refresh">↻</button>
-        </div>
-
-        <div class="search-row">
-          <input id="search-input" class="search-input" type="search" placeholder="Search team, city, stadium, or TV network..." oninput="renderFeed()" />
-        </div>
-
-        <div class="mode-pills">
-          <button class="mode-pill active" id="mode-all" onclick="setFilterMode('all')">All Games</button>
-          <button class="mode-pill" id="mode-upcoming" onclick="setFilterMode('upcoming')">Upcoming</button>
-          <button class="mode-pill" id="mode-live" onclick="setFilterMode('live')">● Live Now</button>
-          <button class="mode-pill" id="mode-saved" onclick="setFilterMode('saved')">★ My Slip (<span id="saved-count">0</span>)</button>
-        </div>
-
-        <div class="date-math-bar" onclick="openDateMathModal()">
-          <span class="dm-title">DATE MATH</span>
-          <div id="dm-pills" style="display:flex;gap:5px;"></div>
-        </div>
-
-        <div class="sports-bar" id="sports-bar"></div>
-      </div>
-
-      <div id="tuner-panel">
-        <div class="tuner-header">
-          <h3>Algorithm Weight Tuner</h3>
-          <button class="icon-btn" style="height:26px;font-size:11px;" onclick="resetWeights()">Reset</button>
-        </div>
-        <div class="slider-row">
-          <div class="slider-label"><span>Gematria Convergence (2+ Refs)</span><strong id="w-gem-val">45%</strong></div>
-          <input type="range" id="w-gem" min="0" max="100" value="45" oninput="onWeightChange()" />
-        </div>
-        <div class="slider-row">
-          <div class="slider-label"><span>Vegas Odds, Splits &amp; H2H</span><strong id="w-h2h-val">25%</strong></div>
-          <input type="range" id="w-h2h" min="0" max="100" value="25" oninput="onWeightChange()" />
-        </div>
-        <div class="slider-row" style="margin-bottom:0;">
-          <div class="slider-label"><span>Health &amp; Live Play Momentum</span><strong id="w-ros-val">30%</strong></div>
-          <input type="range" id="w-ros" min="0" max="100" value="30" oninput="onWeightChange()" />
-        </div>
-      </div>
-
-      <div id="accuracy-banner">
-        <div class="acc-left">
-          <strong id="acc-record">Graded Results: 0–0</strong>
-          <span>Auto-graded against final scores on this slate</span>
-        </div>
-        <div class="acc-rate" id="acc-pct">0%</div>
-      </div>
-
-      <div class="feed-wrap">
-        <div class="feed-header">
-          <div>
-            <div class="feed-title">Popular Games · Highest Confidence</div>
-            <div class="feed-sub" id="feed-sub">Sorted highest live % first · 30s auto-sync</div>
-          </div>
-          <div class="status-badge"><span class="pulse-dot"></span><span id="live-count-badge">Loading...</span></div>
-        </div>
-        <div id="games-feed"></div>
-      </div>
-    </section>
-
-    <!-- GAME BREAKDOWN MODAL -->
-    <div class="modal-backdrop" id="detail-modal" onclick="closeModalOnBg(event, 'detail-modal')">
-      <div class="modal-sheet">
-        <div class="modal-head">
-          <h2 id="detail-title">Game Decode</h2>
-          <div class="modal-head-actions">
-            <button class="icon-btn accent" style="height:30px;font-size:11px;" onclick="shareSelectedGame()">Share</button>
-            <button class="close-btn" onclick="closeModal('detail-modal')">×</button>
-          </div>
-        </div>
-        <div class="tabs-row">
-          <button class="tab-btn active" onclick="switchTab('gem', this)">Gematria</button>
-          <button class="tab-btn" onclick="switchTab('live', this)">Live &amp; H2H</button>
-          <button class="tab-btn" onclick="switchTab('ros', this)">Health</button>
-          <button class="tab-btn" onclick="switchTab('news', this)">News</button>
-        </div>
-        <div id="detail-body"></div>
-      </div>
-    </div>
-
-    <!-- DATE MATH MODAL -->
-    <div class="modal-backdrop" id="dm-modal" onclick="closeModalOnBg(event, 'dm-modal')">
-      <div class="modal-sheet">
-        <div class="modal-head">
-          <h2>Date Numerology Breakdown</h2>
-          <button class="close-btn" onclick="closeModal('dm-modal')">×</button>
-        </div>
-        <div id="dm-modal-body"></div>
-      </div>
-    </div>
-
-    <!-- CUSTOM SCANNER MODAL -->
-    <div class="modal-backdrop" id="scan-modal" onclick="closeModalOnBg(event, 'scan-modal')">
-      <div class="modal-sheet">
-        <div class="modal-head">
-          <h2>Custom Full-Context Scanner</h2>
-          <button class="close-btn" onclick="closeModal('scan-modal')">×</button>
-        </div>
-        <div class="form-grid">
-          <div class="form-group"><label>Away Team</label><input id="sc-away" class="form-input" value="Detroit Lions" /></div>
-          <div class="form-group"><label>Away Record</label><input id="sc-away-rec" class="form-input" value="20-2" /></div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group"><label>Home Team</label><input id="sc-home" class="form-input" value="Kansas City Chiefs" /></div>
-          <div class="form-group"><label>Home Record</label><input id="sc-home-rec" class="form-input" value="18-4" /></div>
-        </div>
-        <div class="form-group"><label>Stadium / Venue</label><input id="sc-venue" class="form-input" value="Arrowhead Stadium" /></div>
-        <div class="form-grid">
-          <div class="form-group"><label>Halftime Performer</label><input id="sc-artist" class="form-input" placeholder="e.g. Kendrick Lamar" /></div>
-          <div class="form-group"><label>Halftime Song Title</label><input id="sc-song" class="form-input" placeholder="e.g. Not Like Us" /></div>
-        </div>
-        <div class="form-group"><label>Broadcast / Refs / Coaches</label><input id="sc-extra" class="form-input" placeholder="e.g. NBC, Andy Reid, Dan Campbell" /></div>
-        <button class="primary-btn" onclick="runCustomScan()">Run Full 4-Cipher Convergence Scan</button>
-        <div id="scan-result" style="margin-top:12px;"></div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    const LEAGUES = [
-      { key: 'NBA', path: 'basketball/nba' },
-      { key: 'NFL', path: 'football/nfl' },
-      { key: 'NHL', path: 'hockey/nhl' },
-      { key: 'MLB', path: 'baseball/mlb' },
-      { key: 'NCAAF', path: 'football/college-football' },
-      { key: 'NCAAB', path: 'basketball/mens-college-basketball' },
-      { key: 'NCAAW', path: 'basketball/womens-college-basketball' },
-      { key: 'WNBA', path: 'basketball/wnba' },
-      { key: 'UFC', path: 'mma/ufc' },
-      { key: 'EPL', path: 'soccer/eng.1' },
-      { key: 'MLS', path: 'soccer/usa.1' },
-      { key: 'UCL', path: 'soccer/uefa.champions' }
-    ];
-
-    let currentDate = new Date();
-    let allGames = [];
-    let summaryCache = {};
-    let leagueNewsCache = {};
-    let activeSport = 'All';
-    let filterMode = 'all';
-    let weights = { gem: 45, h2h: 25, ros: 30 };
-    let selectedGameId = null;
-    let currentTab = 'gem';
-    let livePollTimer = null;
-
-    let savedIds = new Set(JSON.parse(localStorage.getItem('aligniq_saved') || '[]'));
-    let customContextMap = JSON.parse(localStorage.getItem('aligniq_ctx') || '{}');
-
-    // --- 4 BASE CIPHERS ---
-    function reduceDigit(n) {
-      while (n > 9) n = String(n).split('').reduce((a, b) => a + Number(b), 0);
-      return n;
-    }
-
-    function calcCiphers(str) {
-      const clean = (str || '').toUpperCase().replace(/[^A-Z]/g, '');
-      let ord = 0, red = 0, rev = 0, rred = 0;
-      for (let i = 0; i < clean.length; i++) {
-        const v = clean.charCodeAt(i) - 64;
-        const rv = 27 - v;
-        ord += v;
-        red += reduceDigit(v);
-        rev += rv;
-        rred += reduceDigit(rv);
-      }
-      return { ord, red, rev, rred };
-    }
-
-    function getDateMath(d) {
-      const m = d.getMonth() + 1;
-      const day = d.getDate();
-      const y = d.getFullYear();
-      const yTop = Math.floor(y / 100);
-      const yBot = y % 100;
-      const full = m + day + yTop + yBot;
-      const short = m + day + yBot;
-      const digits = `${m}${day}${y}`.split('').reduce((a, b) => a + Number(b), 0);
-      const mixed = m + day + String(y).split('').reduce((a, b) => a + Number(b), 0);
-      const start = new Date(y, 0, 0);
-      const doy = Math.floor((d - start) / 86400000);
-      const isLeap = (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
-      const left = (isLeap ? 366 : 365) - doy;
-      return { full, short, digits, mixed, doy, left, nums: [full, short, digits, mixed, doy, left] };
-    }
-
-    function parseRecord(recStr) {
-      const m = String(recStr || '').match(/(\d+)\s*-\s*(\d+)/);
-      return m ? { w: parseInt(m[1], 10), l: parseInt(m[2], 10) } : null;
-    }
-
-    function buildRecordTargets(w, l) {
-      const t = new Set();
-      const concat = Number(`${w}${l}`);
-      const noZero = Number(`${w}${l}`.replace(/0/g, '') || 0);
-      if (concat > 0) t.add(concat);
-      if (noZero > 0 && noZero !== concat) t.add(noZero);
-      if (w > 0) t.add(w);
-      if (l > 0) t.add(l);
-      return Array.from(t);
-    }
-
-    function progressiveScore(hits) {
-      if (hits < 2) return 0;
-      const tiers = [0, 0, 42, 62, 76, 88, 95, 100];
-      return tiers[Math.min(hits, tiers.length - 1)];
-    }
-
-    function buildEntities(game, sumData, userCtx) {
-      const list = [];
-      const add = (label, text) => {
-        const t = (text || '').trim();
-        if (t && t !== 'TBD Venue' && !list.some(x => x.text.toLowerCase() === t.toLowerCase())) {
-          list.push({ label, text: t });
-        }
-      };
-      add('Away Full', game.away.name);
-      add('Away City', game.away.location);
-      add('Away Mascot', game.away.mascot);
-      add('Home Full', game.home.name);
-      add('Home City', game.home.location);
-      add('Home Mascot', game.home.mascot);
-      add('Stadium', game.venue);
-      add('Venue City', game.venueCity);
-      add('Broadcast', game.broadcast);
-      add('Event Note', game.eventNote);
-      if (sumData?.officials?.length) {
-        sumData.officials.forEach((ref, idx) => add(`Official #${idx + 1}`, ref)); } if (userCtx) { add('Halftime Performer', userCtx.artist); add('Halftime Song', userCtx.song); add('Head Coaches / Extra', userCtx.extra); } return list; }  function evaluateGame(game, dm) { const sumData = summaryCache[game.id] \vert{}\vert{} null; const userCtx = customContextMap[game.id] \vert{}\vert{} game.customCtx \vert{}\vert{} null; const entities = buildEntities(game, sumData, userCtx);  const awayRec = parseRecord(game.away.record); const homeRec = parseRecord(game.home.record);  const awayWinTargets = awayRec ? buildRecordTargets(awayRec.w + 1, awayRec.l) : []; const awayLossTargets = awayRec ? buildRecordTargets(awayRec.w, awayRec.l + 1) : []; const homeWinTargets = homeRec ? buildRecordTargets(homeRec.w + 1, homeRec.l) : []; const homeLossTargets = homeRec ? buildRecordTargets(homeRec.w, homeRec.l + 1) : [];  function scanOutcome(winTargets, oppLossTargets, winLabel, oppLossLabel, teamShort) { const hits = []; entities.forEach(ent => { const c = calcCiphers(ent.text); const map = [ ['Ordinal', c.ord], ['Full Red', c.red], ['Reverse', c.rev], ['Rev Red', c.rred] ]; map.forEach(([cName, val]) => { if (val <= 0) return; if (winTargets.includes(val)) { hits.push(`${ent.label} (${ent.text}) =${val} [${cName}] →${winLabel}`);
-            } else if (oppLossTargets.includes(val)) {
-              hits.push(`${ent.label} (${ent.text}) = ${val} [${cName}] → ${oppLossLabel}`); } }); }); [teamShort].filter(Boolean).forEach(nm => { const tc = calcCiphers(nm); [['Ordinal', tc.ord], ['Full Red', tc.red], ['Reverse', tc.rev], ['Rev Red', tc.rred]].forEach(([cn, v]) => { if (dm.nums.includes(v)) { hits.push(`${nm} = ${v} [${cn}] → matches Date Numerology (${v})`);
-            }
-          });
-        });
-        return hits;
-      }
-
-      const awayWinLabel = awayRec ? `${game.away.short} Win (${awayRec.w + 1}-${awayRec.l})` : `${game.away.short} Win`;
-      const homeLossLabel = homeRec ? `${game.home.short} Loss (${homeRec.w}-${homeRec.l + 1})` : `${game.home.short} Loss`;
-      const homeWinLabel = homeRec ? `${game.home.short} Win (${homeRec.w + 1}-${homeRec.l})` : `${game.home.short} Win`;
-      const awayLossLabel = awayRec ? `${game.away.short} Loss (${awayRec.w}-${awayRec.l + 1})` : `${game.away.short} Loss`;
-
-      const awayHits = scanOutcome(awayWinTargets, homeLossTargets, awayWinLabel, homeLossLabel, game.away.short);
-      const homeHits = scanOutcome(homeWinTargets, awayLossTargets, homeWinLabel, awayLossLabel, game.home.short);
-
-      const awayGem = progressiveScore(awayHits.length);
-      const homeGem = progressiveScore(homeHits.length);
-
-      // Pillar 2: Vegas Odds + Home/Away Splits
-      const aPct = awayRec && (awayRec.w + awayRec.l) > 0 ? awayRec.w / (awayRec.w + awayRec.l) : 0.5;
-      const hPct = homeRec && (homeRec.w + homeRec.l) > 0 ? homeRec.w / (homeRec.w + homeRec.l) : 0.5;
-      const aSplit = parseRecord(game.away.roadRecord);
-      const hSplit = parseRecord(game.home.homeRecord);
-      const aSplitPct = aSplit && (aSplit.w + aSplit.l) > 0 ? aSplit.w / (aSplit.w + aSplit.l) : aPct;
-      const hSplitPct = hSplit && (hSplit.w + hSplit.l) > 0 ? hSplit.w / (hSplit.w + hSplit.l) : hPct;
-
-      let vegasHomeBoost = 0;
-      if (game.oddsFav === 'home') vegasHomeBoost = 10;
-      else if (game.oddsFav === 'away') vegasHomeBoost = -10;
-
-      let pickSide = homeGem > awayGem ? 'home' : awayGem > homeGem ? 'away' : ((hSplitPct + (vegasHomeBoost / 100)) >= aSplitPct ? 'home' : 'away');
-      let primaryHits = pickSide === 'home' ? homeHits : awayHits;
-      let oppHits = pickSide === 'home' ? awayHits : homeHits;
-      let gemScore = Math.max(awayGem, homeGem);
-
-      if (awayHits.length >= 2 && homeHits.length >= 2) {
-        gemScore = Math.max(35, gemScore - Math.min(18, oppHits.length * 4));
-      }
-
-      const splitDiff = pickSide === 'home' ? (hSplitPct - aSplitPct) : (aSplitPct - hSplitPct);
-      const vegasBoost = pickSide === 'home' ? vegasHomeBoost : -vegasHomeBoost;
-      const h2hScore = Math.min(95, Math.max(15, Math.round(50 + splitDiff * 38 + vegasBoost)));
-
-      // Pillar 3: Injuries (Base Roster Health)
-      let injuryPenalty = 0;
-      let oppInjuryBonus = 0;
-      if (sumData?.injuries?.length) {
-        sumData.injuries.forEach(inj => {
-          const pts = /out/i.test(inj.status) ? 7 : /doubtful/i.test(inj.status) ? 5 : /questionable/i.test(inj.status) ? 2 : 0;
-          const isPickedTeam = inj.teamSide === pickSide;
-          if (isPickedTeam) injuryPenalty += pts;
-          else oppInjuryBonus += pts;
-        });
-      }
-
-      const rosScore = Math.min(98, Math.max(10, Math.round(58 - injuryPenalty + oppInjuryBonus)));
-
-      // Base Pre-Game Composite Confidence
-      const totalW = (weights.gem + weights.h2h + weights.ros) || 1;
-      const baseConf = Math.min(99, Math.max(8, Math.round(
-        (gemScore * weights.gem + h2hScore * weights.h2h + rosScore * weights.ros) / totalW
-      )));
-
-      // Live In-Game Momentum Shift Applied Directly to CONF %
-      let liveShift = 0;
-      const liveEvents = sumData?.liveEvents || [];
-      if (game.state === 'in') {
-        const aScore = Number(game.away.score || 0);
-        const hScore = Number(game.home.score || 0);
-        const margin = pickSide === 'home' ? (hScore - aScore) : (aScore - hScore);
-        if (sumData?.liveHomeWP != null) {
-          const pickedWP = pickSide === 'home' ? sumData.liveHomeWP : (1 - sumData.liveHomeWP);
-          liveShift = Math.round((pickedWP - 0.5) * 44);
-        } else {
-          liveShift = Math.max(-22, Math.min(22, Math.round(margin * 2.2)));
-        }
-        liveEvents.forEach(ev => { liveShift += ev.impact; });
-        liveShift = Math.max(-28, Math.min(28, liveShift));
-      }
-
-      const conf = game.state === 'in'
-        ? Math.min(99, Math.max(1, baseConf + liveShift))
-        : baseConf;
-      const actualShift = game.state === 'in' ? (conf - baseConf) : 0;
-
-      const pickedTeam = pickSide === 'home' ? game.home : game.away;
-      const pRec = parseRecord(pickedTeam.record);
-      const nextRecStr = pRec && game.state !== 'post' ? ` → ${pRec.w + 1}-${pRec.l}` : '';
-
-      let grade = null;
-      if (game.state === 'post') {
-        const aS = Number(game.away.score || 0);
-        const hS = Number(game.home.score || 0);
-        if (aS !== hS) {
-          const actualWinner = hS > aS ? 'home' : 'away';
-          grade = actualWinner === pickSide ? 'WON' : 'LOST';
-        }
-      }
-
-      return {
-        ...game,
-        pickSide,
-        pickedTeam,
-        pickLabel: `${pickedTeam.short \vert{}\vert{} pickedTeam.name} Win${nextRecStrHere is the updated **`index.html`** with all three live-confidence upgrades built in:
-
-* **Direct Live Confidence Updates:** Live score margins, ESPN win probability, fouls, turnovers, and injuries now adjust the **main `CONF %` number directly** (so a `▲+4%` shift actually moves `61%` up by 4 points in real time instead of only nudging one sub-pillar)[span_2](start_span)[span_2](end_span).
-* **Blinking Arrow Indicator:** The **`▲+X%`** (green) and **`▼-X%`** (red) shift badge now blinks continuously on live games, paired with a subtle live glow on the confidence box[span_3](start_span)[span_3](end_span).
-* **Auto-Reorganizing Feed:** Every 30-second live sync recalculates all active games and **automatically re-sorts the cards** so rising live games climb to the top and dropping games move down.
-
-Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select all, paste, and tap **Commit changes** (then bump `'aligniq-v4'` to **`'aligniq-v5'`** in `sw.js` so your phone pulls it right away):
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>AlignIQ — Hybrid Gematria & Live Matchup Engine</title>
-  <meta name="theme-color" content="#080d17" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="AlignIQ" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon.png" />
-  <link rel="icon" type="image/png" href="icon.png" />
-  <style>
-    :root {
-      --bg-outer: #04070d;
-      --bg-app: #080d17;
-      --bg-surface: #0f1726;
-      --bg-card: #131d31;
-      --bg-card-hover: #18253e;
-      --border: #1e2d47;
-      --border-strong: #2b3f63;
-      --text-main: #f1f5f9;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --accent: #10b981;
-      --accent-soft: rgba(16, 185, 129, 0.14);
-      --amber: #f59e0b;
-      --amber-soft: rgba(245, 158, 11, 0.14);
-      --blue: #38bdf8;
-      --blue-soft: rgba(56, 189, 248, 0.14);
-      --danger: #ef4444;
-      --danger-soft: rgba(239, 68, 68, 0.14);
-      --purple: #a78bfa;
-      --radius: 14px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      background: var(--bg-outer);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      overflow-x: hidden;
-    }
-
-    #app {
-      width: 100%;
-      max-width: 480px;
-      min-height: 100vh;
-      background: var(--bg-app);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      border-left: 1px solid rgba(255,255,255,0.03);
-      border-right: 1px solid rgba(255,255,255,0.03);
-    }
-
-    /* SIGN-IN SCREEN */
-    #auth-screen {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 28px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-    .glow-orb { position: absolute; width: 280px; height: 280px; border-radius: 50%; filter: blur(80px); opacity: 0.22; pointer-events: none; }
-    .glow-1 { top: -80px; left: -60px; background: #10b981; }
-    .glow-2 { bottom: -80px; right: -60px; background: #38bdf8; }
-
-    .auth-card {
-      position: relative; z-index: 2;
-      background: rgba(15, 23, 38, 0.92);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 28px 22px;
-      text-align: center;
-      backdrop-filter: blur(12px);
-    }
-    .logo-badge {
-      width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 18px;
-      background: linear-gradient(135deg, #0f1726, #132a2e);
-      border: 1.5px solid rgba(16, 185, 129, 0.5);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 0 28px rgba(16, 185, 129, 0.22);
-    }
-    .live-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
-      color: var(--accent); background: var(--accent-soft);
-      border: 1px solid rgba(16, 185, 129, 0.28);
-      padding: 5px 12px; border-radius: 999px; margin-bottom: 14px;
-    }
-    .pulse-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--accent); box-shadow: 0 0 8px var(--accent);
-      animation: pulse 1.8s infinite; flex-shrink: 0;
-    }
-    .pulse-dot.red { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
-    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
-    @keyframes blinkShift { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-
-    .auth-title { font-size: 30px; font-weight: 800; letter-spacing: -0.6px; margin-bottom: 6px; }
-    .auth-title span { color: var(--accent); }
-    .auth-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
-    .feature-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 22px; }
-    .feature-box { background: rgba(8, 13, 23, 0.7); border: 1px solid var(--border); border-radius: 12px; padding: 10px 6px; }
-    .feature-box strong { display: block; font-size: 12px; color: var(--text-main); margin-bottom: 2px; }
-    .feature-box span { font-size: 10px; color: var(--text-dim); }
-
-    .oauth-btn {
-      width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
-      padding: 13px 16px; border-radius: 12px; font-size: 14px; font-weight: 700;
-      cursor: pointer; border: none; margin-bottom: 10px;
-    }
-    .oauth-btn:active { transform: scale(0.98); }
-    .btn-google { background: #ffffff; color: #0f172a; }
-    .btn-apple { background: #000000; color: #ffffff; border: 1px solid #334155; }
-    .auth-note { font-size: 11px; color: var(--text-dim); margin-top: 10px; line-height: 1.4; }
-
-    /* DASHBOARD */
-    #dashboard { display: none; flex-direction: column; flex: 1; padding-bottom: 32px; }
-
-    .sticky-top {
-      position: sticky; top: 0; z-index: 30;
-      background: rgba(8, 13, 23, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 11px 14px 10px;
-    }
-
-    .top-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
-    .brand-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
-    .brand-icon {
-      width: 32px; height: 32px; border-radius: 9px;
-      background: linear-gradient(135deg, #10b981, #059669);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .brand-name { font-size: 18px; font-weight: 800; letter-spacing: -0.4px; white-space: nowrap; }
-    .brand-name span { color: var(--accent); }
-    .top-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-
-    .icon-btn {
-      height: 33px; padding: 0 10px; border-radius: 9px;
-      border: 1px solid var(--border); background: var(--bg-surface);
-      color: var(--text-main); font-size: 12px; font-weight: 700;
-      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-      cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    }
-    .icon-btn.accent { background: var(--accent-soft); border-color: rgba(16, 185, 129, 0.35); color: var(--accent); }
-
-    /* Date Bar */
-    .date-bar {
-      display: flex; align-items: center; justify-content: space-between; gap: 6px;
-      background: var(--bg-surface); border: 1px solid var(--border);
-      border-radius: 11px; padding: 4px 6px; margin-bottom: 8px;
-    }
-    .date-nav-btn {
-      width: 30px; height: 30px; border-radius: 8px;
-      border: 1px solid var(--border); background: var(--bg-card);
-      color: var(--text-main); font-size: 14px; font-weight: 700;
-      cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .date-center { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .date-label-btn {
-      background: transparent; border: none; color: var(--text-main);
-      font-size: 13px; font-weight: 700; cursor: pointer;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: relative;
-    }
-    .date-input-hidden { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
-    .today-chip {
-      font-size: 10px; font-weight: 700; padding: 3px 7px; border-radius: 6px;
-      background: var(--accent-soft); color: var(--accent);
-      border: 1px solid rgba(16,185,129,0.3); cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    }
-
-    /* Search & Quick Filter Row */
-    .search-row { display: flex; gap: 6px; margin-bottom: 8px; }
-    .search-input {
-      flex: 1; min-width: 0; height: 34px; padding: 0 11px;
-      border-radius: 9px; border: 1px solid var(--border);
-      background: var(--bg-surface); color: var(--text-main); font-size: 12px;
-    }
-    .search-input::placeholder { color: var(--text-dim); }
-    .mode-pills { display: flex; gap: 5px; margin-bottom: 8px; overflow-x: auto; scrollbar-width: none; }
-    .mode-pills::-webkit-scrollbar { display: none; }
-    .mode-pill {
-      padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--bg-surface); color: var(--text-muted);
-      font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    }
-    .mode-pill.active { background: var(--blue-soft); border-color: rgba(56,189,248,0.4); color: var(--blue); }
-
-    /* Date Math Strip */
-    .date-math-bar {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--bg-surface); border: 1px solid var(--border);
-      border-radius: 10px; padding: 5px 10px; margin-bottom: 8px;
-      cursor: pointer; overflow-x: auto; scrollbar-width: none;
-    }
-    .date-math-bar::-webkit-scrollbar { display: none; }
-    .dm-title { font-size: 10px; font-weight: 800; letter-spacing: 0.5px; color: var(--blue); white-space: nowrap; flex-shrink: 0; }
-    .dm-pill { font-size: 11px; font-weight: 700; color: var(--text-main); background: var(--bg-card); border: 1px solid var(--border); padding: 2px 7px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; }
-
-    /* Sports Crossbar */
-    .sports-bar { display: flex; align-items: center; gap: 7px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
-    .sports-bar::-webkit-scrollbar { display: none; }
-    .sport-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 11px; border-radius: 999px;
-      background: var(--bg-surface); border: 1px solid var(--border);
-      color: var(--text-muted); font-size: 12px; font-weight: 700;
-      cursor: pointer; white-space: nowrap; flex-shrink: 0;
-    }
-    .sport-pill.active { background: var(--accent); color: #04130d; border-color: var(--accent); }
-    .sport-count { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: rgba(255,255,255,0.1); }
-    .sport-pill.active .sport-count { background: rgba(4,19,13,0.2); color: #04130d; }
-
-    /* Weight Tuner */
-    #tuner-panel {
-      display: none; margin: 10px 14px 0;
-      background: var(--bg-surface); border: 1px solid var(--border-strong);
-      border-radius: var(--radius); padding: 14px;
-    }
-    #tuner-panel.open { display: block; }
-    .tuner-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .tuner-header h3 { font-size: 13px; font-weight: 800; }
-    .slider-row { margin-bottom: 10px; }
-    .slider-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
-    .slider-label strong { color: var(--accent); }
-    input[type="range"] { width: 100%; accent-color: var(--accent); }
-
-    /* Accuracy Banner */
-    #accuracy-banner {
-      display: none; margin: 10px 14px 0;
-      background: linear-gradient(135deg, rgba(16,185,129,0.14), rgba(56,189,248,0.1));
-      border: 1px solid rgba(16,185,129,0.35);
-      border-radius: 12px; padding: 10px 13px;
-      align-items: center; justify-content: space-between; gap: 10px;
-    }
-    #accuracy-banner.show { display: flex; }
-    .acc-left strong { display: block; font-size: 13px; color: var(--accent); }
-    .acc-left span { font-size: 11px; color: var(--text-muted); }
-    .acc-rate { font-size: 18px; font-weight: 900; color: var(--text-main); white-space: nowrap; }
-
-    /* Feed */
-    .feed-wrap { padding: 12px 14px; flex: 1; }
-    .feed-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 11px; }
-    .feed-title { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
-    .feed-sub { font-size: 11px; color: var(--text-muted); }
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      font-size: 11px; font-weight: 700; color: var(--accent);
-      background: var(--accent-soft); border: 1px solid rgba(16,185,129,0.28);
-      padding: 4px 9px; border-radius: 999px; white-space: nowrap; flex-shrink: 0;
-    }
-
-    /* Game Cards */
-    .game-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 13px; margin-bottom: 11px; cursor: pointer;
-    }
-    .game-card.is-live { border-color: rgba(239, 68, 68, 0.45); }
-    .game-card:active { background: var(--bg-card-hover); }
-
-    .card-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 9px; }
-    .card-meta { display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1; }
-    .league-tag {
-      font-size: 10px; font-weight: 800; color: #a5b4fc;
-      background: rgba(99, 102, 241, 0.16); border: 1px solid rgba(99, 102, 241, 0.3);
-      padding: 2px 7px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
-    }
-    .live-tag {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 10px; font-weight: 800; color: #fca5a5;
-      background: var(--danger-soft); border: 1px solid rgba(239,68,68,0.35);
-      padding: 2px 7px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
-    }
-    .grade-tag {
-      font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 6px; white-space: nowrap; flex-shrink: 0;
-    }
-    .grade-tag.won { background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(16,185,129,0.4); }
-    .grade-tag.lost { background: var(--danger-soft); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); }
-
-    .meta-text { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-top-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
-    .hits-tag {
-      font-size: 10px; font-weight: 800; color: var(--blue);
-      background: var(--blue-soft); border: 1px solid rgba(56, 189, 248, 0.28);
-      padding: 3px 7px; border-radius: 999px; white-space: nowrap;
-    }
-    .hits-tag.muted { color: var(--text-dim); background: rgba(100,116,139,0.12); border-color: rgba(100,116,139,0.25); }
-    .star-btn {
-      width: 26px; height: 26px; border-radius: 7px;
-      border: 1px solid var(--border); background: var(--bg-surface);
-      color: var(--text-dim); font-size: 14px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .star-btn.saved { color: var(--amber); border-color: rgba(245,158,11,0.45); background: var(--amber-soft); }
-
-    .card-mid { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
-    .teams-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
-    .team-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
-    .team-left { display: flex; align-items: center; gap: 7px; min-width: 0; flex: 1; }
-    .pick-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
-    .pick-dot.active { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-    .team-logo { width: 20px; height: 20px; object-fit: contain; flex-shrink: 0; }
-    .team-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .team-right { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
-    .team-rec { font-size: 11px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
-    .team-score { font-size: 15px; font-weight: 900; color: var(--text-main); min-width: 22px; text-align: right; }
-
-    .conf-box {
-      width: 68px; height: 58px; border-radius: 12px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      flex-shrink: 0; border: 1.5px solid var(--border-strong); background: rgba(8,13,23,0.55);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .conf-box.high { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
-    .conf-box.mid { border-color: var(--amber); color: var(--amber); background: var(--amber-soft); }
-    .conf-box.low { border-color: var(--text-dim); color: var(--text-muted); }
-    .conf-box.live-up { box-shadow: 0 0 12px rgba(16, 185, 129, 0.35); }
-    .conf-box.live-down { box-shadow: 0 0 12px rgba(239, 68, 68, 0.35); }
     .conf-num { font-size: 18px; font-weight: 900; line-height: 1; }
     .conf-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.4px; margin-top: 2px; opacity: 0.9; }
-    .shift-mini {
-      font-size: 10px; font-weight: 800; margin-top: 2px;
-      animation: blinkShift 1.1s ease-in-out infinite;
-    }
+    .shift-mini { font-size: 9px; font-weight: 800; margin-top: 1px; }
 
     .card-sub-info {
       display: flex; align-items: center; justify-content: space-between; gap: 6px;
@@ -1178,7 +340,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
     .pick-text.high { color: var(--accent); }
     .decode-link { font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
     .meter-track { height: 4px; background: rgba(255,255,255,0.07); border-radius: 999px; margin-top: 7px; overflow: hidden; }
-    .meter-fill { height: 100%; border-radius: 999px; transition: width 0.35s ease; }
+    .meter-fill { height: 100%; border-radius: 999px; }
 
     /* MODALS */
     .modal-backdrop {
@@ -1374,7 +536,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
         <div class="feed-header">
           <div>
             <div class="feed-title">Popular Games · Highest Confidence</div>
-            <div class="feed-sub" id="feed-sub">Auto-sorted live by CONF % · 30s sync</div>
+            <div class="feed-sub" id="feed-sub">Sorted highest % first · Live 30s auto-sync</div>
           </div>
           <div class="status-badge"><span class="pulse-dot"></span><span id="live-count-badge">Loading...</span></div>
         </div>
@@ -1537,19 +699,23 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
           list.push({ label, text: t });
         }
       };
+      // Split city, mascot, and full names for both teams
       add('Away Full', game.away.name);
       add('Away City', game.away.location);
       add('Away Mascot', game.away.mascot);
       add('Home Full', game.home.name);
       add('Home City', game.home.location);
       add('Home Mascot', game.home.mascot);
+      // Venue, city, state, broadcast, event note
       add('Stadium', game.venue);
       add('Venue City', game.venueCity);
       add('Broadcast', game.broadcast);
       add('Event Note', game.eventNote);
+      // Officials from ESPN summary
       if (sumData?.officials?.length) {
         sumData.officials.forEach((ref, idx) => add(`Official #${idx + 1}`, ref));
       }
+      // User-entered halftime show, song title, coaches, extra context
       if (userCtx) {
         add('Halftime Performer', userCtx.artist);
         add('Halftime Song', userCtx.song);
@@ -1566,6 +732,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
       const awayRec = parseRecord(game.away.record);
       const homeRec = parseRecord(game.home.record);
 
+      // Win targets (21-2) AND Loss targets (20-3)
       const awayWinTargets = awayRec ? buildRecordTargets(awayRec.w + 1, awayRec.l) : [];
       const awayLossTargets = awayRec ? buildRecordTargets(awayRec.w, awayRec.l + 1) : [];
       const homeWinTargets = homeRec ? buildRecordTargets(homeRec.w + 1, homeRec.l) : [];
@@ -1590,6 +757,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
             }
           });
         });
+        // Date numerology hits on team mascot/full name
         [teamShort].filter(Boolean).forEach(nm => {
           const tc = calcCiphers(nm);
           [['Ordinal', tc.ord], ['Full Red', tc.red], ['Reverse', tc.rev], ['Rev Red', tc.rred]].forEach(([cn, v]) => {
@@ -1624,6 +792,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
       if (game.oddsFav === 'home') vegasHomeBoost = 10;
       else if (game.oddsFav === 'away') vegasHomeBoost = -10;
 
+      // Determine Pick Side
       let pickSide = homeGem > awayGem ? 'home' : awayGem > homeGem ? 'away' : ((hSplitPct + (vegasHomeBoost / 100)) >= aSplitPct ? 'home' : 'away');
       let primaryHits = pickSide === 'home' ? homeHits : awayHits;
       let oppHits = pickSide === 'home' ? awayHits : homeHits;
@@ -1637,25 +806,19 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
       const vegasBoost = pickSide === 'home' ? vegasHomeBoost : -vegasHomeBoost;
       const h2hScore = Math.min(95, Math.max(15, Math.round(50 + splitDiff * 38 + vegasBoost)));
 
-      // Pillar 3: Injuries
+      // Pillar 3: Injuries + Live In-Game Momentum Shift
       let injuryPenalty = 0;
       let oppInjuryBonus = 0;
       if (sumData?.injuries?.length) {
         sumData.injuries.forEach(inj => {
           const pts = /out/i.test(inj.status) ? 7 : /doubtful/i.test(inj.status) ? 5 : /questionable/i.test(inj.status) ? 2 : 0;
-          if (inj.teamSide === pickSide) injuryPenalty += pts;
+          const isPickedTeam = inj.teamSide === pickSide;
+          if (isPickedTeam) injuryPenalty += pts;
           else oppInjuryBonus += pts;
         });
       }
-      const rosScore = Math.min(98, Math.max(10, Math.round(58 - injuryPenalty + oppInjuryBonus)));
 
-      // Pre-game Base Confidence
-      const totalW = (weights.gem + weights.h2h + weights.ros) || 1;
-      const baseConf = Math.min(99, Math.max(8, Math.round(
-        (gemScore * weights.gem + h2hScore * weights.h2h + rosScore * weights.ros) / totalW
-      )));
-
-      // Live In-Game Shift applied DIRECTLY to main CONF %
+      // Live In-Game Events & Win Probability Shift
       let liveShift = 0;
       const liveEvents = sumData?.liveEvents || [];
       if (game.state === 'in') {
@@ -1664,15 +827,21 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
         const margin = pickSide === 'home' ? (hScore - aScore) : (aScore - hScore);
         if (sumData?.liveHomeWP != null) {
           const pickedWP = pickSide === 'home' ? sumData.liveHomeWP : (1 - sumData.liveHomeWP);
-          liveShift = Math.round((pickedWP - 0.5) * 36);
+          liveShift = Math.round((pickedWP - 0.5) * 44);
         } else {
-          liveShift = Math.max(-20, Math.min(20, Math.round(margin * 2.5)));
+          liveShift = Math.max(-22, Math.min(22, Math.round(margin * 2.2)));
         }
+        // Factor in recent fouls, turnovers, penalties, cards, injuries from play-by-play
         liveEvents.forEach(ev => { liveShift += ev.impact; });
-        liveShift = Math.max(-25, Math.min(25, liveShift));
+        liveShift = Math.max(-28, Math.min(28, liveShift));
       }
 
-      const conf = Math.min(99, Math.max(5, baseConf + liveShift));
+      const rosScore = Math.min(98, Math.max(10, Math.round(58 - injuryPenalty + oppInjuryBonus + liveShift)));
+
+      const totalW = (weights.gem + weights.h2h + weights.ros) || 1;
+      const conf = Math.min(99, Math.max(8, Math.round(
+        (gemScore * weights.gem + h2hScore * weights.h2h + rosScore * weights.ros) / totalW
+      )));
 
       const pickedTeam = pickSide === 'home' ? game.home : game.away;
       const pRec = parseRecord(pickedTeam.record);
@@ -1694,7 +863,6 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
         pickSide,
         pickedTeam,
         pickLabel: `${pickedTeam.short || pickedTeam.name} Win${nextRecStr}`,
-        baseConf,
         confidence: conf,
         hitsCount: primaryHits.length,
         primaryHits,
@@ -1736,7 +904,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
 
       const results = await Promise.all(LEAGUES.map(async (lg) => {
         try {
-          const res = await fetch(`[https://site.api.espn.com/apis/site/v2/sports/$](https://site.api.espn.com/apis/site/v2/sports/$){lg.path}/scoreboard?dates=${ymd}`);
+          const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard?dates=${ymd}`);
           if (!res.ok) return [];
           const data = await res.json();
           return (data.events || []).map(ev => {
@@ -1807,7 +975,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
       const liveGames = allGames.filter(g => g.state === 'in').slice(0, 8);
       if (liveGames.length) {
         await Promise.all(liveGames.map(g => fetchGameSummary(g, true)));
-        renderFeed(); // Re-sorts boxes automatically after live shifts update
+        renderFeed();
       }
     }
 
@@ -1822,12 +990,14 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
     async function fetchGameSummary(game, silent = false) {
       if (!game.path) return null;
       try {
-        const res = await fetch(`[https://site.api.espn.com/apis/site/v2/sports/$](https://site.api.espn.com/apis/site/v2/sports/$){game.path}/summary?event=${game.id}`);
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${game.path}/summary?event=${game.id}`);
         if (!res.ok) return null;
         const data = await res.json();
 
+        // Officials
         const officials = (data.gameInfo?.officials || []).map(o => o.displayName || o.fullName).filter(Boolean);
 
+        // Injuries
         const homeId = data.header?.competitions?.[0]?.competitors?.find(c => c.homeAway === 'home')?.id;
         const injuries = (data.injuries || []).flatMap(ti => {
           const side = ti.team?.id === homeId ? 'home' : 'away';
@@ -1840,11 +1010,13 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
           }));
         });
 
+        // Live Win Probability
         let liveHomeWP = null;
         if (Array.isArray(data.winprobability) && data.winprobability.length) {
           liveHomeWP = data.winprobability[data.winprobability.length - 1].homeWinPercentage;
         }
 
+        // Recent Live Impact Plays (fouls, turnovers, injuries, penalties, cards, scores)
         const rawPlays = data.plays || data.keyEvents || [];
         const recentPlays = rawPlays.slice(-15).reverse();
         const liveEvents = [];
@@ -1864,6 +1036,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
           }
         });
 
+        // News Articles from summary + league fallback
         let news = [];
         if (data.news?.articles?.length) news = data.news.articles;
         else if (data.article) news = [data.article];
@@ -1871,7 +1044,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
         if (!news.length) {
           if (!leagueNewsCache[game.path]) {
             try {
-              const nr = await fetch(`[https://site.api.espn.com/apis/site/v2/sports/$](https://site.api.espn.com/apis/site/v2/sports/$){game.path}/news?limit=25`);
+              const nr = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${game.path}/news?limit=25`);
               if (nr.ok) {
                 const nd = await nr.json();
                 leagueNewsCache[game.path] = nd.articles || [];
@@ -1891,7 +1064,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
         const formattedNews = news.map(a => ({
           headline: a.headline || 'ESPN Story',
           description: a.description || '',
-          url: a.links?.web?.href || a.links?.mobile?.href || '[https://www.espn.com](https://www.espn.com)',
+          url: a.links?.web?.href || a.links?.mobile?.href || 'https://www.espn.com',
           published: a.published ? new Date(a.published).toLocaleDateString() : ''
         }));
 
@@ -1941,6 +1114,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
       const dm = getDateMath(currentDate);
       allGames = allGames.map(g => evaluateGame(g, dm));
 
+      // Update Auto-Grade Accuracy Banner
       const graded = allGames.filter(g => g.grade);
       const banner = document.getElementById('accuracy-banner');
       if (graded.length) {
@@ -1966,9 +1140,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
         );
       }
 
-      // Always sort highest live confidence first
       list = list.sort((a, b) => b.confidence - a.confidence);
-
       const feed = document.getElementById('games-feed');
       if (!list.length) {
         feed.innerHTML = '<div class="empty-state">No games match this filter. Try another date, tab, or use <strong>+ Scan</strong>.</div>';
@@ -1981,7 +1153,6 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
         const hitsText = g.hitsCount >= 2 ? `${g.hitsCount} Hits` : `< 2 Refs`;
         const isSaved = savedIds.has(g.id);
         const showScore = g.state === 'in' || g.state === 'post';
-        const liveGlow = g.state === 'in' && g.liveShift > 0 ? 'live-up' : (g.state === 'in' && g.liveShift < 0 ? 'live-down' : '');
         const shiftHtml = g.state === 'in' && g.liveShift !== 0
           ? `<span class="shift-mini" style="color:${g.liveShift > 0 ? '#10b981' : '#ef4444'}">${g.liveShift > 0 ? '▲+' : '▼'}${g.liveShift}%</span>`
           : `<span class="conf-lbl">CONF</span>`;
@@ -2026,7 +1197,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
                   </div>
                 </div>
               </div>
-              <div class="conf-box ${tier} ${liveGlow}">
+              <div class="conf-box ${tier}">
                 <span class="conf-num">${g.confidence}%</span>
                 ${shiftHtml}
               </div>
@@ -2092,8 +1263,8 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
 
         body.innerHTML = `
           <div class="proof-item">
-            <strong>Live CONF: ${g.confidence}%</strong> (Pre-game: ${g.baseConf}% ${g.liveShift !== 0 ? (g.liveShift > 0 ? `+ ${g.liveShift}% live` : `${g.liveShift}% live`) : ''})
-            <div class="proof-sub">Gematria: ${g.gemScore}% (${g.entitiesCount} variables) · Odds/H2H: ${g.h2hScore}% · Health: ${g.rosScore}%</div>
+            <strong>Composite: ${g.confidence}%</strong> (${g.pickLabel})
+            <div class="proof-sub">Gematria: ${g.gemScore}% (${g.entitiesCount} variables scanned) · Odds/H2H: ${g.h2hScore}% · Health/Live: ${g.rosScore}%</div>
           </div>
           <div class="context-box">
             <h4>+ Add Halftime Show, Song Title, Refs or Coaches</h4>
@@ -2119,7 +1290,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
             <div class="proof-sub">${g.away.short} Road: ${g.away.roadRecord || g.away.record || '—'} · ${g.home.short} Home: ${g.home.homeRecord || g.home.record || '—'}</div>
           </div>
           <div class="proof-item">
-            <strong>Live Shift: ${g.liveShift > 0 ? '+' : ''}${g.liveShift}%</strong> (Base ${g.baseConf}% → Live ${g.confidence}%)
+            <strong>Live Shift: ${g.liveShift > 0 ? '+' : ''}${g.liveShift}%</strong>
             <div class="proof-sub">${liveWpStr}</div>
           </div>
           ${sum?.officials?.length ? `<div class="proof-item"><strong>Officials (Auto-Decoded):</strong> ${sum.officials.join(', ')}</div>` : ''}
@@ -2156,7 +1327,7 @@ Copy the code below, open **`index.html`** in GitHub (**⋮ → Edit**), select 
     async function shareSelectedGame() {
       const g = allGames.find(x => x.id === selectedGameId);
       if (!g) return;
-      const text = `AlignIQ Pick (${g.league}): ${g.pickLabel} — ${g.confidence}% Confidence (${g.hitsCount} Gematria Hits) | ${g.away.short} @ ${g.home.short}\n[https://levaun2024.github.io/AlignIQ/](https://levaun2024.github.io/AlignIQ/)`;
+      const text = `AlignIQ Pick (${g.league}): ${g.pickLabel} — ${g.confidence}% Confidence (${g.hitsCount} Gematria Hits) | ${g.away.short} @ ${g.home.short}\nhttps://levaun2024.github.io/AlignIQ/`;
       if (navigator.share) {
         try { await navigator.share({ title: 'AlignIQ Pick', text }); return; } catch {}
       }
