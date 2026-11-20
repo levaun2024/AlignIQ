@@ -220,7 +220,7 @@
     .sport-count { font-size: 10px; padding: 1px 6px; border-radius: 999px; background: rgba(255,255,255,0.1); }
     .sport-pill.active .sport-count { background: rgba(4,19,13,0.2); color: #04130d; }
 
-    /* Weight Tuner */
+    /* Weight Tuner & Agent Status */
     #tuner-panel {
       display: none; margin: 10px 14px 0;
       background: var(--bg-surface); border: 1px solid var(--border-strong);
@@ -229,6 +229,11 @@
     #tuner-panel.open { display: block; }
     .tuner-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .tuner-header h3 { font-size: 13px; font-weight: 800; }
+    .agent-box {
+      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.28);
+      border-radius: 10px; padding: 10px; margin-bottom: 12px; font-size: 11px; line-height: 1.45;
+    }
+    .agent-box strong { color: var(--accent); display: block; margin-bottom: 3px; font-size: 12px; }
     .slider-row { margin-bottom: 10px; }
     .slider-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
     .slider-label strong { color: var(--accent); }
@@ -364,13 +369,13 @@
     }
 
     .tabs-row {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px;
       background: var(--bg-app); padding: 4px; border-radius: 10px; margin-bottom: 12px;
     }
     .tab-btn {
-      padding: 8px 3px; border-radius: 7px; border: none;
+      padding: 8px 2px; border-radius: 7px; border: none;
       background: transparent; color: var(--text-muted);
-      font-size: 11px; font-weight: 700; cursor: pointer;
+      font-size: 10.5px; font-weight: 700; cursor: pointer; white-space: nowrap;
     }
     .tab-btn.active { background: var(--bg-card); color: var(--text-main); }
 
@@ -382,6 +387,29 @@
     .proof-item.warn strong { color: var(--amber); }
     .proof-item.danger strong { color: #fca5a5; }
     .proof-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    /* Live Odds Rows */
+    .odds-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+    .odds-side-btn {
+      padding: 8px; border-radius: 9px; border: 1px solid var(--border);
+      background: var(--bg-app); color: var(--text-muted); font-size: 11px; font-weight: 700; cursor: pointer;
+    }
+    .odds-side-btn.active { background: var(--accent-soft); border-color: rgba(16,185,129,0.45); color: var(--accent); }
+
+    .book-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 11px; padding: 11px 12px; margin-bottom: 8px; cursor: pointer;
+    }
+    .book-row.best { border-color: rgba(16, 185, 129, 0.55); background: rgba(16, 185, 129, 0.08); }
+    .book-row:active { background: var(--bg-card-hover); }
+    .book-left { min-width: 0; flex: 1; }
+    .book-name { font-size: 13px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
+    .best-badge { font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 5px; background: var(--accent); color: #04130d; }
+    .book-sub { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; }
+    .book-right { text-align: right; flex-shrink: 0; }
+    .book-odds { font-size: 15px; font-weight: 900; color: var(--accent); }
+    .book-payout { font-size: 10.5px; color: var(--blue); font-weight: 700; margin-top: 2px; }
 
     .news-card {
       display: block; text-decoration: none; color: var(--text-main);
@@ -433,12 +461,12 @@
         </div>
         <div class="live-pill"><span class="pulse-dot"></span><span id="auth-date-badge">LIVE MULTI-SPORT ENGINE</span></div>
         <h1 class="auth-title">Align<span>IQ</span></h1>
-        <p class="auth-sub">Full-Context Gematria, Live Play Impact &amp; Matchup Engine</p>
+        <p class="auth-sub">Auto-Tuned AI Agent, Live Multi-Book Odds &amp; Fight Sports</p>
 
         <div class="feature-row">
-          <div class="feature-box"><strong>Win &amp; Loss</strong><span>2+ Ref Sync</span></div>
-          <div class="feature-box"><strong>Live Shift</strong><span>Plays &amp; Fouls</span></div>
-          <div class="feature-box"><strong>Odds + News</strong><span>12 Leagues</span></div>
+          <div class="feature-box"><strong>AI Tuned</strong><span>Per-League</span></div>
+          <div class="feature-box"><strong>Best Odds</strong><span>Live Sort</span></div>
+          <div class="feature-box"><strong>14 Sports</strong><span>+ UFC/Box</span></div>
         </div>
 
         <button class="oauth-btn btn-google" onclick="signIn('Google')">
@@ -449,7 +477,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
           Continue with Apple
         </button>
-        <p class="auth-note">For entertainment &amp; analytical modeling only. Auto-syncs live scores, plays, odds &amp; news.</p>
+        <p class="auth-note">For entertainment &amp; analytical modeling only. Auto-syncs live scores, odds &amp; AI weights.</p>
       </div>
     </section>
 
@@ -467,7 +495,7 @@
             <div class="brand-name">Align<span>IQ</span></div>
           </div>
           <div class="top-actions">
-            <button class="icon-btn" onclick="toggleTuner()">⚙ Weights</button>
+            <button class="icon-btn" onclick="toggleTuner()">⚙ Agent</button>
             <button class="icon-btn accent" onclick="openScanModal()">+ Scan</button>
             <button class="icon-btn" onclick="signOut()" title="Sign Out">↪</button>
           </div>
@@ -487,7 +515,7 @@
         </div>
 
         <div class="search-row">
-          <input id="search-input" class="search-input" type="search" placeholder="Search team, city, stadium, or TV network..." oninput="renderFeed()" />
+          <input id="search-input" class="search-input" type="search" placeholder="Search team, fighter, stadium, or TV network..." oninput="renderFeed()" />
         </div>
 
         <div class="mode-pills">
@@ -505,28 +533,40 @@
         <div class="sports-bar" id="sports-bar"></div>
       </div>
 
+      <!-- AGENT & WEIGHT TUNER PANEL -->
       <div id="tuner-panel">
         <div class="tuner-header">
-          <h3>Algorithm Weight Tuner</h3>
-          <button class="icon-btn" style="height:26px;font-size:11px;" onclick="resetWeights()">Reset</button>
+          <h3>AI Agent &amp; Live Odds Settings</h3>
+          <button class="icon-btn" style="height:26px;font-size:11px;" onclick="resetToAgentWeights()">Use AI Weights</button>
+        </div>
+
+        <div id="agent-status-box" class="agent-box">
+          <strong>Connecting to AlignIQ Agent...</strong>
+          Loading verified 60-day record and per-league weights.
+        </div>
+
+        <div class="slider-row">
+          <div class="slider-label"><span>Gematria Convergence (2+ Refs)</span><strong id="w-gem-val">42%</strong></div>
+          <input type="range" id="w-gem" min="0" max="100" value="42" oninput="onWeightChange()" />
         </div>
         <div class="slider-row">
-          <div class="slider-label"><span>Gematria Convergence (2+ Refs)</span><strong id="w-gem-val">45%</strong></div>
-          <input type="range" id="w-gem" min="0" max="100" value="45" oninput="onWeightChange()" />
+          <div class="slider-label"><span>Vegas Odds, Splits &amp; H2H</span><strong id="w-h2h-val">21%</strong></div>
+          <input type="range" id="w-h2h" min="0" max="100" value="21" oninput="onWeightChange()" />
         </div>
         <div class="slider-row">
-          <div class="slider-label"><span>Vegas Odds, Splits &amp; H2H</span><strong id="w-h2h-val">25%</strong></div>
-          <input type="range" id="w-h2h" min="0" max="100" value="25" oninput="onWeightChange()" />
+          <div class="slider-label"><span>Health &amp; Live Play Momentum</span><strong id="w-ros-val">37%</strong></div>
+          <input type="range" id="w-ros" min="0" max="100" value="37" oninput="onWeightChange()" />
         </div>
-        <div class="slider-row" style="margin-bottom:0;">
-          <div class="slider-label"><span>Health &amp; Live Play Momentum</span><strong id="w-ros-val">30%</strong></div>
-          <input type="range" id="w-ros" min="0" max="100" value="30" oninput="onWeightChange()" />
+
+        <div class="form-group" style="margin-top:10px;margin-bottom:0;">
+          <label>Live Odds API Key (The Odds API)</label>
+          <input id="odds-api-key" class="form-input" type="password" placeholder="Paste API key" onchange="saveOddsKey(this.value)" />
         </div>
       </div>
 
       <div id="accuracy-banner">
         <div class="acc-left">
-          <strong id="acc-record">Graded Results: 0–0</strong>
+          <strong id="acc-record">Graded Picks: 0–0</strong>
           <span>Auto-graded against final scores on this slate</span>
         </div>
         <div class="acc-rate" id="acc-pct">0%</div>
@@ -536,7 +576,7 @@
         <div class="feed-header">
           <div>
             <div class="feed-title">Popular Games · Highest Confidence</div>
-            <div class="feed-sub" id="feed-sub">Sorted highest % first · Live 30s auto-sync</div>
+            <div class="feed-sub" id="feed-sub">Auto-tuned by AlignIQ Agent · Live 30s sync</div>
           </div>
           <div class="status-badge"><span class="pulse-dot"></span><span id="live-count-badge">Loading...</span></div>
         </div>
@@ -555,8 +595,9 @@
           </div>
         </div>
         <div class="tabs-row">
-          <button class="tab-btn active" onclick="switchTab('gem', this)">Gematria</button>
-          <button class="tab-btn" onclick="switchTab('live', this)">Live &amp; H2H</button>
+          <button class="tab-btn active" onclick="switchTab('odds', this)">Best Odds</button>
+          <button class="tab-btn" onclick="switchTab('gem', this)">Gematria</button>
+          <button class="tab-btn" onclick="switchTab('live', this)">Live/H2H</button>
           <button class="tab-btn" onclick="switchTab('ros', this)">Health</button>
           <button class="tab-btn" onclick="switchTab('news', this)">News</button>
         </div>
@@ -579,23 +620,23 @@
     <div class="modal-backdrop" id="scan-modal" onclick="closeModalOnBg(event, 'scan-modal')">
       <div class="modal-sheet">
         <div class="modal-head">
-          <h2>Custom Full-Context Scanner</h2>
+          <h2>Custom Matchup / Fight Scanner</h2>
           <button class="close-btn" onclick="closeModal('scan-modal')">×</button>
         </div>
         <div class="form-grid">
-          <div class="form-group"><label>Away Team</label><input id="sc-away" class="form-input" value="Detroit Lions" /></div>
-          <div class="form-group"><label>Away Record</label><input id="sc-away-rec" class="form-input" value="20-2" /></div>
+          <div class="form-group"><label>Away / Fighter A</label><input id="sc-away" class="form-input" value="Mike Perry" /></div>
+          <div class="form-group"><label>Record</label><input id="sc-away-rec" class="form-input" value="5-0" /></div>
         </div>
         <div class="form-grid">
-          <div class="form-group"><label>Home Team</label><input id="sc-home" class="form-input" value="Kansas City Chiefs" /></div>
-          <div class="form-group"><label>Home Record</label><input id="sc-home-rec" class="form-input" value="18-4" /></div>
+          <div class="form-group"><label>Home / Fighter B</label><input id="sc-home" class="form-input" value="Eddie Alvarez" /></div>
+          <div class="form-group"><label>Record</label><input id="sc-home-rec" class="form-input" value="1-1" /></div>
         </div>
-        <div class="form-group"><label>Stadium / Venue</label><input id="sc-venue" class="form-input" value="Arrowhead Stadium" /></div>
+        <div class="form-group"><label>Arena / Venue</label><input id="sc-venue" class="form-input" value="T-Mobile Arena" /></div>
         <div class="form-grid">
-          <div class="form-group"><label>Halftime Performer</label><input id="sc-artist" class="form-input" placeholder="e.g. Kendrick Lamar" /></div>
-          <div class="form-group"><label>Halftime Song Title</label><input id="sc-song" class="form-input" placeholder="e.g. Not Like Us" /></div>
+          <div class="form-group"><label>Walkout / Performer</label><input id="sc-artist" class="form-input" placeholder="e.g. Kendrick Lamar" /></div>
+          <div class="form-group"><label>Song Title</label><input id="sc-song" class="form-input" placeholder="e.g. Not Like Us" /></div>
         </div>
-        <div class="form-group"><label>Broadcast / Refs / Coaches</label><input id="sc-extra" class="form-input" placeholder="e.g. NBC, Andy Reid, Dan Campbell" /></div>
+        <div class="form-group"><label>Promotion / Refs / Coaches</label><input id="sc-extra" class="form-input" placeholder="e.g. BKFC, UFC, Herb Dean" /></div>
         <button class="primary-btn" onclick="runCustomScan()">Run Full 4-Cipher Convergence Scan</button>
         <div id="scan-result" style="margin-top:12px;"></div>
       </div>
@@ -604,33 +645,98 @@
 
   <script>
     const LEAGUES = [
-      { key: 'NBA', path: 'basketball/nba' },
-      { key: 'NFL', path: 'football/nfl' },
-      { key: 'NHL', path: 'hockey/nhl' },
-      { key: 'MLB', path: 'baseball/mlb' },
-      { key: 'NCAAF', path: 'football/college-football' },
-      { key: 'NCAAB', path: 'basketball/mens-college-basketball' },
-      { key: 'NCAAW', path: 'basketball/womens-college-basketball' },
-      { key: 'WNBA', path: 'basketball/wnba' },
-      { key: 'UFC', path: 'mma/ufc' },
-      { key: 'EPL', path: 'soccer/eng.1' },
-      { key: 'MLS', path: 'soccer/usa.1' },
-      { key: 'UCL', path: 'soccer/uefa.champions' }
+      { key: 'NBA', path: 'basketball/nba', oddsKey: 'basketball_nba' },
+      { key: 'NFL', path: 'football/nfl', oddsKey: 'americanfootball_nfl' },
+      { key: 'NHL', path: 'hockey/nhl', oddsKey: 'icehockey_nhl' },
+      { key: 'MLB', path: 'baseball/mlb', oddsKey: 'baseball_mlb' },
+      { key: 'NCAAF', path: 'football/college-football', oddsKey: 'americanfootball_ncaaf' },
+      { key: 'NCAAB', path: 'basketball/mens-college-basketball', oddsKey: 'basketball_ncaab' },
+      { key: 'NCAAW', path: 'basketball/womens-college-basketball', oddsKey: 'basketball_wncaab' },
+      { key: 'WNBA', path: 'basketball/wnba', oddsKey: 'basketball_wnba' },
+      { key: 'UFC', path: 'mma/ufc', oddsKey: 'mma_mixed_martial_arts' },
+      { key: 'EPL', path: 'soccer/eng.1', oddsKey: 'soccer_epl' },
+      { key: 'MLS', path: 'soccer/usa.1', oddsKey: 'soccer_usa_mls' },
+      { key: 'UCL', path: 'soccer/uefa.champions', oddsKey: 'soccer_uefa_champs_league' }
     ];
+
+    // Sportsbook Deep Links (Android Intent + Play Store fallback, iOS Universal Link)
+    const SPORTSBOOK_LINKS = {
+      draftkings: { name: 'DraftKings', pkg: 'com.draftkings.sportsbook', scheme: 'dksb://', web: 'https://sportsbook.draftkings.com', ios: 'https://sportsbook.draftkings.com' },
+      fanduel: { name: 'FanDuel', pkg: 'com.fanduel.android.self', scheme: 'fanduelsportsbook://', web: 'https://sportsbook.fanduel.com', ios: 'https://sportsbook.fanduel.com' },
+      betmgm: { name: 'BetMGM', pkg: 'com.betmgm.sportsbook', scheme: 'betmgm://', web: 'https://sports.betmgm.com', ios: 'https://sports.betmgm.com' },
+      williamhill_us: { name: 'Caesars', pkg: 'com.williamhill.us.nj.sports', scheme: 'caesarssportsbook://', web: 'https://www.caesars.com/sportsbook-and-casino', ios: 'https://www.caesars.com/sportsbook-and-casino' },
+      espnbet: { name: 'ESPN BET', pkg: 'com.penn.espnbet', scheme: 'espnbet://', web: 'https://espnbet.com', ios: 'https://espnbet.com' },
+      fanatics: { name: 'Fanatics', pkg: 'com.fanatics.betting', scheme: 'fanaticssportsbook://', web: 'https://sportsbook.fanatics.com', ios: 'https://sportsbook.fanatics.com' },
+      betrivers: { name: 'BetRivers', pkg: 'com.rushstreetinteractive.betrivers', scheme: 'betrivers://', web: 'https://www.betrivers.com', ios: 'https://www.betrivers.com' },
+      hardrockbet: { name: 'Hard Rock Bet', pkg: 'com.hardrock.sportsbook', scheme: 'hardrockbet://', web: 'https://www.hardrock.bet', ios: 'https://www.hardrock.bet' },
+      kalshi: { name: 'Kalshi', pkg: 'com.kalshi.mobile', scheme: 'kalshi://', web: 'https://kalshi.com/markets/sports', ios: 'https://kalshi.com/markets/sports' },
+      bovada: { name: 'Bovada', pkg: '', scheme: '', web: 'https://www.bovada.lv/sports', ios: 'https://www.bovada.lv/sports' },
+      betonlineag: { name: 'BetOnline', pkg: '', scheme: '', web: 'https://www.betonline.ag/sportsbook', ios: 'https://www.betonline.ag/sportsbook' },
+      betus: { name: 'BetUS', pkg: '', scheme: '', web: 'https://www.betus.com.pa/sportsbook/', ios: 'https://www.betus.com.pa/sportsbook/' },
+      fliff: { name: 'Fliff', pkg: 'com.fliff.sports', scheme: 'fliff://', web: 'https://www.getfliff.com', ios: 'https://www.getfliff.com' },
+      novig: { name: 'Novig', pkg: 'com.novig.app', scheme: 'novig://', web: 'https://www.novig.us', ios: 'https://www.novig.us' },
+      prophetx: { name: 'ProphetX', pkg: 'com.prophetexchange.app', scheme: 'prophetx://', web: 'https://www.prophetx.co', ios: 'https://www.prophetexchange.com' }
+    };
+
+    const DEFAULT_ODDS_KEY = '975371c27c6eb7cc21932c12be7eab21';
+    let oddsApiKey = localStorage.getItem('aligniq_odds_key') || DEFAULT_ODDS_KEY;
 
     let currentDate = new Date();
     let allGames = [];
     let summaryCache = {};
     let leagueNewsCache = {};
+    let oddsSportCache = {}; // { sportKey: { ts, data } }
     let activeSport = 'All';
     let filterMode = 'all';
-    let weights = { gem: 45, h2h: 25, ros: 30 };
+
+    // Agent-driven weights
+    let agentReport = null;
+    let weights = { gem: 42, h2h: 21, ros: 37 };
+    let leagueWeights = {};
+    let manualOverride = false;
+
     let selectedGameId = null;
-    let currentTab = 'gem';
+    let currentTab = 'odds';
+    let oddsViewSide = 'pick'; // 'pick' or 'opp'
     let livePollTimer = null;
 
     let savedIds = new Set(JSON.parse(localStorage.getItem('aligniq_saved') || '[]'));
     let customContextMap = JSON.parse(localStorage.getItem('aligniq_ctx') || '{}');
+
+    // --- LOAD AGENT REPORT ---
+    async function loadAgentReport() {
+      try {
+        const res = await fetch(`./agent_report.json?t=${Date.now()}`);
+        if (!res.ok) return;
+        agentReport = await res.json();
+        if (agentReport.active_weights) weights = { ...agentReport.active_weights };
+        if (agentReport.league_weights) leagueWeights = { ...agentReport.league_weights };
+        syncSlidersToWeights();
+        renderAgentStatusBox();
+        if (allGames.length) renderFeed();
+      } catch {}
+    }
+
+    function syncSlidersToWeights() {
+      document.getElementById('w-gem').value = weights.gem;
+      document.getElementById('w-h2h').value = weights.h2h;
+      document.getElementById('w-ros').value = weights.ros;
+      document.getElementById('w-gem-val').textContent = weights.gem + '%';
+      document.getElementById('w-h2h-val').textContent = weights.h2h + '%';
+      document.getElementById('w-ros-val').textContent = weights.ros + '%';
+    }
+
+    function renderAgentStatusBox() {
+      const box = document.getElementById('agent-status-box');
+      if (!agentReport) return;
+      const tunedCount = Object.keys(leagueWeights || {}).length;
+      box.innerHTML = `
+        <strong>AI Agent Verified: ${agentReport.overall_win_rate}% (${agentReport.overall_record} · ${agentReport.total_games_graded} games)</strong>
+        <div>${agentReport.adjustment_reason || 'Auto-optimizing per-league weights weekly.'}</div>
+        <div style="margin-top:4px;color:var(--text-dim);">Per-league profiles active: ${tunedCount} · Updated: ${agentReport.last_updated}</div>
+      `;
+      document.getElementById('feed-sub').textContent = `AI Verified ${agentReport.overall_win_rate}% (${agentReport.overall_record}) · 30s live sync`;
+    }
 
     // --- 4 BASE CIPHERS ---
     function reduceDigit(n) {
@@ -713,9 +819,9 @@
         sumData.officials.forEach((ref, idx) => add(`Official #${idx + 1}`, ref));
       }
       if (userCtx) {
-        add('Halftime Performer', userCtx.artist);
-        add('Halftime Song', userCtx.song);
-        add('Head Coaches / Extra', userCtx.extra);
+        add('Performer', userCtx.artist);
+        add('Song', userCtx.song);
+        add('Coaches / Extra', userCtx.extra);
       }
       return list;
     }
@@ -724,6 +830,8 @@
       const sumData = summaryCache[game.id] || null;
       const userCtx = customContextMap[game.id] || game.customCtx || null;
       const entities = buildEntities(game, sumData, userCtx);
+
+      const activeW = manualOverride ? weights : (leagueWeights[game.league] || weights);
 
       const awayRec = parseRecord(game.away.record);
       const homeRec = parseRecord(game.home.record);
@@ -737,27 +845,16 @@
         const hits = [];
         entities.forEach(ent => {
           const c = calcCiphers(ent.text);
-          const map = [
-            ['Ordinal', c.ord],
-            ['Full Red', c.red],
-            ['Reverse', c.rev],
-            ['Rev Red', c.rred]
-          ];
-          map.forEach(([cName, val]) => {
+          [['Ordinal', c.ord], ['Full Red', c.red], ['Reverse', c.rev], ['Rev Red', c.rred]].forEach(([cName, val]) => {
             if (val <= 0) return;
-            if (winTargets.includes(val)) {
-              hits.push(`${ent.label} (${ent.text}) = ${val} [${cName}] → ${winLabel}`);
-            } else if (oppLossTargets.includes(val)) {
-              hits.push(`${ent.label} (${ent.text}) = ${val} [${cName}] → ${oppLossLabel}`);
-            }
+            if (winTargets.includes(val)) hits.push(`${ent.label} (${ent.text}) = ${val} [${cName}] → ${winLabel}`);
+            else if (oppLossTargets.includes(val)) hits.push(`${ent.label} (${ent.text}) = ${val} [${cName}] → ${oppLossLabel}`);
           });
         });
         [teamShort].filter(Boolean).forEach(nm => {
           const tc = calcCiphers(nm);
           [['Ordinal', tc.ord], ['Full Red', tc.red], ['Reverse', tc.rev], ['Rev Red', tc.rred]].forEach(([cn, v]) => {
-            if (dm.nums.includes(v)) {
-              hits.push(`${nm} = ${v} [${cn}] → matches Date Numerology (${v})`);
-            }
+            if (dm.nums.includes(v)) hits.push(`${nm} = ${v} [${cn}] → matches Date Numerology (${v})`);
           });
         });
         return hits;
@@ -781,30 +878,27 @@
       const aSplitPct = aSplit && (aSplit.w + aSplit.l) > 0 ? aSplit.w / (aSplit.w + aSplit.l) : aPct;
       const hSplitPct = hSplit && (hSplit.w + hSplit.l) > 0 ? hSplit.w / (hSplit.w + hSplit.l) : hPct;
 
-      let vegasHomeBoost = 0;
-      if (game.oddsFav === 'home') vegasHomeBoost = 10;
-      else if (game.oddsFav === 'away') vegasHomeBoost = -10;
+      const vegasHomeBoost = game.oddsFav === 'home' ? 10 : (game.oddsFav === 'away' ? -10 : 0);
+      const h2hHome = Math.min(95, Math.max(15, Math.round(50 + (hSplitPct - aSplitPct) * 38 + vegasHomeBoost)));
+      const h2hAway = Math.min(95, Math.max(15, Math.round(50 + (aSplitPct - hSplitPct) * 38 - vegasHomeBoost)));
 
-      let pickSide = homeGem > awayGem ? 'home' : awayGem > homeGem ? 'away' : ((hSplitPct + (vegasHomeBoost / 100)) >= aSplitPct ? 'home' : 'away');
-      let primaryHits = pickSide === 'home' ? homeHits : awayHits;
-      let oppHits = pickSide === 'home' ? awayHits : homeHits;
-      let gemScore = Math.max(awayGem, homeGem);
+      const rosHomeBase = Math.min(95, Math.max(15, Math.round(58 + (hPct - aPct) * 28)));
+      const rosAwayBase = Math.min(95, Math.max(15, Math.round(54 + (aPct - hPct) * 28)));
 
-      if (awayHits.length >= 2 && homeHits.length >= 2) {
-        gemScore = Math.max(35, gemScore - Math.min(18, oppHits.length * 4));
-      }
+      const totalW = (activeW.gem + activeW.h2h + activeW.ros) || 1;
+      const rawHome = (homeGem * activeW.gem + h2hHome * activeW.h2h + rosHomeBase * activeW.ros) / totalW;
+      const rawAway = (awayGem * activeW.gem + h2hAway * activeW.h2h + rosAwayBase * activeW.ros) / totalW;
 
-      const splitDiff = pickSide === 'home' ? (hSplitPct - aSplitPct) : (aSplitPct - hSplitPct);
-      const vegasBoost = pickSide === 'home' ? vegasHomeBoost : -vegasHomeBoost;
-      const h2hScore = Math.min(95, Math.max(15, Math.round(50 + splitDiff * 38 + vegasBoost)));
+      const pickSide = rawHome >= rawAway ? 'home' : 'away';
+      const primaryHits = pickSide === 'home' ? homeHits : awayHits;
+      const gemScore = pickSide === 'home' ? homeGem : awayGem;
+      const h2hScore = pickSide === 'home' ? h2hHome : h2hAway;
 
-      let injuryPenalty = 0;
-      let oppInjuryBonus = 0;
+      let injuryPenalty = 0, oppInjuryBonus = 0;
       if (sumData?.injuries?.length) {
         sumData.injuries.forEach(inj => {
           const pts = /out/i.test(inj.status) ? 7 : /doubtful/i.test(inj.status) ? 5 : /questionable/i.test(inj.status) ? 2 : 0;
-          const isPickedTeam = inj.teamSide === pickSide;
-          if (isPickedTeam) injuryPenalty += pts;
+          if (inj.teamSide === pickSide) injuryPenalty += pts;
           else oppInjuryBonus += pts;
         });
       }
@@ -825,12 +919,8 @@
         liveShift = Math.max(-28, Math.min(28, liveShift));
       }
 
-      const rosScore = Math.min(98, Math.max(10, Math.round(58 - injuryPenalty + oppInjuryBonus + liveShift)));
-
-      const totalW = (weights.gem + weights.h2h + weights.ros) || 1;
-      const conf = Math.min(99, Math.max(8, Math.round(
-        (gemScore * weights.gem + h2hScore * weights.h2h + rosScore * weights.ros) / totalW
-      )));
+      const rosScore = Math.min(98, Math.max(10, Math.round((pickSide === 'home' ? rosHomeBase : rosAwayBase) - injuryPenalty + oppInjuryBonus + liveShift)));
+      const conf = Math.min(99, Math.max(8, Math.round((gemScore * activeW.gem + h2hScore * activeW.h2h + rosScore * activeW.ros) / totalW)));
 
       const pickedTeam = pickSide === 'home' ? game.home : game.away;
       const pRec = parseRecord(pickedTeam.record);
@@ -840,21 +930,18 @@
       if (game.state === 'post') {
         const aS = Number(game.away.score || 0);
         const hS = Number(game.home.score || 0);
-        if (aS !== hS) {
-          const actualWinner = hS > aS ? 'home' : 'away';
-          grade = actualWinner === pickSide ? 'WON' : 'LOST';
-        }
+        if (aS !== hS) grade = (hS > aS ? 'home' : 'away') === pickSide ? 'WON' : 'LOST';
       }
 
       return {
         ...game,
+        activeW,
         pickSide,
         pickedTeam,
         pickLabel: `${pickedTeam.short || pickedTeam.name} Win${nextRecStr}`,
         confidence: conf,
         hitsCount: primaryHits.length,
         primaryHits,
-        oppHits,
         gemScore,
         h2hScore,
         rosScore,
@@ -867,7 +954,62 @@
       };
     }
 
-    // --- ESPN FETCHERS ---
+    // --- LIVE MULTI-BOOK ODDS & DEEP LINKING ---
+    function americanToProfit100(odds) {
+      if (!odds || odds === 0) return 0;
+      return odds > 0 ? odds : (10000 / Math.abs(odds));
+    }
+
+    function americanToCents(odds) {
+      if (!odds) return 50;
+      const prob = odds > 0 ? (100 / (odds + 100)) : (Math.abs(odds) / (Math.abs(odds) + 100));
+      return Math.round(prob * 100);
+    }
+
+    function openSportsbook(bookKey) {
+      const info = SPORTSBOOK_LINKS[bookKey] || { web: 'https://www.google.com/search?q=' + encodeURIComponent(bookKey + ' sportsbook') };
+      const ua = navigator.userAgent || '';
+      const isAndroid = /Android/i.test(ua);
+      const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+      if (isAndroid && info.pkg && info.scheme) {
+        const storeUrl = encodeURIComponent(`https://play.google.com/store/apps/details?id=${info.pkg}`);
+        const schemeClean = info.scheme.replace('://', '');
+        window.location.href = `intent://open#Intent;scheme=${schemeClean};package=${info.pkg};S.browser_fallback_url=${storeUrl};end`;
+      } else if (isIOS && info.ios) {
+        window.open(info.ios, '_blank');
+      } else {
+        window.open(info.web, '_blank');
+      }
+    }
+
+    async function fetchOddsForSport(sportKey) {
+      if (!oddsApiKey || !sportKey) return [];
+      const cached = oddsSportCache[sportKey];
+      if (cached && (Date.now() - cached.ts < 600000)) return cached.data; // 10-min cache
+      try {
+        const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${encodeURIComponent(oddsApiKey)}&regions=us,us2,us_ex&markets=h2h&oddsFormat=american`;
+        const res = await fetch(url);
+        if (!res.ok) return [];
+        const data = await res.json();
+        oddsSportCache[sportKey] = { ts: Date.now(), data: Array.isArray(data) ? data : [] };
+        return oddsSportCache[sportKey].data;
+      } catch {
+        return [];
+      }
+    }
+
+    function matchGameInOdds(game, oddsEvents) {
+      const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const hFull = norm(game.home.name), aFull = norm(game.away.name);
+      const hShort = norm(game.home.mascot || game.home.short), aShort = norm(game.away.mascot || game.away.short);
+      return oddsEvents.find(ev => {
+        const eh = norm(ev.home_team), ea = norm(ev.away_team);
+        return (eh.includes(hShort) && ea.includes(aShort)) || (eh.includes(aShort) && ea.includes(hShort)) || (eh === hFull && ea === aFull);
+      });
+    }
+
+    // --- ESPN + FIGHT SPORTS FETCHERS ---
     function fmtYYYYMMDD(d) {
       return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
     }
@@ -883,14 +1025,14 @@
       const badge = document.getElementById('live-count-badge');
       if (!silent) {
         badge.textContent = 'Syncing...';
-        feed.innerHTML = '<div class="empty-state">Scanning 12 live sports, odds &amp; records...</div>';
+        feed.innerHTML = '<div class="empty-state">Scanning 14 sports, UFC, Boxing &amp; live lines...</div>';
       }
 
       updateDateUI();
       const ymd = fmtYYYYMMDD(currentDate);
       const dm = getDateMath(currentDate);
 
-      const results = await Promise.all(LEAGUES.map(async (lg) => {
+      const espnResults = await Promise.all(LEAGUES.map(async (lg) => {
         try {
           const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard?dates=${ymd}`);
           if (!res.ok) return [];
@@ -903,35 +1045,30 @@
             const state = comp.status?.type?.state || 'pre';
             const dt = new Date(ev.date);
             const timeStr = comp.status?.type?.shortDetail || dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-
             const getRec = (teamObj, type) => (teamObj.records || []).find(r => r.type === type)?.summary || '';
             const oddsObj = comp.odds?.[0];
-            let oddsText = oddsObj?.details || '';
             let oddsFav = null;
             if (oddsObj?.homeTeamOdds?.favorite) oddsFav = 'home';
             else if (oddsObj?.awayTeamOdds?.favorite) oddsFav = 'away';
-
-            const broadcast = comp.broadcasts?.[0]?.names?.[0] || comp.geoBroadcasts?.[0]?.media?.shortName || '';
-            const eventNote = comp.notes?.[0]?.headline || '';
-            const venueCity = [comp.venue?.address?.city, comp.venue?.address?.state].filter(Boolean).join(', ');
 
             return {
               id: ev.id,
               league: lg.key,
               path: lg.path,
+              oddsKey: lg.oddsKey,
               state,
               time: timeStr,
               venue: comp.venue?.fullName || 'TBD Venue',
-              venueCity,
-              broadcast,
-              eventNote,
-              oddsText,
+              venueCity: [comp.venue?.address?.city, comp.venue?.address?.state].filter(Boolean).join(', '),
+              broadcast: comp.broadcasts?.[0]?.names?.[0] || comp.geoBroadcasts?.[0]?.media?.shortName || '',
+              eventNote: comp.notes?.[0]?.headline || '',
+              oddsText: oddsObj?.details || '',
               oddsFav,
               home: {
                 name: home.team?.displayName || home.athlete?.displayName || 'Home',
-                short: home.team?.shortDisplayName || home.team?.name || 'Home',
+                short: home.team?.shortDisplayName || home.athlete?.shortName || home.team?.name || 'Home',
                 location: home.team?.location || '',
-                mascot: home.team?.name || '',
+                mascot: home.team?.name || home.athlete?.displayName || '',
                 logo: home.team?.logo || '',
                 score: home.score ?? '',
                 record: getRec(home, 'total') || home.records?.[0]?.summary || '',
@@ -939,9 +1076,9 @@
               },
               away: {
                 name: away.team?.displayName || away.athlete?.displayName || 'Away',
-                short: away.team?.shortDisplayName || away.team?.name || 'Away',
+                short: away.team?.shortDisplayName || away.athlete?.shortName || away.team?.name || 'Away',
                 location: away.team?.location || '',
-                mascot: away.team?.name || '',
+                mascot: away.team?.name || away.athlete?.displayName || '',
                 logo: away.team?.logo || '',
                 score: away.score ?? '',
                 record: getRec(away, 'total') || away.records?.[0]?.summary || '',
@@ -954,12 +1091,39 @@
         }
       }));
 
-      allGames = results.flat().map(g => evaluateGame(g, dm));
+      // Pull Boxing & Bare Knuckle / MMA cards from Odds API for today/upcoming
+      let fightGames = [];
+      if (oddsApiKey && isSameDay(currentDate, new Date())) {
+        const boxingEvents = await fetchOddsForSport('boxing_boxing');
+        fightGames = boxingEvents.slice(0, 12).map(ev => {
+          const dt = new Date(ev.commence_time);
+          const isBKFC = /bkfc|bare knuckle/i.test(ev.sport_title || '');
+          return {
+            id: `odds_${ev.id}`,
+            league: isBKFC ? 'BKFC' : 'BOXING',
+            path: null,
+            oddsKey: 'boxing_boxing',
+            oddsEventDirect: ev,
+            state: 'pre',
+            time: dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' + dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
+            venue: ev.sport_title || 'Fight Card',
+            venueCity: '',
+            broadcast: 'PPV / Live',
+            eventNote: ev.sport_title || '',
+            oddsText: `${ev.bookmakers?.length || 0} Sportsbooks Live`,
+            oddsFav: null,
+            home: { name: ev.home_team, short: ev.home_team, location: '', mascot: ev.home_team, logo: '', score: '', record: '', homeRecord: '' },
+            away: { name: ev.away_team, short: ev.away_team, location: '', mascot: ev.away_team, logo: '', score: '', record: '', roadRecord: '' }
+          };
+        });
+      }
+
+      allGames = [...espnResults.flat(), ...fightGames].map(g => evaluateGame(g, dm));
       renderSportsBar();
       renderFeed();
       setupLivePolling();
 
-      const liveGames = allGames.filter(g => g.state === 'in').slice(0, 8);
+      const liveGames = allGames.filter(g => g.state === 'in' && g.path).slice(0, 8);
       if (liveGames.length) {
         await Promise.all(liveGames.map(g => fetchGameSummary(g, true)));
         renderFeed();
@@ -982,7 +1146,6 @@
         const data = await res.json();
 
         const officials = (data.gameInfo?.officials || []).map(o => o.displayName || o.fullName).filter(Boolean);
-
         const homeId = data.header?.competitions?.[0]?.competitors?.find(c => c.homeAway === 'home')?.id;
         const injuries = (data.injuries || []).flatMap(ti => {
           const side = ti.team?.id === homeId ? 'home' : 'away';
@@ -1001,9 +1164,8 @@
         }
 
         const rawPlays = data.plays || data.keyEvents || [];
-        const recentPlays = rawPlays.slice(-15).reverse();
         const liveEvents = [];
-        recentPlays.forEach(p => {
+        rawPlays.slice(-15).reverse().forEach(p => {
           const txt = p.text || p.shortText || '';
           if (!txt) return;
           const clock = p.clock?.displayValue || '';
@@ -1014,43 +1176,36 @@
           else if (/foul|penalty|yellow card/i.test(txt)) { tag = 'FOUL/PEN'; impact = -1; }
           else if (/turnover|interception|fumble|steal/i.test(txt)) { tag = 'TURNOVER'; impact = -2; }
           else if (/touchdown|goal|three point|home run/i.test(txt)) { tag = 'BIG SCORE'; impact = 2; }
-          if (tag && liveEvents.length < 6) {
-            liveEvents.push({ tag, clock: `${per} ${clock}`.trim(), text: txt, impact });
-          }
+          if (tag && liveEvents.length < 6) liveEvents.push({ tag, clock: `${per} ${clock}`.trim(), text: txt, impact });
         });
 
-        let news = [];
-        if (data.news?.articles?.length) news = data.news.articles;
-        else if (data.article) news = [data.article];
-
+        let news = data.news?.articles?.length ? data.news.articles : (data.article ? [data.article] : []);
         if (!news.length) {
           if (!leagueNewsCache[game.path]) {
             try {
               const nr = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${game.path}/news?limit=25`);
-              if (nr.ok) {
-                const nd = await nr.json();
-                leagueNewsCache[game.path] = nd.articles || [];
-              }
+              if (nr.ok) leagueNewsCache[game.path] = (await nr.json()).articles || [];
             } catch {}
           }
           const pool = leagueNewsCache[game.path] || [];
           const k1 = (game.away.mascot || game.away.short || '').toLowerCase();
           const k2 = (game.home.mascot || game.home.short || '').toLowerCase();
-          news = pool.filter(a => {
-            const hay = `${a.headline || ''} ${a.description || ''}`.toLowerCase();
-            return (k1 && hay.includes(k1)) || (k2 && hay.includes(k2));
-          }).slice(0, 6);
+          news = pool.filter(a => `${a.headline || ''} ${a.description || ''}`.toLowerCase().includes(k1) || `${a.headline || ''} ${a.description || ''}`.toLowerCase().includes(k2)).slice(0, 6);
           if (!news.length) news = pool.slice(0, 4);
         }
 
-        const formattedNews = news.map(a => ({
-          headline: a.headline || 'ESPN Story',
-          description: a.description || '',
-          url: a.links?.web?.href || a.links?.mobile?.href || 'https://www.espn.com',
-          published: a.published ? new Date(a.published).toLocaleDateString() : ''
-        }));
-
-        summaryCache[game.id] = { officials, injuries, liveHomeWP, liveEvents, news: formattedNews };
+        summaryCache[game.id] = {
+          officials,
+          injuries,
+          liveHomeWP,
+          liveEvents,
+          news: news.map(a => ({
+            headline: a.headline || 'ESPN Story',
+            description: a.description || '',
+            url: a.links?.web?.href || a.links?.mobile?.href || 'https://www.espn.com',
+            published: a.published ? new Date(a.published).toLocaleDateString() : ''
+          }))
+        };
         if (!silent && selectedGameId === game.id) {
           renderFeed();
           renderDetailTab();
@@ -1075,6 +1230,7 @@
       const dm = getDateMath(currentDate);
       document.getElementById('dm-pills').innerHTML = dm.nums.map(n => `<span class="dm-pill">${n}</span>`).join('');
       document.getElementById('saved-count').textContent = savedIds.size;
+      document.getElementById('odds-api-key').value = oddsApiKey;
     }
 
     function renderSportsBar() {
@@ -1100,9 +1256,8 @@
       const banner = document.getElementById('accuracy-banner');
       if (graded.length) {
         const wins = graded.filter(g => g.grade === 'WON').length;
-        const losses = graded.length - wins;
         const pct = Math.round((wins / graded.length) * 100);
-        document.getElementById('acc-record').textContent = `Graded Picks: ${wins}–${losses}`;
+        document.getElementById('acc-record').textContent = `Graded Picks: ${wins}–${graded.length - wins}`;
         document.getElementById('acc-pct').textContent = `${pct}%`;
         banner.classList.add('show');
       } else {
@@ -1115,11 +1270,7 @@
       else if (filterMode === 'live') list = list.filter(g => g.state === 'in');
       else if (filterMode === 'saved') list = list.filter(g => savedIds.has(g.id));
 
-      if (q) {
-        list = list.filter(g =>
-          `${g.away.name} ${g.home.name} ${g.venue} ${g.broadcast} ${g.league}`.toLowerCase().includes(q)
-        );
-      }
+      if (q) list = list.filter(g => `${g.away.name} ${g.home.name} ${g.venue} ${g.broadcast} ${g.league}`.toLowerCase().includes(q));
 
       list = list.sort((a, b) => b.confidence - a.confidence);
       const feed = document.getElementById('games-feed');
@@ -1191,7 +1342,7 @@
 
             <div class="card-foot">
               <span class="pick-text ${tier === 'high' ? 'high' : ''}">Pick: ${g.pickLabel}</span>
-              <span class="decode-link">Decode &amp; News ›</span>
+              <span class="decode-link">Best Odds &amp; Decode ›</span>
             </div>
             <div class="meter-track"><div class="meter-fill" style="width:${g.confidence}%;background:${barColor};"></div></div>
           </div>
@@ -1202,20 +1353,32 @@
     // --- MODAL & TABS ---
     async function openGameDetail(id) {
       selectedGameId = id;
+      oddsViewSide = 'pick';
       const g = allGames.find(x => x.id === id);
       if (!g) return;
       document.getElementById('detail-title').textContent = `${g.away.short} @ ${g.home.short}`;
       document.getElementById('detail-modal').classList.add('open');
-      currentTab = 'gem';
+      currentTab = 'odds';
       document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
       renderDetailTab();
-      await fetchGameSummary(g, false);
+
+      // Fetch live multi-book odds + ESPN summary in parallel
+      await Promise.all([
+        g.oddsKey ? fetchOddsForSport(g.oddsKey) : Promise.resolve(),
+        g.path ? fetchGameSummary(g, false) : Promise.resolve()
+      ]);
+      if (selectedGameId === id) renderDetailTab();
     }
 
     function switchTab(tab, btn) {
       currentTab = tab;
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      renderDetailTab();
+    }
+
+    function setOddsSide(side) {
+      oddsViewSide = side;
       renderDetailTab();
     }
 
@@ -1237,7 +1400,67 @@
       const ctx = customContextMap[g.id] || { artist: '', song: '', extra: '' };
       const body = document.getElementById('detail-body');
 
-      if (currentTab === 'gem') {
+      if (currentTab === 'odds') {
+        const oppSide = g.pickSide === 'home' ? 'away' : 'home';
+        const targetTeam = oddsViewSide === 'pick' ? g.pickedTeam : (oppSide === 'home' ? g.home : g.away);
+        const oppTeam = oppSide === 'home' ? g.home : g.away;
+
+        const cachedEvents = oddsSportCache[g.oddsKey]?.data || [];
+        const oddsEv = g.oddsEventDirect || matchGameInOdds(g, cachedEvents);
+
+        let rows = [];
+        if (oddsEv?.bookmakers?.length) {
+          const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          const tShort = norm(targetTeam.mascot || targetTeam.short || targetTeam.name);
+          const tFull = norm(targetTeam.name);
+
+          oddsEv.bookmakers.forEach(bm => {
+            const h2h = (bm.markets || []).find(m => m.key === 'h2h');
+            if (!h2h?.outcomes?.length) return;
+            const out = h2h.outcomes.find(o => norm(o.name) === tFull || norm(o.name).includes(tShort) || tFull.includes(norm(o.name)));
+            if (!out || typeof out.price !== 'number') return;
+            const profit100 = americanToProfit100(out.price);
+            rows.push({
+              key: bm.key,
+              title: bm.title,
+              price: out.price,
+              profit100,
+              cents: americanToCents(out.price)
+            });
+          });
+          // Dynamically sort highest payout to the top
+          rows.sort((a, b) => b.profit100 - a.profit100);
+        }
+
+        const listHtml = rows.length
+          ? rows.map((r, idx) => `
+              <div class="book-row ${idx === 0 ? 'best' : ''}" onclick="openSportsbook('${r.key}')">
+                <div class="book-left">
+                  <div class="book-name">
+                    ${r.title}
+                    ${idx === 0 ? '<span class="best-badge">HIGHEST PAYOUT</span>' : ''}
+                  </div>
+                  <div class="book-sub">Tap to open app (or Store) · Implied ${r.cents}¢</div>
+                </div>
+                <div class="book-right">
+                  <div class="book-odds">${r.price > 0 ? '+' + r.price : r.price}</div>
+                  <div class="book-payout">+$${r.profit100.toFixed(0)} on $100</div>
+                </div>
+              </div>
+            `).join('')
+          : `<div class="proof-item warn">
+               <strong>No Live Multi-Book Lines Found Yet</strong>
+               <div class="proof-sub">This game may already be finished, off the board, or outside today's active sportsbook window.</div>
+             </div>`;
+
+        body.innerHTML = `
+          <div class="odds-toggle">
+            <button class="odds-side-btn ${oddsViewSide === 'pick' ? 'active' : ''}" onclick="setOddsSide('pick')">Pick: ${g.pickedTeam.short}</button>
+            <button class="odds-side-btn ${oddsViewSide === 'opp' ? 'active' : ''}" onclick="setOddsSide('opp')">Opp: ${oppTeam.short}</button>
+          </div>
+          ${listHtml}
+        `;
+      } else if (currentTab === 'gem') {
         const hitsHtml = g.primaryHits.length >= 2
           ? g.primaryHits.map(h => `<div class="proof-item"><strong>✓ Hit:</strong> ${h}</div>`).join('')
           : `<div class="proof-item warn"><strong>Threshold Not Met (${g.primaryHits.length}/2):</strong> Fewer than 2 references matched. Gematria pillar is 0% until 2+ align.</div>`;
@@ -1245,15 +1468,15 @@
         body.innerHTML = `
           <div class="proof-item">
             <strong>Composite: ${g.confidence}%</strong> (${g.pickLabel})
-            <div class="proof-sub">Gematria: ${g.gemScore}% (${g.entitiesCount} variables scanned) · Odds/H2H: ${g.h2hScore}% · Health/Live: ${g.rosScore}%</div>
+            <div class="proof-sub">Weights (${g.league}): ${g.activeW.gem}% Gem · ${g.activeW.h2h}% Odds/H2H · ${g.activeW.ros}% Health/Live</div>
           </div>
           <div class="context-box">
-            <h4>+ Add Halftime Show, Song Title, Refs or Coaches</h4>
+            <h4>+ Add Walkout Song, Performer, Refs or Coaches</h4>
             <div class="form-grid">
-              <div class="form-group"><label>Halftime Performer</label><input id="ctx-artist" class="form-input" value="${ctx.artist || ''}" placeholder="Artist name" /></div>
+              <div class="form-group"><label>Performer</label><input id="ctx-artist" class="form-input" value="${ctx.artist || ''}" placeholder="Artist name" /></div>
               <div class="form-group"><label>Song Title</label><input id="ctx-song" class="form-input" value="${ctx.song || ''}" placeholder="Song title" /></div>
             </div>
-            <div class="form-group"><label>Coaches / Extra Keywords</label><input id="ctx-extra" class="form-input" value="${ctx.extra || ''}" placeholder="Coach name, theme, etc." /></div>
+            <div class="form-group"><label>Coaches / Extra Keywords</label><input id="ctx-extra" class="form-input" value="${ctx.extra || ''}" placeholder="Coach, ref, theme..." /></div>
             <button class="primary-btn" onclick="saveExtraContext('${g.id}')">Recalculate Gematria with Context</button>
           </div>
           ${hitsHtml}
@@ -1262,7 +1485,7 @@
         const liveWpStr = sum?.liveHomeWP != null ? `Live ESPN Home Win Prob: ${Math.round(sum.liveHomeWP * 100)}%` : 'Live win probability updates once game is active.';
         const eventsHtml = g.liveEvents.length
           ? g.liveEvents.map(ev => `<div class="proof-item ${ev.impact < 0 ? 'danger' : ''}"><strong>[${ev.tag}] ${ev.clock}</strong> (${ev.impact > 0 ? '+' : ''}${ev.impact}% shift)<div class="proof-sub">${ev.text}</div></div>`).join('')
-          : `<div class="proof-item"><strong>No Live Momentum Events Yet</strong><div class="proof-sub">Fouls, penalties, turnovers, injuries, and big scoring plays appear here live and shift the %.</div></div>`;
+          : `<div class="proof-item"><strong>No Live Momentum Events Yet</strong><div class="proof-sub">Fouls, penalties, turnovers, injuries, and big scoring plays appear here live.</div></div>`;
 
         body.innerHTML = `
           <div class="proof-item">
@@ -1301,14 +1524,14 @@
                 <div class="news-meta">ESPN · ${n.published || 'Latest'}</div>
               </a>
             `).join('')
-          : `<div class="proof-item">Loading latest ESPN news articles for this matchup...</div>`;
+          : `<div class="proof-item">No recent ESPN articles found for this matchup.</div>`;
       }
     }
 
     async function shareSelectedGame() {
       const g = allGames.find(x => x.id === selectedGameId);
       if (!g) return;
-      const text = `AlignIQ Pick (${g.league}): ${g.pickLabel} — ${g.confidence}% Confidence (${g.hitsCount} Gematria Hits) | ${g.away.short} @ ${g.home.short}\nhttps://levaun2024.github.io/AlignIQ/`;
+      const text = `AlignIQ Pick (${g.league}): ${g.pickLabel} — ${g.confidence}% Confidence | ${g.away.short} @ ${g.home.short}\nhttps://levaun2024.github.io/AlignIQ/`;
       if (navigator.share) {
         try { await navigator.share({ title: 'AlignIQ Pick', text }); return; } catch {}
       }
@@ -1363,6 +1586,12 @@
     }
 
     // --- CONTROLS & AUTH ---
+    function saveOddsKey(val) {
+      oddsApiKey = val.trim();
+      localStorage.setItem('aligniq_odds_key', oddsApiKey);
+      oddsSportCache = {};
+      loadSlate(false);
+    }
     function toggleSave(e, id) {
       e.stopPropagation();
       if (savedIds.has(id)) savedIds.delete(id);
@@ -1379,19 +1608,18 @@
     function setSport(s) { activeSport = s; renderSportsBar(); renderFeed(); }
     function toggleTuner() { document.getElementById('tuner-panel').classList.toggle('open'); }
     function onWeightChange() {
+      manualOverride = true;
       weights.gem = Number(document.getElementById('w-gem').value);
       weights.h2h = Number(document.getElementById('w-h2h').value);
       weights.ros = Number(document.getElementById('w-ros').value);
-      document.getElementById('w-gem-val').textContent = weights.gem + '%';
-      document.getElementById('w-h2h-val').textContent = weights.h2h + '%';
-      document.getElementById('w-ros-val').textContent = weights.ros + '%';
+      syncSlidersToWeights();
       renderFeed();
     }
-    function resetWeights() {
-      document.getElementById('w-gem').value = 45;
-      document.getElementById('w-h2h').value = 25;
-      document.getElementById('w-ros').value = 30;
-      onWeightChange();
+    function resetToAgentWeights() {
+      manualOverride = false;
+      if (agentReport?.active_weights) weights = { ...agentReport.active_weights };
+      syncSlidersToWeights();
+      renderFeed();
     }
     function shiftDate(delta) { currentDate.setDate(currentDate.getDate() + delta); loadSlate(false); }
     function onPickDate(val) {
@@ -1408,6 +1636,7 @@
       localStorage.setItem('aligniq_user', provider);
       document.getElementById('auth-screen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'flex';
+      loadAgentReport();
       loadSlate(false);
     }
     function signOut() {
@@ -1420,6 +1649,7 @@
     if (localStorage.getItem('aligniq_user')) {
       document.getElementById('auth-screen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'flex';
+      loadAgentReport();
       loadSlate(false);
     }
   </script>
