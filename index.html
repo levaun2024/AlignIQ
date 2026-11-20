@@ -386,7 +386,23 @@
     .proof-item strong { color: var(--accent); }
     .proof-item.warn strong { color: var(--amber); }
     .proof-item.danger strong { color: #fca5a5; }
+    .proof-item.star-out { border-color: rgba(239, 68, 68, 0.55); background: rgba(239, 68, 68, 0.09); }
     .proof-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .star-badge {
+      display: inline-block; font-size: 9px; font-weight: 800; letter-spacing: 0.4px;
+      padding: 2px 6px; border-radius: 5px; margin-right: 5px; vertical-align: middle;
+      background: var(--danger); color: #ffffff;
+    }
+    .key-badge {
+      display: inline-block; font-size: 9px; font-weight: 800; letter-spacing: 0.4px;
+      padding: 2px 6px; border-radius: 5px; margin-right: 5px; vertical-align: middle;
+      background: var(--amber); color: #04130d;
+    }
+    .bench-badge {
+      display: inline-block; font-size: 9px; font-weight: 700;
+      padding: 2px 6px; border-radius: 5px; margin-right: 5px; vertical-align: middle;
+      background: rgba(100, 116, 139, 0.25); color: var(--text-muted);
+    }
 
     /* Live Odds Rows */
     .odds-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
@@ -461,12 +477,12 @@
         </div>
         <div class="live-pill"><span class="pulse-dot"></span><span id="auth-date-badge">LIVE MULTI-SPORT ENGINE</span></div>
         <h1 class="auth-title">Align<span>IQ</span></h1>
-        <p class="auth-sub">Auto-Tuned AI Agent, Live Multi-Book Odds &amp; Fight Sports</p>
+        <p class="auth-sub">Auto-Tuned AI Agent, Star-Weighted Health &amp; Best Live Odds</p>
 
         <div class="feature-row">
           <div class="feature-box"><strong>AI Tuned</strong><span>Per-League</span></div>
+          <div class="feature-box"><strong>Star Impact</strong><span>Leader Health</span></div>
           <div class="feature-box"><strong>Best Odds</strong><span>Live Sort</span></div>
-          <div class="feature-box"><strong>14 Sports</strong><span>+ UFC/Box</span></div>
         </div>
 
         <button class="oauth-btn btn-google" onclick="signIn('Google')">
@@ -554,7 +570,7 @@
           <input type="range" id="w-h2h" min="0" max="100" value="21" oninput="onWeightChange()" />
         </div>
         <div class="slider-row">
-          <div class="slider-label"><span>Health &amp; Live Play Momentum</span><strong id="w-ros-val">37%</strong></div>
+          <div class="slider-label"><span>Star Health &amp; Live Momentum</span><strong id="w-ros-val">37%</strong></div>
           <input type="range" id="w-ros" min="0" max="100" value="37" oninput="onWeightChange()" />
         </div>
 
@@ -659,7 +675,6 @@
       { key: 'UCL', path: 'soccer/uefa.champions', oddsKey: 'soccer_uefa_champs_league' }
     ];
 
-    // Sportsbook Deep Links (Android Intent + Play Store fallback, iOS Universal Link)
     const SPORTSBOOK_LINKS = {
       draftkings: { name: 'DraftKings', pkg: 'com.draftkings.sportsbook', scheme: 'dksb://', web: 'https://sportsbook.draftkings.com', ios: 'https://sportsbook.draftkings.com' },
       fanduel: { name: 'FanDuel', pkg: 'com.fanduel.android.self', scheme: 'fanduelsportsbook://', web: 'https://sportsbook.fanduel.com', ios: 'https://sportsbook.fanduel.com' },
@@ -685,11 +700,10 @@
     let allGames = [];
     let summaryCache = {};
     let leagueNewsCache = {};
-    let oddsSportCache = {}; // { sportKey: { ts, data } }
+    let oddsSportCache = {};
     let activeSport = 'All';
     let filterMode = 'all';
 
-    // Agent-driven weights
     let agentReport = null;
     let weights = { gem: 42, h2h: 21, ros: 37 };
     let leagueWeights = {};
@@ -697,7 +711,7 @@
 
     let selectedGameId = null;
     let currentTab = 'odds';
-    let oddsViewSide = 'pick'; // 'pick' or 'opp'
+    let oddsViewSide = 'pick';
     let livePollTimer = null;
 
     let savedIds = new Set(JSON.parse(localStorage.getItem('aligniq_saved') || '[]'));
@@ -736,6 +750,63 @@
         <div style="margin-top:4px;color:var(--text-dim);">Per-league profiles active: ${tunedCount} · Updated: ${agentReport.last_updated}</div>
       `;
       document.getElementById('feed-sub').textContent = `AI Verified ${agentReport.overall_win_rate}% (${agentReport.overall_record}) · 30s live sync`;
+    }
+
+    // --- STAR-WEIGHTED INJURY ENGINE ---
+    const PRIMARY_STAT_RE = /point|passing|goal|rating|scoring/i;
+
+    function extractLeadersFromArr(leadersArr, teamShort, side) {
+      const out = [];
+      (leadersArr || []).forEach(cat => {
+        const statName = cat.shortDisplayName || cat.displayName || cat.name || 'Stat';
+        const isPrimary = PRIMARY_STAT_RE.test(`${cat.name || ''} ${cat.displayName || ''}`);
+        const top = (cat.leaders || [])[0];
+        if (!top?.athlete) return;
+        out.push({
+          id: String(top.athlete.id || ''),
+          name: top.athlete.displayName || top.athlete.shortName || '',
+          team: teamShort,
+          side,
+          stat: statName,
+          value: top.displayValue || '',
+          isPrimary
+        });
+      });
+      return out;
+    }
+
+    function classifyInjuryImpact(inj, allLeaders) {
+      const norm = s => (s || '').toLowerCase().replace(/[^a-z]/g, '');
+      const injName = norm(inj.player);
+      const matches = (allLeaders || []).filter(l =>
+        l.side === inj.teamSide && (
+          (inj.athleteId && l.id && inj.athleteId === l.id) ||
+          (injName && norm(l.name) === injName)
+        )
+      );
+
+      const isMulti = matches.length >= 2;
+      const isPrimary = matches.some(m => m.isPrimary);
+      let tier = 'bench';
+      if (isMulti || isPrimary) tier = 'star';
+      else if (matches.length === 1) tier = 'key';
+
+      const st = inj.status || '';
+      const isOut = /out|ir|injured reserve|suspended/i.test(st);
+      const isDoubt = /doubtful/i.test(st);
+      const isQuest = /questionable|day-to-day|gtd/i.test(st);
+
+      let pts = 0;
+      if (tier === 'star') {
+        pts = isOut ? (isMulti ? 18 : 16) : isDoubt ? 11 : isQuest ? 5 : 0;
+      } else if (tier === 'key') {
+        pts = isOut ? 10 : isDoubt ? 7 : isQuest ? 3 : 0;
+      } else {
+        pts = isOut ? 2 : isDoubt ? 1 : 0;
+      }
+
+      const statLabels = [...new Set(matches.map(m => m.stat))].join('/');
+      return { tier, pts, statLabels };
     }
 
     // --- 4 BASE CIPHERS ---
@@ -882,8 +953,20 @@
       const h2hHome = Math.min(95, Math.max(15, Math.round(50 + (hSplitPct - aSplitPct) * 38 + vegasHomeBoost)));
       const h2hAway = Math.min(95, Math.max(15, Math.round(50 + (aSplitPct - hSplitPct) * 38 - vegasHomeBoost)));
 
-      const rosHomeBase = Math.min(95, Math.max(15, Math.round(58 + (hPct - aPct) * 28)));
-      const rosAwayBase = Math.min(95, Math.max(15, Math.round(54 + (aPct - hPct) * 28)));
+      // Combine scoreboard + summary stat leaders for Star-Weighted Injury scoring
+      const allLeaders = [...(game.leaders || []), ...(sumData?.leaders || [])];
+      let homeInjPen = 0, awayInjPen = 0;
+      const gradedInjuries = (sumData?.injuries || []).map(inj => {
+        const impact = classifyInjuryImpact(inj, allLeaders);
+        if (inj.teamSide === 'home') homeInjPen += impact.pts;
+        else awayInjPen += impact.pts;
+        return { ...inj, ...impact };
+      });
+      homeInjPen = Math.min(32, homeInjPen);
+      awayInjPen = Math.min(32, awayInjPen);
+
+      const rosHomeBase = Math.min(95, Math.max(12, Math.round(58 + (hPct - aPct) * 28 - homeInjPen + awayInjPen)));
+      const rosAwayBase = Math.min(95, Math.max(12, Math.round(54 + (aPct - hPct) * 28 - awayInjPen + homeInjPen)));
 
       const totalW = (activeW.gem + activeW.h2h + activeW.ros) || 1;
       const rawHome = (homeGem * activeW.gem + h2hHome * activeW.h2h + rosHomeBase * activeW.ros) / totalW;
@@ -894,14 +977,8 @@
       const gemScore = pickSide === 'home' ? homeGem : awayGem;
       const h2hScore = pickSide === 'home' ? h2hHome : h2hAway;
 
-      let injuryPenalty = 0, oppInjuryBonus = 0;
-      if (sumData?.injuries?.length) {
-        sumData.injuries.forEach(inj => {
-          const pts = /out/i.test(inj.status) ? 7 : /doubtful/i.test(inj.status) ? 5 : /questionable/i.test(inj.status) ? 2 : 0;
-          if (inj.teamSide === pickSide) injuryPenalty += pts;
-          else oppInjuryBonus += pts;
-        });
-      }
+      const injuryPenalty = pickSide === 'home' ? homeInjPen : awayInjPen;
+      const oppInjuryBonus = pickSide === 'home' ? awayInjPen : homeInjPen;
 
       let liveShift = 0;
       const liveEvents = sumData?.liveEvents || [];
@@ -919,7 +996,7 @@
         liveShift = Math.max(-28, Math.min(28, liveShift));
       }
 
-      const rosScore = Math.min(98, Math.max(10, Math.round((pickSide === 'home' ? rosHomeBase : rosAwayBase) - injuryPenalty + oppInjuryBonus + liveShift)));
+      const rosScore = Math.min(98, Math.max(10, Math.round((pickSide === 'home' ? rosHomeBase : rosAwayBase) + liveShift)));
       const conf = Math.min(99, Math.max(8, Math.round((gemScore * activeW.gem + h2hScore * activeW.h2h + rosScore * activeW.ros) / totalW)));
 
       const pickedTeam = pickSide === 'home' ? game.home : game.away;
@@ -947,6 +1024,8 @@
         rosScore,
         injuryPenalty,
         oppInjuryBonus,
+        gradedInjuries,
+        allLeaders,
         liveShift,
         liveEvents,
         grade,
@@ -986,7 +1065,7 @@
     async function fetchOddsForSport(sportKey) {
       if (!oddsApiKey || !sportKey) return [];
       const cached = oddsSportCache[sportKey];
-      if (cached && (Date.now() - cached.ts < 600000)) return cached.data; // 10-min cache
+      if (cached && (Date.now() - cached.ts < 600000)) return cached.data;
       try {
         const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${encodeURIComponent(oddsApiKey)}&regions=us,us2,us_ex&markets=h2h&oddsFormat=american`;
         const res = await fetch(url);
@@ -1025,7 +1104,7 @@
       const badge = document.getElementById('live-count-badge');
       if (!silent) {
         badge.textContent = 'Syncing...';
-        feed.innerHTML = '<div class="empty-state">Scanning 14 sports, UFC, Boxing &amp; live lines...</div>';
+        feed.innerHTML = '<div class="empty-state">Scanning 14 sports, star leaders, UFC &amp; Boxing...</div>';
       }
 
       updateDateUI();
@@ -1051,6 +1130,14 @@
             if (oddsObj?.homeTeamOdds?.favorite) oddsFav = 'home';
             else if (oddsObj?.awayTeamOdds?.favorite) oddsFav = 'away';
 
+            const hShort = home.team?.shortDisplayName || home.athlete?.shortName || home.team?.name || 'Home';
+            const aShort = away.team?.shortDisplayName || away.athlete?.shortName || away.team?.name || 'Away';
+
+            const leaders = [
+              ...extractLeadersFromArr(home.leaders, hShort, 'home'),
+              ...extractLeadersFromArr(away.leaders, aShort, 'away')
+            ];
+
             return {
               id: ev.id,
               league: lg.key,
@@ -1064,9 +1151,10 @@
               eventNote: comp.notes?.[0]?.headline || '',
               oddsText: oddsObj?.details || '',
               oddsFav,
+              leaders,
               home: {
                 name: home.team?.displayName || home.athlete?.displayName || 'Home',
-                short: home.team?.shortDisplayName || home.athlete?.shortName || home.team?.name || 'Home',
+                short: hShort,
                 location: home.team?.location || '',
                 mascot: home.team?.name || home.athlete?.displayName || '',
                 logo: home.team?.logo || '',
@@ -1076,7 +1164,7 @@
               },
               away: {
                 name: away.team?.displayName || away.athlete?.displayName || 'Away',
-                short: away.team?.shortDisplayName || away.athlete?.shortName || away.team?.name || 'Away',
+                short: aShort,
                 location: away.team?.location || '',
                 mascot: away.team?.name || away.athlete?.displayName || '',
                 logo: away.team?.logo || '',
@@ -1091,7 +1179,6 @@
         }
       }));
 
-      // Pull Boxing & Bare Knuckle / MMA cards from Odds API for today/upcoming
       let fightGames = [];
       if (oddsApiKey && isSameDay(currentDate, new Date())) {
         const boxingEvents = await fetchOddsForSport('boxing_boxing');
@@ -1112,6 +1199,7 @@
             eventNote: ev.sport_title || '',
             oddsText: `${ev.bookmakers?.length || 0} Sportsbooks Live`,
             oddsFav: null,
+            leaders: [],
             home: { name: ev.home_team, short: ev.home_team, location: '', mascot: ev.home_team, logo: '', score: '', record: '', homeRecord: '' },
             away: { name: ev.away_team, short: ev.away_team, location: '', mascot: ev.away_team, logo: '', score: '', record: '', roadRecord: '' }
           };
@@ -1146,12 +1234,21 @@
         const data = await res.json();
 
         const officials = (data.gameInfo?.officials || []).map(o => o.displayName || o.fullName).filter(Boolean);
-        const homeId = data.header?.competitions?.[0]?.competitors?.find(c => c.homeAway === 'home')?.id;
+        const homeId = String(data.header?.competitions?.[0]?.competitors?.find(c => c.homeAway === 'home')?.id || '');
+
+        const leaders = [];
+        (data.leaders || []).forEach(tl => {
+          const side = String(tl.team?.id || '') === homeId ? 'home' : 'away';
+          const tShort = tl.team?.shortDisplayName || (side === 'home' ? game.home.short : game.away.short);
+          leaders.push(...extractLeadersFromArr(tl.leaders, tShort, side));
+        });
+
         const injuries = (data.injuries || []).flatMap(ti => {
-          const side = ti.team?.id === homeId ? 'home' : 'away';
-          return (ti.injuries || []).slice(0, 5).map(inj => ({
+          const side = String(ti.team?.id || '') === homeId ? 'home' : 'away';
+          return (ti.injuries || []).slice(0, 8).map(inj => ({
             team: ti.team?.shortDisplayName || '',
             teamSide: side,
+            athleteId: String(inj.athlete?.id || ''),
             player: inj.athlete?.displayName || 'Player',
             status: inj.status || 'Listed',
             detail: inj.shortComment || inj.longComment || ''
@@ -1196,6 +1293,7 @@
 
         summaryCache[game.id] = {
           officials,
+          leaders,
           injuries,
           liveHomeWP,
           liveEvents,
@@ -1362,12 +1460,14 @@
       document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
       renderDetailTab();
 
-      // Fetch live multi-book odds + ESPN summary in parallel
       await Promise.all([
         g.oddsKey ? fetchOddsForSport(g.oddsKey) : Promise.resolve(),
         g.path ? fetchGameSummary(g, false) : Promise.resolve()
       ]);
-      if (selectedGameId === id) renderDetailTab();
+      if (selectedGameId === id) {
+        renderFeed();
+        renderDetailTab();
+      }
     }
 
     function switchTab(tab, btn) {
@@ -1428,7 +1528,6 @@
               cents: americanToCents(out.price)
             });
           });
-          // Dynamically sort highest payout to the top
           rows.sort((a, b) => b.profit100 - a.profit100);
         }
 
@@ -1501,17 +1600,43 @@
           ${eventsHtml}
         `;
       } else if (currentTab === 'ros') {
-        const injHtml = sum?.injuries?.length
-          ? sum.injuries.map(i => {
-              const pts = /out/i.test(i.status) ? '-7 pts' : /doubtful/i.test(i.status) ? '-5 pts' : /questionable/i.test(i.status) ? '-2 pts' : '0 pts';
-              return `<div class="proof-item danger"><strong>${i.player}</strong> (${i.team}) — ${i.status} (${pts})<div class="proof-sub">${i.detail}</div></div>`;
+        // Deduplicate key stat leaders for display
+        const uniqueLeaders = [];
+        (g.allLeaders || []).forEach(l => {
+          if (l.name && !uniqueLeaders.some(u => u.name === l.name && u.stat === l.stat)) {
+            uniqueLeaders.push(l);
+          }
+        });
+
+        const leadersHtml = uniqueLeaders.length
+          ? `<div class="proof-item">
+               <strong>Tracked Key Stat Leaders</strong>
+               <div class="proof-sub">${uniqueLeaders.slice(0, 6).map(l => `${l.team} ${l.stat}: ${l.name} (${l.value})`).join(' · ')}</div>
+             </div>`
+          : '';
+
+        const sortedInj = [...(g.gradedInjuries || [])].sort((a, b) => b.pts - a.pts);
+        const injHtml = sortedInj.length
+          ? sortedInj.map(i => {
+              const badge = i.tier === 'star'
+                ? `<span class="star-badge">★ STAR ${i.statLabels ? '(' + i.statLabels + ')' : ''}</span>`
+                : i.tier === 'key'
+                  ? `<span class="key-badge">KEY (${i.statLabels})</span>`
+                  : `<span class="bench-badge">ROTATION</span>`;
+              const cls = i.tier === 'star' ? 'danger star-out' : i.pts > 0 ? 'danger' : '';
+              return `<div class="proof-item ${cls}">
+                ${badge}<strong>${i.player}</strong> (${i.team}) — ${i.status} (${i.pts > 0 ? '-' + i.pts + ' pts' : '0 pts'})
+                <div class="proof-sub">${i.detail || 'Listed on official ESPN injury report.'}</div>
+              </div>`;
             }).join('')
           : `<div class="proof-item"><strong>Clean Injury Report</strong><div class="proof-sub">No major ESPN injury deductions impacting this game.</div></div>`;
+
         body.innerHTML = `
           <div class="proof-item">
-            <strong>Roster Health Score: ${g.rosScore}%</strong>
-            <div class="proof-sub">Pick Injury Penalty: -${g.injuryPenalty} pts · Opponent Injury Boost: +${g.oppInjuryBonus} pts</div>
+            <strong>Star-Weighted Health Score: ${g.rosScore}%</strong>
+            <div class="proof-sub">Pick Star/Injury Penalty: -${g.injuryPenalty} pts · Opponent Injury Boost: +${g.oppInjuryBonus} pts</div>
           </div>
+          ${leadersHtml}
           ${injHtml}
         `;
       } else {
@@ -1555,6 +1680,7 @@
         state: 'pre',
         time: 'Custom Scan',
         venue: document.getElementById('sc-venue').value,
+        leaders: [],
         away: { name: awayFull, short: awayFull.split(' ').pop(), location: awayFull.split(' ')[0], mascot: awayFull.split(' ').pop(), record: document.getElementById('sc-away-rec').value },
         home: { name: homeFull, short: homeFull.split(' ').pop(), location: homeFull.split(' ')[0], mascot: homeFull.split(' ').pop(), record: document.getElementById('sc-home-rec').value },
         customCtx: {
