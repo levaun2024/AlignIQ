@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>AlignIQ — Hybrid Gematria & Live Matchup Engine</title>
+  <title>AlignIQ — Hybrid Gematria, +EV & Live Matchup Engine</title>
   <meta name="theme-color" content="#080d17" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -32,6 +32,7 @@
       --danger: #ef4444;
       --danger-soft: rgba(239, 68, 68, 0.14);
       --purple: #a78bfa;
+      --purple-soft: rgba(167, 139, 250, 0.14);
       --radius: 14px;
     }
 
@@ -127,27 +128,27 @@
 
     .sticky-top {
       position: sticky; top: 0; z-index: 30;
-      background: rgba(8, 13, 23, 0.95);
+      background: rgba(8, 13, 23, 0.96);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: calc(11px + env(safe-area-inset-top, 0px)) calc(14px + env(safe-area-inset-right, 0px)) 10px calc(14px + env(safe-area-inset-left, 0px));
     }
 
-    .top-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
-    .brand-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .top-bar { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 9px; }
+    .brand-left { display: flex; align-items: center; gap: 7px; min-width: 0; }
     .brand-icon {
-      width: 32px; height: 32px; border-radius: 9px;
+      width: 30px; height: 30px; border-radius: 9px;
       background: linear-gradient(135deg, #10b981, #059669);
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .brand-name { font-size: 18px; font-weight: 800; letter-spacing: -0.4px; white-space: nowrap; }
+    .brand-name { font-size: 17px; font-weight: 800; letter-spacing: -0.4px; white-space: nowrap; }
     .brand-name span { color: var(--accent); }
-    .top-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .top-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 
     .icon-btn {
-      height: 33px; padding: 0 10px; border-radius: 9px;
+      height: 31px; padding: 0 9px; border-radius: 9px;
       border: 1px solid var(--border); background: var(--bg-surface);
-      color: var(--text-main); font-size: 12px; font-weight: 700;
+      color: var(--text-main); font-size: 11.5px; font-weight: 700;
       display: inline-flex; align-items: center; justify-content: center; gap: 4px;
       cursor: pointer; white-space: nowrap; flex-shrink: 0;
     }
@@ -323,13 +324,35 @@
       width: 66px; height: 56px; border-radius: 12px;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       flex-shrink: 0; border: 1.5px solid var(--border-strong); background: rgba(8,13,23,0.55);
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
     .conf-box.high { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
     .conf-box.mid { border-color: var(--amber); color: var(--amber); background: var(--amber-soft); }
     .conf-box.low { border-color: var(--text-dim); color: var(--text-muted); }
     .conf-num { font-size: 18px; font-weight: 900; line-height: 1; }
     .conf-lbl { font-size: 9px; font-weight: 700; letter-spacing: 0.4px; margin-top: 2px; opacity: 0.9; }
-    .shift-mini { font-size: 9px; font-weight: 800; margin-top: 1px; }
+
+    /* Live Direction Flash (1.5s) */
+    @keyframes flashGreen {
+      0% { box-shadow: 0 0 18px rgba(16, 185, 129, 0.95); background: rgba(16, 185, 129, 0.4); border-color: #34d399; color: #ecfdf5; transform: scale(1.05); }
+      100% { box-shadow: none; transform: scale(1); }
+    }
+    @keyframes flashRed {
+      0% { box-shadow: 0 0 18px rgba(239, 68, 68, 0.95); background: rgba(239, 68, 68, 0.4); border-color: #f87171; color: #fef2f2; transform: scale(1.05); }
+      100% { box-shadow: none; transform: scale(1); }
+    }
+    @keyframes meterFlashGreen {
+      0% { background: #34d399; box-shadow: 0 0 10px #10b981; }
+      100% { box-shadow: none; }
+    }
+    @keyframes meterFlashRed {
+      0% { background: #f87171; box-shadow: 0 0 10px #ef4444; }
+      100% { box-shadow: none; }
+    }
+    .conf-box.flash-up { animation: flashGreen 1.5s ease-out; }
+    .conf-box.flash-down { animation: flashRed 1.5s ease-out; }
+    .meter-fill.flash-up { animation: meterFlashGreen 1.5s ease-out; }
+    .meter-fill.flash-down { animation: meterFlashRed 1.5s ease-out; }
 
     .card-sub-info {
       display: flex; align-items: center; justify-content: space-between; gap: 6px;
@@ -345,17 +368,17 @@
     .pick-text.high { color: var(--accent); }
     .decode-link { font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; flex-shrink: 0; }
     .meter-track { height: 4px; background: rgba(255,255,255,0.07); border-radius: 999px; margin-top: 7px; overflow: hidden; }
-    .meter-fill { height: 100%; border-radius: 999px; }
+    .meter-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
 
     /* MODALS */
     .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(2, 6, 14, 0.8);
+      position: fixed; inset: 0; background: rgba(2, 6, 14, 0.82);
       backdrop-filter: blur(5px); z-index: 60;
       display: none; align-items: flex-end; justify-content: center;
     }
     .modal-backdrop.open { display: flex; }
     .modal-sheet {
-      width: 100%; max-width: 480px; max-height: 90vh;
+      width: 100%; max-width: 480px; max-height: 91vh;
       background: var(--bg-surface); border-top: 1px solid var(--border-strong);
       border-radius: 20px 20px 0 0; padding: 16px 15px calc(28px + env(safe-area-inset-bottom, 0px)); overflow-y: auto;
     }
@@ -368,14 +391,16 @@
       color: var(--text-main); font-size: 16px; cursor: pointer;
     }
 
+    /* Scrollable Clean Modal Tabs */
     .tabs-row {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px;
+      display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none;
       background: var(--bg-app); padding: 4px; border-radius: 10px; margin-bottom: 12px;
     }
+    .tabs-row::-webkit-scrollbar { display: none; }
     .tab-btn {
-      padding: 8px 2px; border-radius: 7px; border: none;
+      flex: 1; min-width: 68px; padding: 8px 6px; border-radius: 7px; border: none;
       background: transparent; color: var(--text-muted);
-      font-size: 10.5px; font-weight: 700; cursor: pointer; white-space: nowrap;
+      font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap; text-align: center;
     }
     .tab-btn.active { background: var(--bg-card); color: var(--text-main); }
 
@@ -387,7 +412,18 @@
     .proof-item.warn strong { color: var(--amber); }
     .proof-item.danger strong { color: #fca5a5; }
     .proof-item.star-out { border-color: rgba(239, 68, 68, 0.55); background: rgba(239, 68, 68, 0.09); }
+    .proof-item.arb-box { border-color: rgba(16, 185, 129, 0.65); background: linear-gradient(135deg, rgba(16,185,129,0.16), rgba(56,189,248,0.1)); }
     .proof-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    .ev-badge {
+      display: inline-block; font-size: 9px; font-weight: 800; padding: 2px 6px;
+      border-radius: 5px; background: var(--purple-soft); color: var(--purple);
+      border: 1px solid rgba(167, 139, 250, 0.45);
+    }
+    .move-badge {
+      display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 5px;
+      border-radius: 4px; background: rgba(255,255,255,0.06); color: var(--text-muted);
+    }
     .star-badge {
       display: inline-block; font-size: 9px; font-weight: 800; letter-spacing: 0.4px;
       padding: 2px 6px; border-radius: 5px; margin-right: 5px; vertical-align: middle;
@@ -403,6 +439,31 @@
       padding: 2px 6px; border-radius: 5px; margin-right: 5px; vertical-align: middle;
       background: rgba(100, 116, 139, 0.25); color: var(--text-muted);
     }
+
+    /* Traffic Light Hit Rate Charts */
+    .hr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .hr-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+    .hr-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+    .hr-label { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+    .hr-pct { font-size: 16px; font-weight: 900; }
+    .hr-pct.green { color: var(--accent); }
+    .hr-pct.yellow { color: var(--amber); }
+    .hr-pct.red { color: #f87171; }
+    .hr-bars { display: flex; align-items: flex-end; gap: 4px; height: 42px; padding-top: 4px; }
+    .hr-bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; height: 100%; justify-content: flex-end; }
+    .hr-bar { width: 100%; border-radius: 3px 3px 1px 1px; min-height: 6px; }
+    .hr-bar.w { background: var(--accent); }
+    .hr-bar.l { background: var(--danger); opacity: 0.75; }
+    .hr-bar-lbl { font-size: 8px; color: var(--text-dim); font-weight: 700; }
+
+    /* Fight Striking Map Bars */
+    .strike-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .strike-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+    .strike-name { font-size: 12px; font-weight: 800; margin-bottom: 6px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .zone-row { margin-bottom: 6px; }
+    .zone-lbl { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
+    .zone-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; }
+    .zone-fill { height: 100%; border-radius: 999px; }
 
     /* Live Odds Rows */
     .odds-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
@@ -420,9 +481,14 @@
     .book-row.best { border-color: rgba(16, 185, 129, 0.55); background: rgba(16, 185, 129, 0.08); }
     .book-row:active { background: var(--bg-card-hover); }
     .book-left { min-width: 0; flex: 1; }
-    .book-name { font-size: 13px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
+    .book-name { font-size: 13px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
     .best-badge { font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 5px; background: var(--accent); color: #04130d; }
-    .book-sub { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; }
+    .book-sub { font-size: 10.5px; color: var(--text-muted); margin-top: 3px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+    .get-app-btn {
+      display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 5px;
+      background: var(--blue-soft); border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--blue); font-size: 9.5px; font-weight: 800; cursor: pointer;
+    }
     .book-right { text-align: right; flex-shrink: 0; }
     .book-odds { font-size: 15px; font-weight: 900; color: var(--accent); }
     .book-payout { font-size: 10.5px; color: var(--blue); font-weight: 700; margin-top: 2px; }
@@ -455,6 +521,10 @@
       width: 100%; padding: 11px; border-radius: 9px; border: none;
       background: var(--accent); color: #04130d; font-size: 13px; font-weight: 800; cursor: pointer; margin-top: 4px;
     }
+    .secondary-btn {
+      width: 100%; padding: 9px; border-radius: 9px; border: 1px solid var(--border-strong);
+      background: var(--bg-card); color: var(--blue); font-size: 12px; font-weight: 700; cursor: pointer; margin-top: 4px;
+    }
 
     .empty-state { text-align: center; padding: 36px 16px; color: var(--text-muted); font-size: 13px; }
   </style>
@@ -477,12 +547,12 @@
         </div>
         <div class="live-pill"><span class="pulse-dot"></span><span id="auth-date-badge">LIVE MULTI-SPORT ENGINE</span></div>
         <h1 class="auth-title">Align<span>IQ</span></h1>
-        <p class="auth-sub">Auto-Tuned AI Agent, Star-Weighted Health &amp; Best Live Odds</p>
+        <p class="auth-sub">AI Agent, Scaled Fair Odds, L5/L10 Form &amp; Fight IQ</p>
 
         <div class="feature-row">
-          <div class="feature-box"><strong>AI Tuned</strong><span>Per-League</span></div>
-          <div class="feature-box"><strong>Star Impact</strong><span>Leader Health</span></div>
-          <div class="feature-box"><strong>Best Odds</strong><span>Live Sort</span></div>
+          <div class="feature-box"><strong>Fair Odds</strong><span>No-Vig Math</span></div>
+          <div class="feature-box"><strong>Hit Rates</strong><span>L5 / L10 Form</span></div>
+          <div class="feature-box"><strong>Fight IQ</strong><span>Target Maps</span></div>
         </div>
 
         <button class="oauth-btn btn-google" onclick="signIn('Google')">
@@ -503,7 +573,7 @@
         <div class="top-bar">
           <div class="brand-left">
             <div class="brand-icon">
-              <svg width="18" height="18" viewBox="0 0 36 36" fill="none">
+              <svg width="17" height="17" viewBox="0 0 36 36" fill="none">
                 <polygon points="18,4 30,11 30,25 18,32 6,25 6,11" stroke="#04130d" stroke-width="3.2" fill="none"/>
                 <circle cx="18" cy="18" r="3.5" fill="#04130d"/>
               </svg>
@@ -511,6 +581,7 @@
             <div class="brand-name">Align<span>IQ</span></div>
           </div>
           <div class="top-actions">
+            <button class="icon-btn" onclick="openToolsModal('calc')">🧮 Calc</button>
             <button class="icon-btn" onclick="toggleTuner()">⚙ Agent</button>
             <button class="icon-btn accent" onclick="openScanModal()">+ Scan</button>
             <button class="icon-btn" onclick="signOut()" title="Sign Out">↪</button>
@@ -536,9 +607,11 @@
 
         <div class="mode-pills">
           <button class="mode-pill active" id="mode-all" onclick="setFilterMode('all')">All Games</button>
-          <button class="mode-pill" id="mode-upcoming" onclick="setFilterMode('upcoming')">Upcoming</button>
+          <button class="mode-pill" id="mode-high" onclick="setFilterMode('high')">🔥 70%+ Conf</button>
+          <button class="mode-pill" id="mode-gem" onclick="setFilterMode('gem')">✦ 2+ Hits</button>
           <button class="mode-pill" id="mode-live" onclick="setFilterMode('live')">● Live Now</button>
-          <button class="mode-pill" id="mode-saved" onclick="setFilterMode('saved')">★ My Slip (<span id="saved-count">0</span>)</button>
+          <button class="mode-pill" id="mode-upcoming" onclick="setFilterMode('upcoming')">Upcoming</button>
+          <button class="mode-pill" id="mode-saved" onclick="openToolsModal('slip')">★ Slip (<span id="saved-count">0</span>)</button>
         </div>
 
         <div class="date-math-bar" onclick="openDateMathModal()">
@@ -566,16 +639,16 @@
           <input type="range" id="w-gem" min="0" max="100" value="42" oninput="onWeightChange()" />
         </div>
         <div class="slider-row">
-          <div class="slider-label"><span>Vegas Odds, Splits &amp; H2H</span><strong id="w-h2h-val">21%</strong></div>
+          <div class="slider-label"><span>Scaled Fair Odds &amp; Splits</span><strong id="w-h2h-val">21%</strong></div>
           <input type="range" id="w-h2h" min="0" max="100" value="21" oninput="onWeightChange()" />
         </div>
         <div class="slider-row">
-          <div class="slider-label"><span>Star Health &amp; Live Momentum</span><strong id="w-ros-val">37%</strong></div>
+          <div class="slider-label"><span>L5/L10 Form, Health &amp; Fight IQ</span><strong id="w-ros-val">37%</strong></div>
           <input type="range" id="w-ros" min="0" max="100" value="37" oninput="onWeightChange()" />
         </div>
 
         <div class="form-group" style="margin-top:10px;margin-bottom:0;">
-          <label>Live Odds API Key (The Odds API)</label>
+          <label>Live Odds API Key <span id="credits-badge" style="color:var(--blue);font-weight:800;"></span></label>
           <input id="odds-api-key" class="form-input" type="password" placeholder="Paste API key" onchange="saveOddsKey(this.value)" />
         </div>
       </div>
@@ -610,14 +683,31 @@
             <button class="close-btn" onclick="closeModal('detail-modal')">×</button>
           </div>
         </div>
-        <div class="tabs-row">
-          <button class="tab-btn active" onclick="switchTab('odds', this)">Best Odds</button>
-          <button class="tab-btn" onclick="switchTab('gem', this)">Gematria</button>
-          <button class="tab-btn" onclick="switchTab('live', this)">Live/H2H</button>
-          <button class="tab-btn" onclick="switchTab('ros', this)">Health</button>
-          <button class="tab-btn" onclick="switchTab('news', this)">News</button>
+        <div class="tabs-row" id="detail-tabs">
+          <button class="tab-btn active" data-tab="odds" onclick="switchTab('odds', this)">Best Odds</button>
+          <button class="tab-btn" data-tab="props" onclick="switchTab('props', this)">Props/DFS</button>
+          <button class="tab-btn" data-tab="trends" onclick="switchTab('trends', this)">Trends/AI</button>
+          <button class="tab-btn" data-tab="gem" onclick="switchTab('gem', this)">Gematria</button>
+          <button class="tab-btn" data-tab="ros" id="tab-ros-btn" onclick="switchTab('ros', this)">Health</button>
+          <button class="tab-btn" data-tab="news" onclick="switchTab('news', this)">News</button>
         </div>
         <div id="detail-body"></div>
+      </div>
+    </div>
+
+    <!-- PARLAY SLIP & CALCULATORS MODAL -->
+    <div class="modal-backdrop" id="tools-modal" onclick="closeModalOnBg(event, 'tools-modal')">
+      <div class="modal-sheet">
+        <div class="modal-head">
+          <h2>Parlay Slip &amp; Pro Calculators</h2>
+          <button class="close-btn" onclick="closeModal('tools-modal')">×</button>
+        </div>
+        <div class="tabs-row">
+          <button class="tab-btn active" id="tool-tab-slip" onclick="switchToolsTab('slip', this)">★ Parlay Slip</button>
+          <button class="tab-btn" id="tool-tab-calc" onclick="switchToolsTab('calc', this)">+EV &amp; Arb Calc</button>
+          <button class="tab-btn" id="tool-tab-conv" onclick="switchToolsTab('conv', this)">Odds / ¢</button>
+        </div>
+        <div id="tools-body"></div>
       </div>
     </div>
 
@@ -661,36 +751,41 @@
 
   <script>
     const LEAGUES = [
-      { key: 'NBA', path: 'basketball/nba', oddsKey: 'basketball_nba' },
-      { key: 'NFL', path: 'football/nfl', oddsKey: 'americanfootball_nfl' },
-      { key: 'NHL', path: 'hockey/nhl', oddsKey: 'icehockey_nhl' },
-      { key: 'MLB', path: 'baseball/mlb', oddsKey: 'baseball_mlb' },
-      { key: 'NCAAF', path: 'football/college-football', oddsKey: 'americanfootball_ncaaf' },
-      { key: 'NCAAB', path: 'basketball/mens-college-basketball', oddsKey: 'basketball_ncaab' },
-      { key: 'NCAAW', path: 'basketball/womens-college-basketball', oddsKey: 'basketball_wncaab' },
-      { key: 'WNBA', path: 'basketball/wnba', oddsKey: 'basketball_wnba' },
-      { key: 'UFC', path: 'mma/ufc', oddsKey: 'mma_mixed_martial_arts' },
-      { key: 'EPL', path: 'soccer/eng.1', oddsKey: 'soccer_epl' },
-      { key: 'MLS', path: 'soccer/usa.1', oddsKey: 'soccer_usa_mls' },
-      { key: 'UCL', path: 'soccer/uefa.champions', oddsKey: 'soccer_uefa_champs_league' }
+      { key: 'NBA', path: 'basketball/nba', oddsKey: 'basketball_nba', propMarkets: 'player_points,player_rebounds,player_assists' },
+      { key: 'NFL', path: 'football/nfl', oddsKey: 'americanfootball_nfl', propMarkets: 'player_pass_yds,player_rush_yds,player_reception_yds,player_anytime_td' },
+      { key: 'NHL', path: 'hockey/nhl', oddsKey: 'icehockey_nhl', propMarkets: 'player_points,player_goals,player_shots_on_goal' },
+      { key: 'MLB', path: 'baseball/mlb', oddsKey: 'baseball_mlb', propMarkets: 'batter_hits,batter_total_bases,pitcher_strikeouts' },
+      { key: 'NCAAF', path: 'football/college-football', oddsKey: 'americanfootball_ncaaf', propMarkets: 'player_pass_yds,player_rush_yds,player_anytime_td' },
+      { key: 'NCAAB', path: 'basketball/mens-college-basketball', oddsKey: 'basketball_ncaab', propMarkets: 'player_points,player_rebounds,player_assists' },
+      { key: 'NCAAW', path: 'basketball/womens-college-basketball', oddsKey: 'basketball_wncaab', propMarkets: '' },
+      { key: 'WNBA', path: 'basketball/wnba', oddsKey: 'basketball_wnba', propMarkets: 'player_points,player_rebounds,player_assists' },
+      { key: 'UFC', path: 'mma/ufc', oddsKey: 'mma_mixed_martial_arts', propMarkets: '' },
+      { key: 'EPL', path: 'soccer/eng.1', oddsKey: 'soccer_epl', propMarkets: '' },
+      { key: 'MLS', path: 'soccer/usa.1', oddsKey: 'soccer_usa_mls', propMarkets: '' },
+      { key: 'UCL', path: 'soccer/uefa.champions', oddsKey: 'soccer_uefa_champs_league', propMarkets: '' }
     ];
 
+    const FIGHT_LEAGUES = new Set(['UFC', 'BOXING', 'BKFC']);
+
     const SPORTSBOOK_LINKS = {
-      draftkings: { name: 'DraftKings', pkg: 'com.draftkings.sportsbook', scheme: 'dksb://', web: 'https://sportsbook.draftkings.com', ios: 'https://sportsbook.draftkings.com' },
-      fanduel: { name: 'FanDuel', pkg: 'com.fanduel.android.self', scheme: 'fanduelsportsbook://', web: 'https://sportsbook.fanduel.com', ios: 'https://sportsbook.fanduel.com' },
-      betmgm: { name: 'BetMGM', pkg: 'com.betmgm.sportsbook', scheme: 'betmgm://', web: 'https://sports.betmgm.com', ios: 'https://sports.betmgm.com' },
-      williamhill_us: { name: 'Caesars', pkg: 'com.williamhill.us.nj.sports', scheme: 'caesarssportsbook://', web: 'https://www.caesars.com/sportsbook-and-casino', ios: 'https://www.caesars.com/sportsbook-and-casino' },
-      espnbet: { name: 'ESPN BET', pkg: 'com.penn.espnbet', scheme: 'espnbet://', web: 'https://espnbet.com', ios: 'https://espnbet.com' },
-      fanatics: { name: 'Fanatics', pkg: 'com.fanatics.betting', scheme: 'fanaticssportsbook://', web: 'https://sportsbook.fanatics.com', ios: 'https://sportsbook.fanatics.com' },
-      betrivers: { name: 'BetRivers', pkg: 'com.rushstreetinteractive.betrivers', scheme: 'betrivers://', web: 'https://www.betrivers.com', ios: 'https://www.betrivers.com' },
-      hardrockbet: { name: 'Hard Rock Bet', pkg: 'com.hardrock.sportsbook', scheme: 'hardrockbet://', web: 'https://www.hardrock.bet', ios: 'https://www.hardrock.bet' },
-      kalshi: { name: 'Kalshi', pkg: 'com.kalshi.mobile', scheme: 'kalshi://', web: 'https://kalshi.com/markets/sports', ios: 'https://kalshi.com/markets/sports' },
-      bovada: { name: 'Bovada', pkg: '', scheme: '', web: 'https://www.bovada.lv/sports', ios: 'https://www.bovada.lv/sports' },
-      betonlineag: { name: 'BetOnline', pkg: '', scheme: '', web: 'https://www.betonline.ag/sportsbook', ios: 'https://www.betonline.ag/sportsbook' },
-      betus: { name: 'BetUS', pkg: '', scheme: '', web: 'https://www.betus.com.pa/sportsbook/', ios: 'https://www.betus.com.pa/sportsbook/' },
-      fliff: { name: 'Fliff', pkg: 'com.fliff.sports', scheme: 'fliff://', web: 'https://www.getfliff.com', ios: 'https://www.getfliff.com' },
-      novig: { name: 'Novig', pkg: 'com.novig.app', scheme: 'novig://', web: 'https://www.novig.us', ios: 'https://www.novig.us' },
-      prophetx: { name: 'ProphetX', pkg: 'com.prophetexchange.app', scheme: 'prophetx://', web: 'https://www.prophetx.co', ios: 'https://www.prophetexchange.com' }
+      draftkings: { name: 'DraftKings', pkg: 'com.draftkings.sportsbook', ios: 'https://apps.apple.com/us/app/draftkings-sports-casino/id1375031369', web: 'https://sportsbook.draftkings.com' },
+      fanduel: { name: 'FanDuel', pkg: 'com.fanduel.android.self', ios: 'https://apps.apple.com/us/app/fanduel-sportsbook-casino/id1413721906', web: 'https://sportsbook.fanduel.com' },
+      betmgm: { name: 'BetMGM', pkg: 'com.playmgm.nj.sports', ios: 'https://apps.apple.com/us/app/betmgm-sportsbook-casino/id1430875409', web: 'https://sports.betmgm.com' },
+      williamhill_us: { name: 'Caesars', pkg: 'com.williamhill.us.nj.sports', ios: 'https://apps.apple.com/us/app/caesars-sportsbook-casino/id1413099571', web: 'https://www.caesars.com/sportsbook-and-casino' },
+      espnbet: { name: 'ESPN BET', pkg: 'com.penn.espnbet', ios: 'https://espnbet.com', web: 'https://espnbet.com' },
+      fanatics: { name: 'Fanatics', pkg: 'com.betfanatics.sportsbook.android', ios: 'https://apps.apple.com/us/app/fanatics-sports-casino/id1616738407', web: 'https://sportsbook.fanatics.com' },
+      betrivers: { name: 'BetRivers', pkg: 'com.rushstreetinteractive.betrivers', ios: 'https://apps.apple.com/us/app/betrivers-casino-sportsbook/id1635357259', web: 'https://www.betrivers.com' },
+      hardrockbet: { name: 'Hard Rock Bet', pkg: 'com.hardrock.sportsbook', ios: 'https://apps.apple.com/us/app/hard-rock-bet-sportsbook/id1572525917', web: 'https://www.hardrock.bet' },
+      kalshi: { name: 'Kalshi', pkg: 'com.kalshi.mobile', ios: 'https://apps.apple.com/us/app/kalshi-trade-events-sports/id1632713844', web: 'https://kalshi.com/markets/sports' },
+      novig: { name: 'Novig', pkg: 'us.novig.app', ios: 'https://apps.apple.com/us/app/novig-prediction-market/id6443958997', web: 'https://www.novig.us' },
+      prophetx: { name: 'ProphetX', pkg: 'com.prophetxsweepstake', ios: 'https://apps.apple.com/us/app/prophetx-prediction-market/id6504584166', web: 'https://www.prophetx.co' },
+      fliff: { name: 'Fliff', pkg: 'com.fliff.sports', ios: 'https://apps.apple.com/us/app/fliff-sportsbook-casino/id1489145500', web: 'https://www.getfliff.com' },
+      prizepicks: { name: 'PrizePicks', pkg: 'com.prizepicks.app', ios: 'https://apps.apple.com/us/app/prizepicks-daily-fantasy/id1407493120', web: 'https://app.prizepicks.com' },
+      underdog: { name: 'Underdog', pkg: 'com.underdogsports.android', ios: 'https://apps.apple.com/us/app/underdog-fantasy-sports/id1514665962', web: 'https://underdogfantasy.com' },
+      parlayplay: { name: 'ParlayPlay', pkg: 'io.parlayplay.app', ios: 'https://apps.apple.com/us/app/parlayplay-fantasy-sports/id1566037258', web: 'https://parlayplay.io' },
+      bovada: { name: 'Bovada', pkg: '', ios: '', web: 'https://www.bovada.lv/sports' },
+      betonlineag: { name: 'BetOnline', pkg: '', ios: '', web: 'https://www.betonline.ag/sportsbook' },
+      betus: { name: 'BetUS', pkg: '', ios: '', web: 'https://www.betus.com.pa/sportsbook/' }
     };
 
     const DEFAULT_ODDS_KEY = '975371c27c6eb7cc21932c12be7eab21';
@@ -699,8 +794,12 @@
     let currentDate = new Date();
     let allGames = [];
     let summaryCache = {};
+    let scheduleCache = {};
     let leagueNewsCache = {};
     let oddsSportCache = {};
+    let propsEventCache = {};
+    let fightersDb = {};
+    let prevConfMap = {};
     let activeSport = 'All';
     let filterMode = 'all';
 
@@ -711,24 +810,32 @@
 
     let selectedGameId = null;
     let currentTab = 'odds';
+    let currentToolsTab = 'slip';
     let oddsViewSide = 'pick';
     let livePollTimer = null;
 
     let savedIds = new Set(JSON.parse(localStorage.getItem('aligniq_saved') || '[]'));
     let customContextMap = JSON.parse(localStorage.getItem('aligniq_ctx') || '{}');
+    let fightIntelMap = JSON.parse(localStorage.getItem('aligniq_fight_intel') || '{}');
+    let openOddsMap = JSON.parse(localStorage.getItem('aligniq_open_odds') || '{}');
 
-    // --- LOAD AGENT REPORT ---
+    // --- LOAD AGENT REPORT & FIGHTERS DB ---
     async function loadAgentReport() {
       try {
         const res = await fetch(`./agent_report.json?t=${Date.now()}`);
-        if (!res.ok) return;
-        agentReport = await res.json();
-        if (agentReport.active_weights) weights = { ...agentReport.active_weights };
-        if (agentReport.league_weights) leagueWeights = { ...agentReport.league_weights };
-        syncSlidersToWeights();
-        renderAgentStatusBox();
-        if (allGames.length) renderFeed();
+        if (res.ok) {
+          agentReport = await res.json();
+          if (agentReport.active_weights) weights = { ...agentReport.active_weights };
+          if (agentReport.league_weights) leagueWeights = { ...agentReport.league_weights };
+          syncSlidersToWeights();
+          renderAgentStatusBox();
+        }
       } catch {}
+      try {
+        const fres = await fetch(`./fighters.json?t=${Date.now()}`);
+        if (fres.ok) fightersDb = await fres.json();
+      } catch {}
+      if (allGames.length) renderFeed();
     }
 
     function syncSlidersToWeights() {
@@ -752,6 +859,141 @@
       document.getElementById('feed-sub').textContent = `AI Verified ${agentReport.overall_win_rate}% (${agentReport.overall_record}) · 30s live sync`;
     }
 
+    // --- ODDS MATH (+EV, NO-VIG, ARBITRAGE) ---
+    function americanToDecimal(odds) {
+      if (!odds) return 2;
+      return odds > 0 ? (1 + odds / 100) : (1 + 100 / Math.abs(odds));
+    }
+    function americanToImplied(odds) {
+      if (!odds) return 0.5;
+      return odds > 0 ? (100 / (odds + 100)) : (Math.abs(odds) / (Math.abs(odds) + 100));
+    }
+    function americanToProfit100(odds) {
+      if (!odds || odds === 0) return 0;
+      return odds > 0 ? odds : (10000 / Math.abs(odds));
+    }
+    function americanToCents(odds) {
+      return Math.round(americanToImplied(odds) * 100);
+    }
+    function decimalToAmerican(dec) {
+      if (!dec || dec <= 1.01) return -10000;
+      return dec >= 2 ? Math.round((dec - 1) * 100) : Math.round(-100 / (dec - 1));
+    }
+
+    function analyzeOddsEvent(oddsEv, homeTeam, awayTeam) {
+      if (!oddsEv?.bookmakers?.length) return { homeRows: [], awayRows: [], fairHome: 0.5, fairAway: 0.5, fairPairs: 0, arb: null };
+      const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const hFull = norm(homeTeam.name), aFull = norm(awayTeam.name);
+      const hShort = norm(homeTeam.mascot || homeTeam.short || homeTeam.name);
+      const aShort = norm(awayTeam.mascot || awayTeam.short || awayTeam.name);
+
+      const homeRows = [], awayRows = [];
+      let sumFairHome = 0, fairPairs = 0;
+
+      oddsEv.bookmakers.forEach(bm => {
+        const h2h = (bm.markets || []).find(m => m.key === 'h2h');
+        if (!h2h?.outcomes?.length) return;
+        const hOut = h2h.outcomes.find(o => norm(o.name) === hFull || norm(o.name).includes(hShort) || hFull.includes(norm(o.name)));
+        const aOut = h2h.outcomes.find(o => o !== hOut && (norm(o.name) === aFull || norm(o.name).includes(aShort) || aFull.includes(norm(o.name))));
+
+        if (hOut && aOut && typeof hOut.price === 'number' && typeof aOut.price === 'number') {
+          const ih = americanToImplied(hOut.price);
+          const ia = americanToImplied(aOut.price);
+          if (ih + ia > 0) {
+            sumFairHome += ih / (ih + ia);
+            fairPairs++;
+          }
+        }
+        if (hOut && typeof hOut.price === 'number') {
+          homeRows.push({
+            key: bm.key, title: bm.title, price: hOut.price,
+            dec: americanToDecimal(hOut.price), profit100: americanToProfit100(hOut.price),
+            cents: americanToCents(hOut.price), link: hOut.link || h2h.link || bm.link || ''
+          });
+        }
+        if (aOut && typeof aOut.price === 'number') {
+          awayRows.push({
+            key: bm.key, title: bm.title, price: aOut.price,
+            dec: americanToDecimal(aOut.price), profit100: americanToProfit100(aOut.price),
+            cents: americanToCents(aOut.price), link: aOut.link || h2h.link || bm.link || ''
+          });
+        }
+      });
+
+      const fairHome = fairPairs ? (sumFairHome / fairPairs) : 0.5;
+      const fairAway = 1 - fairHome;
+
+      homeRows.forEach(r => { r.ev = ((fairHome * r.dec) - 1) * 100; });
+      awayRows.forEach(r => { r.ev = ((fairAway * r.dec) - 1) * 100; });
+
+      homeRows.sort((a, b) => b.profit100 - a.profit100);
+      awayRows.sort((a, b) => b.profit100 - a.profit100);
+
+      const openKey = oddsEv.id || `${hFull}_${aFull}`;
+      if (!openOddsMap[openKey] && homeRows[0] && awayRows[0]) {
+        openOddsMap[openKey] = { home: homeRows[0].price, away: awayRows[0].price };
+        localStorage.setItem('aligniq_open_odds', JSON.stringify(openOddsMap));
+      }
+      const opened = openOddsMap[openKey] || null;
+
+      let arb = null;
+      if (homeRows[0] && awayRows[0]) {
+        const invSum = (1 / homeRows[0].dec) + (1 / awayRows[0].dec);
+        if (invSum < 0.998) {
+          const roi = ((1 / invSum) - 1) * 100;
+          const stakeHome = (100 / (homeRows[0].dec * invSum));
+          const stakeAway = 100 - stakeHome;
+          arb = {
+            roi,
+            profit100: (stakeHome * homeRows[0].dec) - 100,
+            homeBook: homeRows[0].title, homePrice: homeRows[0].price, stakeHome,
+            awayBook: awayRows[0].title, awayPrice: awayRows[0].price, stakeAway
+          };
+        }
+      }
+      return { homeRows, awayRows, fairHome, fairAway, fairPairs, arb, opened };
+    }
+
+    // --- FORM & FIGHT IQ HELPERS ---
+    function computeFormMetrics(sched) {
+      if (!sched || !sched.length) return null;
+      const l10 = sched.slice(-10);
+      const l5 = sched.slice(-5);
+      const l10Pct = l10.filter(x => x.won).length / l10.length;
+      const l5Pct = l5.filter(x => x.won).length / l5.length;
+      const avgMargin = l5.reduce((s, x) => s + x.margin, 0) / l5.length;
+      return {
+        pct: l5Pct * 0.6 + l10Pct * 0.4,
+        l5Wins: l5.filter(x => x.won).length,
+        l5Len: l5.length,
+        avgMargin
+      };
+    }
+
+    function parseReachInches(reachStr) {
+      const m = String(reachStr || '').match(/(\d+(?:\.\d+)?)/);
+      return m ? parseFloat(m[1]) : null;
+    }
+
+    function findFighterStats(name) {
+      if (!name || !fightersDb) return null;
+      const key = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      return fightersDb[key] || null;
+    }
+
+    function computeFightEdge(homeName, awayName) {
+      const fH = findFighterStats(homeName);
+      const fA = findFighterStats(awayName);
+      if (!fH || !fA) return { edge: 0, hasData: false };
+      const defDiff = ((fH.str_def || 55) - (fA.str_def || 55)) * 0.6;
+      const sapmDiff = ((fA.sapm || 3.2) - (fH.sapm || 3.2)) * 4.0;
+      const rH = parseReachInches(fH.reach);
+      const rA = parseReachInches(fA.reach);
+      const reachDiff = (rH && rA) ? Math.max(-6, Math.min(6, (rH - rA) * 1.2)) : 0;
+      const edge = Math.max(-22, Math.min(22, Math.round(defDiff + sapmDiff + reachDiff)));
+      return { edge, hasData: true, defDiff: Math.round(defDiff), sapmDiff: Math.round(sapmDiff), reachDiff: Math.round(reachDiff) };
+    }
+
     // --- STAR-WEIGHTED INJURY ENGINE ---
     const PRIMARY_STAT_RE = /point|passing|goal|rating|scoring/i;
 
@@ -765,11 +1007,7 @@
         out.push({
           id: String(top.athlete.id || ''),
           name: top.athlete.displayName || top.athlete.shortName || '',
-          team: teamShort,
-          side,
-          stat: statName,
-          value: top.displayValue || '',
-          isPrimary
+          team: teamShort, side, stat: statName, value: top.displayValue || '', isPrimary
         });
       });
       return out;
@@ -779,12 +1017,8 @@
       const norm = s => (s || '').toLowerCase().replace(/[^a-z]/g, '');
       const injName = norm(inj.player);
       const matches = (allLeaders || []).filter(l =>
-        l.side === inj.teamSide && (
-          (inj.athleteId && l.id && inj.athleteId === l.id) ||
-          (injName && norm(l.name) === injName)
-        )
+        l.side === inj.teamSide && ((inj.athleteId && l.id && inj.athleteId === l.id) || (injName && norm(l.name) === injName))
       );
-
       const isMulti = matches.length >= 2;
       const isPrimary = matches.some(m => m.isPrimary);
       let tier = 'bench';
@@ -797,16 +1031,11 @@
       const isQuest = /questionable|day-to-day|gtd/i.test(st);
 
       let pts = 0;
-      if (tier === 'star') {
-        pts = isOut ? (isMulti ? 18 : 16) : isDoubt ? 11 : isQuest ? 5 : 0;
-      } else if (tier === 'key') {
-        pts = isOut ? 10 : isDoubt ? 7 : isQuest ? 3 : 0;
-      } else {
-        pts = isOut ? 2 : isDoubt ? 1 : 0;
-      }
+      if (tier === 'star') pts = isOut ? (isMulti ? 18 : 16) : isDoubt ? 11 : isQuest ? 5 : 0;
+      else if (tier === 'key') pts = isOut ? 10 : isDoubt ? 7 : isQuest ? 3 : 0;
+      else pts = isOut ? 2 : isDoubt ? 1 : 0;
 
-      const statLabels = [...new Set(matches.map(m => m.stat))].join('/');
-      return { tier, pts, statLabels };
+      return { tier, pts, statLabels: [...new Set(matches.map(m => m.stat))].join('/') };
     }
 
     // --- 4 BASE CIPHERS ---
@@ -814,43 +1043,32 @@
       while (n > 9) n = String(n).split('').reduce((a, b) => a + Number(b), 0);
       return n;
     }
-
     function calcCiphers(str) {
       const clean = (str || '').toUpperCase().replace(/[^A-Z]/g, '');
       let ord = 0, red = 0, rev = 0, rred = 0;
       for (let i = 0; i < clean.length; i++) {
         const v = clean.charCodeAt(i) - 64;
         const rv = 27 - v;
-        ord += v;
-        red += reduceDigit(v);
-        rev += rv;
-        rred += reduceDigit(rv);
+        ord += v; red += reduceDigit(v); rev += rv; rred += reduceDigit(rv);
       }
       return { ord, red, rev, rred };
     }
-
     function getDateMath(d) {
-      const m = d.getMonth() + 1;
-      const day = d.getDate();
-      const y = d.getFullYear();
-      const yTop = Math.floor(y / 100);
-      const yBot = y % 100;
+      const m = d.getMonth() + 1, day = d.getDate(), y = d.getFullYear();
+      const yTop = Math.floor(y / 100), yBot = y % 100;
       const full = m + day + yTop + yBot;
       const short = m + day + yBot;
       const digits = `${m}${day}${y}`.split('').reduce((a, b) => a + Number(b), 0);
       const mixed = m + day + String(y).split('').reduce((a, b) => a + Number(b), 0);
-      const start = new Date(y, 0, 0);
-      const doy = Math.floor((d - start) / 86400000);
+      const doy = Math.floor((d - new Date(y, 0, 0)) / 86400000);
       const isLeap = (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0);
       const left = (isLeap ? 366 : 365) - doy;
       return { full, short, digits, mixed, doy, left, nums: [full, short, digits, mixed, doy, left] };
     }
-
     function parseRecord(recStr) {
       const m = String(recStr || '').match(/(\d+)\s*-\s*(\d+)/);
       return m ? { w: parseInt(m[1], 10), l: parseInt(m[2], 10) } : null;
     }
-
     function buildRecordTargets(w, l) {
       const t = new Set();
       const concat = Number(`${w}${l}`);
@@ -861,7 +1079,6 @@
       if (l > 0) t.add(l);
       return Array.from(t);
     }
-
     function progressiveScore(hits) {
       if (hits < 2) return 0;
       const tiers = [0, 0, 42, 62, 76, 88, 95, 100];
@@ -872,41 +1089,25 @@
       const list = [];
       const add = (label, text) => {
         const t = (text || '').trim();
-        if (t && t !== 'TBD Venue' && !list.some(x => x.text.toLowerCase() === t.toLowerCase())) {
-          list.push({ label, text: t });
-        }
+        if (t && t !== 'TBD Venue' && !list.some(x => x.text.toLowerCase() === t.toLowerCase())) list.push({ label, text: t });
       };
-      add('Away Full', game.away.name);
-      add('Away City', game.away.location);
-      add('Away Mascot', game.away.mascot);
-      add('Home Full', game.home.name);
-      add('Home City', game.home.location);
-      add('Home Mascot', game.home.mascot);
-      add('Stadium', game.venue);
-      add('Venue City', game.venueCity);
-      add('Broadcast', game.broadcast);
-      add('Event Note', game.eventNote);
-      if (sumData?.officials?.length) {
-        sumData.officials.forEach((ref, idx) => add(`Official #${idx + 1}`, ref));
-      }
-      if (userCtx) {
-        add('Performer', userCtx.artist);
-        add('Song', userCtx.song);
-        add('Coaches / Extra', userCtx.extra);
-      }
+      add('Away Full', game.away.name); add('Away City', game.away.location); add('Away Mascot', game.away.mascot);
+      add('Home Full', game.home.name); add('Home City', game.home.location); add('Home Mascot', game.home.mascot);
+      add('Stadium', game.venue); add('Venue City', game.venueCity); add('Broadcast', game.broadcast); add('Event Note', game.eventNote);
+      if (sumData?.officials?.length) sumData.officials.forEach((ref, idx) => add(`Official #${idx + 1}`, ref));
+      if (userCtx) { add('Performer', userCtx.artist); add('Song', userCtx.song); add('Coaches / Extra', userCtx.extra); }
       return list;
     }
 
     function evaluateGame(game, dm) {
       const sumData = summaryCache[game.id] || null;
       const userCtx = customContextMap[game.id] || game.customCtx || null;
+      const fIntel = fightIntelMap[game.id] || null;
       const entities = buildEntities(game, sumData, userCtx);
-
       const activeW = manualOverride ? weights : (leagueWeights[game.league] || weights);
 
       const awayRec = parseRecord(game.away.record);
       const homeRec = parseRecord(game.home.record);
-
       const awayWinTargets = awayRec ? buildRecordTargets(awayRec.w + 1, awayRec.l) : [];
       const awayLossTargets = awayRec ? buildRecordTargets(awayRec.w, awayRec.l + 1) : [];
       const homeWinTargets = homeRec ? buildRecordTargets(homeRec.w + 1, homeRec.l) : [];
@@ -938,9 +1139,31 @@
 
       const awayHits = scanOutcome(awayWinTargets, homeLossTargets, awayWinLabel, homeLossLabel, game.away.short);
       const homeHits = scanOutcome(homeWinTargets, awayLossTargets, homeWinLabel, awayLossLabel, game.home.short);
-
       const awayGem = progressiveScore(awayHits.length);
       const homeGem = progressiveScore(homeHits.length);
+
+      // --- UPGRADE 1: SCALED NO-VIG FAIR ODDS ---
+      const cachedOddsEv = game.oddsEventDirect || matchGameInOdds(game, oddsSportCache[game.oddsKey]?.data || []);
+      const oa = analyzeOddsEvent(cachedOddsEv, game.home, game.away);
+
+      let fairHomeProb = 0.5;
+      let hasScaledOdds = false;
+      if (oa.fairPairs > 0) {
+        fairHomeProb = oa.fairHome;
+        hasScaledOdds = true;
+      } else if (typeof game.homeML === 'number' && typeof game.awayML === 'number') {
+        const ih = americanToImplied(game.homeML);
+        const ia = americanToImplied(game.awayML);
+        if (ih + ia > 0) {
+          fairHomeProb = ih / (ih + ia);
+          hasScaledOdds = true;
+        }
+      } else if (game.oddsFav === 'home') {
+        fairHomeProb = 0.58;
+      } else if (game.oddsFav === 'away') {
+        fairHomeProb = 0.42;
+      }
+      const fairAwayProb = 1 - fairHomeProb;
 
       const aPct = awayRec && (awayRec.w + awayRec.l) > 0 ? awayRec.w / (awayRec.w + awayRec.l) : 0.5;
       const hPct = homeRec && (homeRec.w + homeRec.l) > 0 ? homeRec.w / (homeRec.w + homeRec.l) : 0.5;
@@ -949,9 +1172,26 @@
       const aSplitPct = aSplit && (aSplit.w + aSplit.l) > 0 ? aSplit.w / (aSplit.w + aSplit.l) : aPct;
       const hSplitPct = hSplit && (hSplit.w + hSplit.l) > 0 ? hSplit.w / (hSplit.w + hSplit.l) : hPct;
 
-      const vegasHomeBoost = game.oddsFav === 'home' ? 10 : (game.oddsFav === 'away' ? -10 : 0);
-      const h2hHome = Math.min(95, Math.max(15, Math.round(50 + (hSplitPct - aSplitPct) * 38 + vegasHomeBoost)));
-      const h2hAway = Math.min(95, Math.max(15, Math.round(50 + (aSplitPct - hSplitPct) * 38 - vegasHomeBoost)));
+      const isFight = FIGHT_LEAGUES.has(game.league);
+      const splitHomeScore = Math.min(95, Math.max(15, 50 + (hSplitPct - aSplitPct) * 45));
+      const splitAwayScore = Math.min(95, Math.max(15, 50 + (aSplitPct - hSplitPct) * 45));
+      const oddsHomeScore = Math.min(95, Math.max(12, Math.round(fairHomeProb * 100)));
+      const oddsAwayScore = Math.min(95, Math.max(12, Math.round(fairAwayProb * 100)));
+
+      const h2hHome = isFight ? oddsHomeScore : Math.min(95, Math.max(12, Math.round(oddsHomeScore * 0.60 + splitHomeScore * 0.40)));
+      const h2hAway = isFight ? oddsAwayScore : Math.min(95, Math.max(12, Math.round(oddsAwayScore * 0.60 + splitAwayScore * 0.40)));
+
+      // --- UPGRADE 2: L5 / L10 RECENT FORM ---
+      const homeForm = (!isFight && game.path && game.home.id) ? computeFormMetrics(scheduleCache[`${game.path}_${game.home.id}`]) : null;
+      const awayForm = (!isFight && game.path && game.away.id) ? computeFormMetrics(scheduleCache[`${game.path}_${game.away.id}`]) : null;
+      const blendedHPct = homeForm ? (hPct * 0.50 + homeForm.pct * 0.50) : hPct;
+      const blendedAPct = awayForm ? (aPct * 0.50 + awayForm.pct * 0.50) : aPct;
+      const marginBoost = (homeForm && awayForm)
+        ? Math.max(-8, Math.min(8, Math.round((homeForm.avgMargin - awayForm.avgMargin) * 0.5)))
+        : 0;
+
+      // --- UPGRADE 3: UFC STRIKING DEFENSE & REACH EDGE ---
+      const fightIQ = isFight ? computeFightEdge(game.home.name, game.away.name) : { edge: 0, hasData: false };
 
       const allLeaders = [...(game.leaders || []), ...(sumData?.leaders || [])];
       let homeInjPen = 0, awayInjPen = 0;
@@ -961,11 +1201,16 @@
         else awayInjPen += impact.pts;
         return { ...inj, ...impact };
       });
-      homeInjPen = Math.min(32, homeInjPen);
-      awayInjPen = Math.min(32, awayInjPen);
 
-      const rosHomeBase = Math.min(95, Math.max(12, Math.round(58 + (hPct - aPct) * 28 - homeInjPen + awayInjPen)));
-      const rosAwayBase = Math.min(95, Math.max(12, Math.round(54 + (aPct - hPct) * 28 - awayInjPen + homeInjPen)));
+      if (fIntel) {
+        homeInjPen += Number(fIntel.homeCutPen || 0) + Number(fIntel.homeInjPen || 0);
+        awayInjPen += Number(fIntel.awayCutPen || 0) + Number(fIntel.awayInjPen || 0);
+      }
+      homeInjPen = Math.min(35, homeInjPen);
+      awayInjPen = Math.min(35, awayInjPen);
+
+      const rosHomeBase = Math.min(95, Math.max(12, Math.round(56 + (blendedHPct - blendedAPct) * 32 + marginBoost + fightIQ.edge - homeInjPen + awayInjPen)));
+      const rosAwayBase = Math.min(95, Math.max(12, Math.round(52 + (blendedAPct - blendedHPct) * 32 - marginBoost - fightIQ.edge - awayInjPen + homeInjPen)));
 
       const totalW = (activeW.gem + activeW.h2h + activeW.ros) || 1;
       const rawHome = (homeGem * activeW.gem + h2hHome * activeW.h2h + rosHomeBase * activeW.ros) / totalW;
@@ -982,8 +1227,7 @@
       let liveShift = 0;
       const liveEvents = sumData?.liveEvents || [];
       if (game.state === 'in') {
-        const aScore = Number(game.away.score || 0);
-        const hScore = Number(game.home.score || 0);
+        const aScore = Number(game.away.score || 0), hScore = Number(game.home.score || 0);
         const margin = pickSide === 'home' ? (hScore - aScore) : (aScore - hScore);
         if (sumData?.liveHomeWP != null) {
           const pickedWP = pickSide === 'home' ? sumData.liveHomeWP : (1 - sumData.liveHomeWP);
@@ -995,8 +1239,9 @@
         liveShift = Math.max(-28, Math.min(28, liveShift));
       }
 
-      const rosScore = Math.min(98, Math.max(10, Math.round((pickSide === 'home' ? rosHomeBase : rosAwayBase) + liveShift)));
-      const conf = Math.min(99, Math.max(8, Math.round((gemScore * activeW.gem + h2hScore * activeW.h2h + rosScore * activeW.ros) / totalW)));
+      const rosScore = Math.min(98, Math.max(10, Math.round(pickSide === 'home' ? rosHomeBase : rosAwayBase)));
+      const baseConf = (gemScore * activeW.gem + h2hScore * activeW.h2h + rosScore * activeW.ros) / totalW;
+      const conf = Math.min(99, Math.max(8, Math.round(baseConf + liveShift)));
 
       const pickedTeam = pickSide === 'home' ? game.home : game.away;
       const pRec = parseRecord(pickedTeam.record);
@@ -1004,60 +1249,51 @@
 
       let grade = null;
       if (game.state === 'post') {
-        const aS = Number(game.away.score || 0);
-        const hS = Number(game.home.score || 0);
+        const aS = Number(game.away.score || 0), hS = Number(game.home.score || 0);
         if (aS !== hS) grade = (hS > aS ? 'home' : 'away') === pickSide ? 'WON' : 'LOST';
       }
 
       return {
         ...game,
-        activeW,
-        pickSide,
-        pickedTeam,
+        activeW, pickSide, pickedTeam,
         pickLabel: `${pickedTeam.short || pickedTeam.name} Win${nextRecStr}`,
-        confidence: conf,
-        hitsCount: primaryHits.length,
-        primaryHits,
-        gemScore,
-        h2hScore,
-        rosScore,
-        injuryPenalty,
-        oppInjuryBonus,
-        gradedInjuries,
-        allLeaders,
-        liveShift,
-        liveEvents,
-        grade,
-        entitiesCount: entities.length
+        confidence: conf, hitsCount: primaryHits.length, primaryHits,
+        gemScore, h2hScore, rosScore, injuryPenalty, oppInjuryBonus,
+        fairProbPick: Math.round((pickSide === 'home' ? fairHomeProb : fairAwayProb) * 100),
+        hasScaledOdds, fightIQ, homeForm, awayForm,
+        gradedInjuries, allLeaders, liveShift, liveEvents, grade, entitiesCount: entities.length
       };
     }
 
-    // --- LIVE MULTI-BOOK ODDS & DEEP LINKING ---
-    function americanToProfit100(odds) {
-      if (!odds || odds === 0) return 0;
-      return odds > 0 ? odds : (10000 / Math.abs(odds));
-    }
-
-    function americanToCents(odds) {
-      if (!odds) return 50;
-      const prob = odds > 0 ? (100 / (odds + 100)) : (Math.abs(odds) / (Math.abs(odds) + 100));
-      return Math.round(prob * 100);
-    }
-
-    function openSportsbook(bookKey) {
+    // --- DEEP LINKING & ODDS FETCHERS ---
+    function openSportsbook(bookKey, gameLink) {
       const info = SPORTSBOOK_LINKS[bookKey] || { web: 'https://www.google.com/search?q=' + encodeURIComponent(bookKey + ' sportsbook') };
-      const ua = navigator.userAgent || '';
-      const isAndroid = /Android/i.test(ua);
-      const isIOS = /iPhone|iPad|iPod/i.test(ua);
+      const targetUrl = (gameLink && gameLink.startsWith('http')) ? gameLink : info.web;
+      const isAndroid = /Android/i.test(navigator.userAgent || '');
 
-      if (isAndroid && info.pkg && info.scheme) {
+      if (isAndroid && info.pkg) {
+        const cleanPath = targetUrl.replace(/^https?:\/\//i, '');
         const storeUrl = encodeURIComponent(`https://play.google.com/store/apps/details?id=${info.pkg}`);
-        const schemeClean = info.scheme.replace('://', '');
-        window.location.href = `intent://open#Intent;scheme=${schemeClean};package=${info.pkg};S.browser_fallback_url=${storeUrl};end`;
-      } else if (isIOS && info.ios) {
-        window.open(info.ios, '_blank');
+        window.location.href = `intent://${cleanPath}#Intent;scheme=https;package=${info.pkg};S.browser_fallback_url=${storeUrl};end`;
       } else {
-        window.open(info.web, '_blank');
+        window.open(targetUrl, '_blank');
+      }
+    }
+
+    function openAppStore(e, bookKey) {
+      e.stopPropagation();
+      const info = SPORTSBOOK_LINKS[bookKey];
+      if (!info) return;
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+      if (isIOS && info.ios) window.location.href = info.ios;
+      else window.open(info.web, '_blank');
+    }
+
+    function updateCreditsHeader(res) {
+      const rem = res.headers.get('x-requests-remaining');
+      if (rem !== null) {
+        const el = document.getElementById('credits-badge');
+        if (el) el.textContent = `(${rem} credits left)`;
       }
     }
 
@@ -1066,8 +1302,9 @@
       const cached = oddsSportCache[sportKey];
       if (cached && (Date.now() - cached.ts < 600000)) return cached.data;
       try {
-        const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${encodeURIComponent(oddsApiKey)}&regions=us,us2,us_ex&markets=h2h&oddsFormat=american`;
+        const url = `https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${encodeURIComponent(oddsApiKey)}&regions=us,us2,us_ex&markets=h2h&oddsFormat=american&includeLinks=true`;
         const res = await fetch(url);
+        updateCreditsHeader(res);
         if (!res.ok) return [];
         const data = await res.json();
         oddsSportCache[sportKey] = { ts: Date.now(), data: Array.isArray(data) ? data : [] };
@@ -1077,7 +1314,36 @@
       }
     }
 
+    async function loadPropsForSelectedGame() {
+      const g = allGames.find(x => x.id === selectedGameId);
+      if (!g) return;
+      const lgCfg = LEAGUES.find(l => l.key === g.league);
+      const markets = lgCfg?.propMarkets;
+      if (!markets) return;
+
+      const cachedEvents = oddsSportCache[g.oddsKey]?.data || await fetchOddsForSport(g.oddsKey);
+      const oddsEv = g.oddsEventDirect || matchGameInOdds(g, cachedEvents);
+      if (!oddsEv?.id) {
+        propsEventCache[g.id] = { error: 'No matching live sportsbook event found for player props.' };
+        renderDetailTab();
+        return;
+      }
+
+      document.getElementById('detail-body').innerHTML = '<div class="empty-state">Fetching live Player Props &amp; DFS (PrizePicks / Underdog)...</div>';
+      try {
+        const url = `https://api.the-odds-api.com/v4/sports/${g.oddsKey}/events/${oddsEv.id}/odds?apiKey=${encodeURIComponent(oddsApiKey)}&regions=us,us_dfs&markets=${markets}&oddsFormat=american&includeLinks=true`;
+        const res = await fetch(url);
+        updateCreditsHeader(res);
+        if (!res.ok) propsEventCache[g.id] = { error: 'Player props are not posted yet for this matchup.' };
+        else propsEventCache[g.id] = { data: await res.json() };
+      } catch {
+        propsEventCache[g.id] = { error: 'Could not connect to Player Props feed.' };
+      }
+      if (selectedGameId === g.id) renderDetailTab();
+    }
+
     function matchGameInOdds(game, oddsEvents) {
+      if (!oddsEvents || !oddsEvents.length) return null;
       const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
       const hFull = norm(game.home.name), aFull = norm(game.away.name);
       const hShort = norm(game.home.mascot || game.home.short), aShort = norm(game.away.mascot || game.away.short);
@@ -1085,6 +1351,36 @@
         const eh = norm(ev.home_team), ea = norm(ev.away_team);
         return (eh.includes(hShort) && ea.includes(aShort)) || (eh.includes(aShort) && ea.includes(hShort)) || (eh === hFull && ea === aFull);
       });
+    }
+
+    // --- ESPN SCHEDULE FOR TRAFFIC-LIGHT HIT-RATE CHARTS ---
+    async function fetchTeamSchedule(path, teamId) {
+      if (!path || !teamId) return null;
+      const key = `${path}_${teamId}`;
+      if (scheduleCache[key]) return scheduleCache[key];
+      try {
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${path}/teams/${teamId}/schedule`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        const completed = (data.events || []).filter(ev => ev.competitions?.[0]?.status?.type?.completed);
+        const last10 = completed.slice(-10).map(ev => {
+          const comp = ev.competitions[0];
+          const me = comp.competitors.find(c => String(c.id) === String(teamId));
+          const opp = comp.competitors.find(c => String(c.id) !== String(teamId));
+          const myS = Number(me?.score?.value ?? me?.score ?? 0);
+          const oppS = Number(opp?.score?.value ?? opp?.score ?? 0);
+          return {
+            won: Boolean(me?.winner) || myS > oppS,
+            margin: myS - oppS,
+            opp: opp?.team?.abbreviation || 'OPP',
+            score: `${myS}-${oppS}`
+          };
+        });
+        scheduleCache[key] = last10;
+        return last10;
+      } catch {
+        return null;
+      }
     }
 
     // --- ESPN + FIGHT SPORTS FETCHERS ---
@@ -1103,7 +1399,7 @@
       const badge = document.getElementById('live-count-badge');
       if (!silent) {
         badge.textContent = 'Syncing...';
-        feed.innerHTML = '<div class="empty-state">Scanning 14 sports, star leaders, UFC &amp; Boxing...</div>';
+        feed.innerHTML = '<div class="empty-state">Scanning 14 sports, fair odds, star leaders, UFC &amp; Boxing...</div>';
       }
 
       updateDateUI();
@@ -1129,6 +1425,9 @@
             if (oddsObj?.homeTeamOdds?.favorite) oddsFav = 'home';
             else if (oddsObj?.awayTeamOdds?.favorite) oddsFav = 'away';
 
+            const homeML = typeof oddsObj?.homeTeamOdds?.moneyLine === 'number' ? oddsObj.homeTeamOdds.moneyLine : null;
+            const awayML = typeof oddsObj?.awayTeamOdds?.moneyLine === 'number' ? oddsObj.awayTeamOdds.moneyLine : null;
+
             const hShort = home.team?.shortDisplayName || home.athlete?.shortName || home.team?.name || 'Home';
             const aShort = away.team?.shortDisplayName || away.athlete?.shortName || away.team?.name || 'Away';
 
@@ -1138,44 +1437,31 @@
             ];
 
             return {
-              id: ev.id,
-              league: lg.key,
-              path: lg.path,
-              oddsKey: lg.oddsKey,
-              state,
-              time: timeStr,
+              id: ev.id, league: lg.key, path: lg.path, oddsKey: lg.oddsKey, state, time: timeStr,
               venue: comp.venue?.fullName || 'TBD Venue',
               venueCity: [comp.venue?.address?.city, comp.venue?.address?.state].filter(Boolean).join(', '),
               broadcast: comp.broadcasts?.[0]?.names?.[0] || comp.geoBroadcasts?.[0]?.media?.shortName || '',
               eventNote: comp.notes?.[0]?.headline || '',
-              oddsText: oddsObj?.details || '',
-              oddsFav,
-              leaders,
+              oddsText: oddsObj?.details || '', oddsFav, homeML, awayML, leaders,
               home: {
+                id: String(home.team?.id || home.id || ''),
                 name: home.team?.displayName || home.athlete?.displayName || 'Home',
-                short: hShort,
-                location: home.team?.location || '',
+                short: hShort, location: home.team?.location || '',
                 mascot: home.team?.name || home.athlete?.displayName || '',
-                logo: home.team?.logo || '',
-                score: home.score ?? '',
-                record: getRec(home, 'total') || home.records?.[0]?.summary || '',
-                homeRecord: getRec(home, 'home')
+                logo: home.team?.logo || '', score: home.score ?? '',
+                record: getRec(home, 'total') || home.records?.[0]?.summary || '', homeRecord: getRec(home, 'home')
               },
               away: {
+                id: String(away.team?.id || away.id || ''),
                 name: away.team?.displayName || away.athlete?.displayName || 'Away',
-                short: aShort,
-                location: away.team?.location || '',
+                short: aShort, location: away.team?.location || '',
                 mascot: away.team?.name || away.athlete?.displayName || '',
-                logo: away.team?.logo || '',
-                score: away.score ?? '',
-                record: getRec(away, 'total') || away.records?.[0]?.summary || '',
-                roadRecord: getRec(away, 'road')
+                logo: away.team?.logo || '', score: away.score ?? '',
+                record: getRec(away, 'total') || away.records?.[0]?.summary || '', roadRecord: getRec(away, 'road')
               }
             };
           }).filter(Boolean);
-        } catch {
-          return [];
-        }
+        } catch { return []; }
       }));
 
       let fightGames = [];
@@ -1185,22 +1471,14 @@
           const dt = new Date(ev.commence_time);
           const isBKFC = /bkfc|bare knuckle/i.test(ev.sport_title || '');
           return {
-            id: `odds_${ev.id}`,
-            league: isBKFC ? 'BKFC' : 'BOXING',
-            path: null,
-            oddsKey: 'boxing_boxing',
-            oddsEventDirect: ev,
-            state: 'pre',
+            id: `odds_${ev.id}`, league: isBKFC ? 'BKFC' : 'BOXING', path: null, oddsKey: 'boxing_boxing',
+            oddsEventDirect: ev, state: 'pre',
             time: dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' + dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
-            venue: ev.sport_title || 'Fight Card',
-            venueCity: '',
-            broadcast: 'PPV / Live',
-            eventNote: ev.sport_title || '',
-            oddsText: `${ev.bookmakers?.length || 0} Sportsbooks Live`,
-            oddsFav: null,
-            leaders: [],
-            home: { name: ev.home_team, short: ev.home_team, location: '', mascot: ev.home_team, logo: '', score: '', record: '', homeRecord: '' },
-            away: { name: ev.away_team, short: ev.away_team, location: '', mascot: ev.away_team, logo: '', score: '', record: '', roadRecord: '' }
+            venue: ev.sport_title || 'Fight Card', venueCity: '', broadcast: 'PPV / Live',
+            eventNote: ev.sport_title || '', oddsText: `${ev.bookmakers?.length || 0} Sportsbooks Live`,
+            oddsFav: null, homeML: null, awayML: null, leaders: [],
+            home: { id: '', name: ev.home_team, short: ev.home_team, location: '', mascot: ev.home_team, logo: '', score: '', record: '', homeRecord: '' },
+            away: { id: '', name: ev.away_team, short: ev.away_team, location: '', mascot: ev.away_team, logo: '', score: '', record: '', roadRecord: '' }
           };
         });
       }
@@ -1224,16 +1502,12 @@
       if (livePollTimer) clearInterval(livePollTimer);
       const hasLive = allGames.some(g => g.state === 'in');
       if (hasLive && isSameDay(currentDate, new Date())) {
-        livePollTimer = setInterval(() => {
-          if (!document.hidden) loadSlate(true);
-        }, 30000);
+        livePollTimer = setInterval(() => { if (!document.hidden) loadSlate(true); }, 30000);
       }
     }
 
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden && localStorage.getItem('aligniq_user')) {
-        setTimeout(() => loadSlate(true), 500);
-      }
+      if (!document.hidden && localStorage.getItem('aligniq_user')) setTimeout(() => loadSlate(true), 500);
     });
 
     async function fetchGameSummary(game, silent = false) {
@@ -1256,12 +1530,9 @@
         const injuries = (data.injuries || []).flatMap(ti => {
           const side = String(ti.team?.id || '') === homeId ? 'home' : 'away';
           return (ti.injuries || []).slice(0, 8).map(inj => ({
-            team: ti.team?.shortDisplayName || '',
-            teamSide: side,
-            athleteId: String(inj.athlete?.id || ''),
-            player: inj.athlete?.displayName || 'Player',
-            status: inj.status || 'Listed',
-            detail: inj.shortComment || inj.longComment || ''
+            team: ti.team?.shortDisplayName || '', teamSide: side,
+            athleteId: String(inj.athlete?.id || ''), player: inj.athlete?.displayName || 'Player',
+            status: inj.status || 'Listed', detail: inj.shortComment || inj.longComment || ''
           }));
         });
 
@@ -1302,26 +1573,16 @@
         }
 
         summaryCache[game.id] = {
-          officials,
-          leaders,
-          injuries,
-          liveHomeWP,
-          liveEvents,
+          officials, leaders, injuries, liveHomeWP, liveEvents,
           news: news.map(a => ({
-            headline: a.headline || 'ESPN Story',
-            description: a.description || '',
+            headline: a.headline || 'ESPN Story', description: a.description || '',
             url: a.links?.web?.href || a.links?.mobile?.href || 'https://www.espn.com',
             published: a.published ? new Date(a.published).toLocaleDateString() : ''
           }))
         };
-        if (!silent && selectedGameId === game.id) {
-          renderFeed();
-          renderDetailTab();
-        }
+        if (!silent && selectedGameId === game.id) { renderFeed(); renderDetailTab(); }
         return summaryCache[game.id];
-      } catch {
-        return null;
-      }
+      } catch { return null; }
     }
 
     // --- UI RENDERING ---
@@ -1376,14 +1637,15 @@
       let list = activeSport === 'All' ? allGames : allGames.filter(g => g.league === activeSport);
       if (filterMode === 'upcoming') list = list.filter(g => g.state === 'pre');
       else if (filterMode === 'live') list = list.filter(g => g.state === 'in');
-      else if (filterMode === 'saved') list = list.filter(g => savedIds.has(g.id));
+      else if (filterMode === 'high') list = list.filter(g => g.confidence >= 70);
+      else if (filterMode === 'gem') list = list.filter(g => g.hitsCount >= 2);
 
       if (q) list = list.filter(g => `${g.away.name} ${g.home.name} ${g.venue} ${g.broadcast} ${g.league}`.toLowerCase().includes(q));
-
       list = list.sort((a, b) => b.confidence - a.confidence);
+
       const feed = document.getElementById('games-feed');
       if (!list.length) {
-        feed.innerHTML = '<div class="empty-state">No games match this filter. Try another date, tab, or use <strong>+ Scan</strong>.</div>';
+        feed.innerHTML = '<div class="empty-state">No games match this filter. Try another date, filter, or use <strong>+ Scan</strong>.</div>';
         return;
       }
 
@@ -1393,9 +1655,12 @@
         const hitsText = g.hitsCount >= 2 ? `${g.hitsCount} Hits` : `< 2 Refs`;
         const isSaved = savedIds.has(g.id);
         const showScore = g.state === 'in' || g.state === 'post';
-        const shiftHtml = g.state === 'in' && g.liveShift !== 0
-          ? `<span class="shift-mini" style="color:${g.liveShift > 0 ? '#10b981' : '#ef4444'}">${g.liveShift > 0 ? '▲+' : '▼'}${g.liveShift}%</span>`
-          : `<span class="conf-lbl">CONF</span>`;
+
+        let flashClass = '';
+        if (g.state === 'in' && prevConfMap[g.id] !== undefined && g.confidence !== prevConfMap[g.id]) {
+          flashClass = g.confidence > prevConfMap[g.id] ? 'flash-up' : 'flash-down';
+        }
+        prevConfMap[g.id] = g.confidence;
 
         return `
           <div class="game-card ${g.state === 'in' ? 'is-live' : ''}" onclick="openGameDetail('${g.id}')">
@@ -1437,9 +1702,9 @@
                   </div>
                 </div>
               </div>
-              <div class="conf-box ${tier}">
+              <div class="conf-box ${tier} ${flashClass}">
                 <span class="conf-num">${g.confidence}%</span>
-                ${shiftHtml}
+                <span class="conf-lbl">CONF</span>
               </div>
             </div>
 
@@ -1450,47 +1715,48 @@
 
             <div class="card-foot">
               <span class="pick-text ${tier === 'high' ? 'high' : ''}">Pick: ${g.pickLabel}</span>
-              <span class="decode-link">Best Odds &amp; Decode ›</span>
+              <span class="decode-link">+EV, Props &amp; Decode ›</span>
             </div>
-            <div class="meter-track"><div class="meter-fill" style="width:${g.confidence}%;background:${barColor};"></div></div>
+            <div class="meter-track"><div class="meter-fill ${flashClass}" style="width:${g.confidence}%;background:${barColor};"></div></div>
           </div>
         `;
       }).join('');
     }
 
-    // --- MODAL & TABS ---
+    // --- GAME DETAIL MODAL ---
     async function openGameDetail(id) {
       selectedGameId = id;
       oddsViewSide = 'pick';
       const g = allGames.find(x => x.id === id);
       if (!g) return;
       document.getElementById('detail-title').textContent = `${g.away.short} @ ${g.home.short}`;
+      document.getElementById('tab-ros-btn').textContent = FIGHT_LEAGUES.has(g.league) ? 'Fight IQ' : 'Health';
       document.getElementById('detail-modal').classList.add('open');
       currentTab = 'odds';
-      document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+      document.querySelectorAll('#detail-tabs .tab-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
       renderDetailTab();
 
-      await Promise.all([
+      const tasks = [
         g.oddsKey ? fetchOddsForSport(g.oddsKey) : Promise.resolve(),
         g.path ? fetchGameSummary(g, false) : Promise.resolve()
-      ]);
-      if (selectedGameId === id) {
-        renderFeed();
-        renderDetailTab();
+      ];
+      // Fetch BOTH teams' L5/L10 schedules so recent form scores symmetrically into CONF %
+      if (g.path && !FIGHT_LEAGUES.has(g.league)) {
+        if (g.home?.id) tasks.push(fetchTeamSchedule(g.path, g.home.id));
+        if (g.away?.id) tasks.push(fetchTeamSchedule(g.path, g.away.id));
       }
+      await Promise.all(tasks);
+      if (selectedGameId === id) { renderFeed(); renderDetailTab(); }
     }
 
     function switchTab(tab, btn) {
       currentTab = tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#detail-tabs .tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderDetailTab();
     }
 
-    function setOddsSide(side) {
-      oddsViewSide = side;
-      renderDetailTab();
-    }
+    function setOddsSide(side) { oddsViewSide = side; renderDetailTab(); }
 
     function saveExtraContext(id) {
       customContextMap[id] = {
@@ -1499,8 +1765,37 @@
         extra: document.getElementById('ctx-extra').value.trim()
       };
       localStorage.setItem('aligniq_ctx', JSON.stringify(customContextMap));
-      renderFeed();
-      renderDetailTab();
+      renderFeed(); renderDetailTab();
+    }
+
+    function saveFightIntel(id) {
+      fightIntelMap[id] = {
+        awayCutPen: Number(document.getElementById('fi-away-cut').value || 0),
+        awayInjPen: Number(document.getElementById('fi-away-inj').value || 0),
+        homeCutPen: Number(document.getElementById('fi-home-cut').value || 0),
+        homeInjPen: Number(document.getElementById('fi-home-inj').value || 0),
+        notes: document.getElementById('fi-notes').value.trim()
+      };
+      localStorage.setItem('aligniq_fight_intel', JSON.stringify(fightIntelMap));
+      renderFeed(); renderDetailTab();
+    }
+
+    function renderHitRateCard(title, games) {
+      if (!games || !games.length) return '';
+      const wins = games.filter(x => x.won).length;
+      const pct = Math.round((wins / games.length) * 100);
+      const cls = pct >= 65 ? 'green' : pct >= 45 ? 'yellow' : 'red';
+      const maxM = Math.max(10, ...games.map(x => Math.abs(x.margin)));
+      const bars = games.map(x => {
+        const h = Math.max(18, Math.min(100, Math.round((Math.abs(x.margin) / maxM) * 100)));
+        return `<div class="hr-bar-col"><div class="hr-bar ${x.won ? 'w' : 'l'}" style="height:${h}%"></div><span class="hr-bar-lbl">${x.won ? 'W' : 'L'}</span></div>`;
+      }).join('');
+      return `
+        <div class="hr-card">
+          <div class="hr-top"><span class="hr-label">${title} (${wins}-${games.length - wins})</span><span class="hr-pct ${cls}">${pct}%</span></div>
+          <div class="hr-bars">${bars}</div>
+        </div>
+      `;
     }
 
     function renderDetailTab() {
@@ -1509,65 +1804,161 @@
       const sum = summaryCache[g.id];
       const ctx = customContextMap[g.id] || { artist: '', song: '', extra: '' };
       const body = document.getElementById('detail-body');
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+
+      const cachedEvents = oddsSportCache[g.oddsKey]?.data || [];
+      const oddsEv = g.oddsEventDirect || matchGameInOdds(g, cachedEvents);
+      const oddsAnalysis = analyzeOddsEvent(oddsEv, g.home, g.away);
 
       if (currentTab === 'odds') {
         const oppSide = g.pickSide === 'home' ? 'away' : 'home';
-        const targetTeam = oddsViewSide === 'pick' ? g.pickedTeam : (oppSide === 'home' ? g.home : g.away);
         const oppTeam = oppSide === 'home' ? g.home : g.away;
+        const showHome = (oddsViewSide === 'pick' && g.pickSide === 'home') || (oddsViewSide === 'opp' && oppSide === 'home');
+        const rows = showHome ? oddsAnalysis.homeRows : oddsAnalysis.awayRows;
+        const fairProb = Math.round((showHome ? oddsAnalysis.fairHome : oddsAnalysis.fairAway) * 100);
+        const openedPrice = oddsAnalysis.opened ? (showHome ? oddsAnalysis.opened.home : oddsAnalysis.opened.away) : null;
 
-        const cachedEvents = oddsSportCache[g.oddsKey]?.data || [];
-        const oddsEv = g.oddsEventDirect || matchGameInOdds(g, cachedEvents);
-
-        let rows = [];
-        if (oddsEv?.bookmakers?.length) {
-          const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-          const tShort = norm(targetTeam.mascot || targetTeam.short || targetTeam.name);
-          const tFull = norm(targetTeam.name);
-
-          oddsEv.bookmakers.forEach(bm => {
-            const h2h = (bm.markets || []).find(m => m.key === 'h2h');
-            if (!h2h?.outcomes?.length) return;
-            const out = h2h.outcomes.find(o => norm(o.name) === tFull || norm(o.name).includes(tShort) || tFull.includes(norm(o.name)));
-            if (!out || typeof out.price !== 'number') return;
-            const profit100 = americanToProfit100(out.price);
-            rows.push({
-              key: bm.key,
-              title: bm.title,
-              price: out.price,
-              profit100,
-              cents: americanToCents(out.price)
-            });
-          });
-          rows.sort((a, b) => b.profit100 - a.profit100);
-        }
+        const arbHtml = oddsAnalysis.arb ? `
+          <div class="proof-item arb-box">
+            <strong>⚡ ARBITRAGE FOUND (+${oddsAnalysis.arb.roi.toFixed(2)}% Guaranteed ROI)</strong>
+            <div class="proof-sub">Bet $${oddsAnalysis.arb.stakeHome.toFixed(0)} on ${g.home.short} (${oddsAnalysis.arb.homeBook} ${oddsAnalysis.arb.homePrice > 0 ? '+' : ''}${oddsAnalysis.arb.homePrice}) &amp; $${oddsAnalysis.arb.stakeAway.toFixed(0)} on ${g.away.short} (${oddsAnalysis.arb.awayBook} ${oddsAnalysis.arb.awayPrice > 0 ? '+' : ''}${oddsAnalysis.arb.awayPrice}) → +$${oddsAnalysis.arb.profit100.toFixed(2)} guaranteed profit.</div>
+          </div>
+        ` : '';
 
         const listHtml = rows.length
-          ? rows.map((r, idx) => `
-              <div class="book-row ${idx === 0 ? 'best' : ''}" onclick="openSportsbook('${r.key}')">
-                <div class="book-left">
-                  <div class="book-name">
-                    ${r.title}
-                    ${idx === 0 ? '<span class="best-badge">HIGHEST PAYOUT</span>' : ''}
+          ? rows.map((r, idx) => {
+              const safeLink = (r.link || '').replace(/'/g, '');
+              const hasIosApp = Boolean(SPORTSBOOK_LINKS[r.key]?.ios);
+              const evBadge = r.ev >= 0.5 ? `<span class="ev-badge">+${r.ev.toFixed(1)}% EV</span>` : '';
+              const moveBadge = (openedPrice && openedPrice !== r.price && idx === 0)
+                ? `<span class="move-badge">Open ${openedPrice > 0 ? '+' + openedPrice : openedPrice} → Now ${r.price > 0 ? '+' + r.price : r.price}</span>` : '';
+              const subHtml = (isIOS && hasIosApp)
+                ? `<button class="get-app-btn" onclick="openAppStore(event, '${r.key}')">Get App</button><span>Implied ${r.cents}¢ · Fair ${fairProb}¢</span>`
+                : `<span>Tap to open game · Implied ${r.cents}¢ · Fair ${fairProb}¢</span>`;
+
+              return `
+                <div class="book-row ${idx === 0 ? 'best' : ''}" onclick="openSportsbook('${r.key}', '${safeLink}')">
+                  <div class="book-left">
+                    <div class="book-name">
+                      ${r.title}
+                      ${idx === 0 ? '<span class="best-badge">BEST PAYOUT</span>' : ''}
+                      ${evBadge}
+                      ${moveBadge}
+                    </div>
+                    <div class="book-sub">${subHtml}</div>
                   </div>
-                  <div class="book-sub">Tap to open app (or Store) · Implied ${r.cents}¢</div>
+                  <div class="book-right">
+                    <div class="book-odds">${r.price > 0 ? '+' + r.price : r.price}</div>
+                    <div class="book-payout">+$${r.profit100.toFixed(0)} on $100</div>
+                  </div>
                 </div>
-                <div class="book-right">
-                  <div class="book-odds">${r.price > 0 ? '+' + r.price : r.price}</div>
-                  <div class="book-payout">+$${r.profit100.toFixed(0)} on $100</div>
-                </div>
-              </div>
-            `).join('')
-          : `<div class="proof-item warn">
-               <strong>No Live Multi-Book Lines Found Yet</strong>
-               <div class="proof-sub">This game may already be finished, off the board, or outside today's active sportsbook window.</div>
-             </div>`;
+              `;
+            }).join('')
+          : `<div class="proof-item warn"><strong>No Live Multi-Book Lines Found Yet</strong><div class="proof-sub">This game may already be finished, off the board, or outside today's active sportsbook window.</div></div>`;
 
         body.innerHTML = `
           <div class="odds-toggle">
             <button class="odds-side-btn ${oddsViewSide === 'pick' ? 'active' : ''}" onclick="setOddsSide('pick')">Pick: ${g.pickedTeam.short}</button>
             <button class="odds-side-btn ${oddsViewSide === 'opp' ? 'active' : ''}" onclick="setOddsSide('opp')">Opp: ${oppTeam.short}</button>
           </div>
+          ${arbHtml}
           ${listHtml}
+        `;
+      } else if (currentTab === 'props') {
+        const lgCfg = LEAGUES.find(l => l.key === g.league);
+        if (!lgCfg?.propMarkets) {
+          body.innerHTML = `<div class="proof-item warn"><strong>Player Props Not Available for ${g.league}</strong><div class="proof-sub">On-demand Player Props &amp; DFS (PrizePicks / Underdog / ParlayPlay) are supported for NBA, NFL, NHL, MLB, NCAAF, NCAAB &amp; WNBA.</div></div>`;
+          return;
+        }
+        const cached = propsEventCache[g.id];
+        if (!cached) {
+          body.innerHTML = `
+            <div class="proof-item">
+              <strong>On-Demand Player Props &amp; DFS</strong>
+              <div class="proof-sub">Pulls live player lines from DraftKings, FanDuel, BetMGM, PrizePicks, Underdog &amp; ParlayPlay on demand so your free monthly API credits are protected.</div>
+            </div>
+            <button class="primary-btn" onclick="loadPropsForSelectedGame()">Load Live Player Props &amp; DFS</button>
+          `;
+          return;
+        }
+        if (cached.error) {
+          body.innerHTML = `<div class="proof-item warn"><strong>${cached.error}</strong></div><button class="secondary-btn" onclick="delete propsEventCache['${g.id}']; loadPropsForSelectedGame();">Retry</button>`;
+          return;
+        }
+        const propRows = [];
+        (cached.data?.bookmakers || []).forEach(bm => {
+          (bm.markets || []).forEach(mkt => {
+            const mName = mkt.key.replace(/^player_|^batter_|^pitcher_/, '').replace(/_/g, ' ').toUpperCase();
+            (mkt.outcomes || []).forEach(out => {
+              if (out.name === 'Over' || out.name === 'Yes') {
+                propRows.push({
+                  player: out.description || 'Player', market: mName, point: out.point ?? '',
+                  side: out.name, price: out.price, profit100: americanToProfit100(out.price),
+                  bookKey: bm.key, bookTitle: bm.title, link: out.link || mkt.link || bm.link || ''
+                });
+              }
+            });
+          });
+        });
+        propRows.sort((a, b) => b.profit100 - a.profit100);
+        body.innerHTML = propRows.length
+          ? propRows.slice(0, 35).map(p => `
+              <div class="book-row" onclick="openSportsbook('${p.bookKey}', '${(p.link || '').replace(/'/g, '')}')">
+                <div class="book-left">
+                  <div class="book-name">${p.player} <span class="ev-badge">${p.side} ${p.point} ${p.market}</span></div>
+                  <div class="book-sub">${p.bookTitle} · Tap to open app</div>
+                </div>
+                <div class="book-right">
+                  <div class="book-odds">${p.price > 0 ? '+' + p.price : p.price}</div>
+                  <div class="book-payout">+$${p.profit100.toFixed(0)} on $100</div>
+                </div>
+              </div>
+            `).join('')
+          : `<div class="proof-item warn"><strong>No Player Props Posted Yet</strong><div class="proof-sub">Sportsbooks and DFS apps typically release player props closer to game time.</div></div>`;
+      } else if (currentTab === 'trends') {
+        const sched = g.path && g.pickedTeam?.id ? scheduleCache[`${g.path}_${g.pickedTeam.id}`] : null;
+        const l5 = sched ? sched.slice(-5) : null;
+        const l10 = sched ? sched.slice(-10) : null;
+
+        const bestRow = (g.pickSide === 'home' ? oddsAnalysis.homeRows[0] : oddsAnalysis.awayRows[0]);
+        const bulls = [], bears = [];
+        if (g.hasScaledOdds) bulls.push(`Scaled No-Vig Fair Odds give ${g.pickedTeam.short} a ${g.fairProbPick}% consensus win probability (factored directly into CONF %).`);
+        if (g.hitsCount >= 2) bulls.push(`Strong Gematria convergence (${g.hitsCount} matching references across 4 ciphers).`);
+        else bears.push(`Gematria threshold not met (${g.hitsCount}/2 hits) — relying on Scaled Fair Odds, Form & Health.`);
+        if (bestRow && bestRow.ev >= 0.5) bulls.push(`Positive EV edge: ${bestRow.title} is paying +${bestRow.ev.toFixed(1)}% above fair market consensus.`);
+        if (g.fightIQ?.hasData && g.fightIQ.edge !== 0) {
+          const favSide = g.fightIQ.edge > 0 ? 'home' : 'away';
+          const edgePts = Math.abs(g.fightIQ.edge);
+          if (favSide === g.pickSide) bulls.push(`UFC Fight IQ edge (+${edgePts} pts) from superior striking defense, lower absorbed rate & reach.`);
+          else bears.push(`Opponent holds a +${edgePts} pt UFC striking defense / reach advantage.`);
+        }
+        if (g.oppInjuryBonus >= 10) bulls.push(`Opponent missing key star production (+${g.oppInjuryBonus} pt health edge).`);
+        if (g.injuryPenalty >= 10) bears.push(`Picked side has significant star/injury risk (-${g.injuryPenalty} pt deduction).`);
+        if (l5 && l5.filter(x => x.won).length >= 4) bulls.push(`${g.pickedTeam.short} is hot — won ${l5.filter(x => x.won).length} of their last ${l5.length} games (boosted in CONF %).`);
+        if (l5 && l5.filter(x => x.won).length <= 1) bears.push(`Recent form concern — ${g.pickedTeam.short} won only ${l5.filter(x => x.won).length} of their last ${l5.length}.`);
+        if (!bulls.length) bulls.push(`Composite model (${g.confidence}%) favors ${g.pickedTeam.short} based on ${g.league} AI-tuned weights.`);
+        if (!bears.length) bears.push(`Standard matchup variance — compare live line movement in Best Odds before locking in.`);
+
+        const chartsHtml = sched && sched.length
+          ? `<div class="hr-grid">${renderHitRateCard(`${g.pickedTeam.short} Last 5`, l5)}${renderHitRateCard(`${g.pickedTeam.short} Last 10`, l10)}</div>`
+          : `<div class="proof-item"><strong>Hit-Rate Form</strong><div class="proof-sub">${g.away.short} (${g.away.record || '—'}) vs ${g.home.short} (${g.home.record || '—'}) · Fair Win Prob: ${g.fairProbPick}%</div></div>`;
+
+        const eventsHtml = g.liveEvents.length
+          ? g.liveEvents.map(ev => `<div class="proof-item ${ev.impact < 0 ? 'danger' : ''}"><strong>[${ev.tag}] ${ev.clock}</strong> (${ev.impact > 0 ? '+' : ''}${ev.impact}% shift)<div class="proof-sub">${ev.text}</div></div>`).join('')
+          : '';
+
+        body.innerHTML = `
+          ${chartsHtml}
+          <div class="proof-item">
+            <strong>🤖 AI Breakdown — Why ${g.pickedTeam.short} Hits</strong>
+            ${bulls.map(b => `<div class="proof-sub">• ${b}</div>`).join('')}
+          </div>
+          <div class="proof-item warn">
+            <strong>⚠ Main Risk Factors</strong>
+            ${bears.map(b => `<div class="proof-sub">• ${b}</div>`).join('')}
+          </div>
+          ${sum?.officials?.length ? `<div class="proof-item"><strong>Officials (Auto-Decoded):</strong> ${sum.officials.join(', ')}</div>` : ''}
+          ${eventsHtml}
         `;
       } else if (currentTab === 'gem') {
         const hitsHtml = g.primaryHits.length >= 2
@@ -1577,7 +1968,7 @@
         body.innerHTML = `
           <div class="proof-item">
             <strong>Composite: ${g.confidence}%</strong> (${g.pickLabel})
-            <div class="proof-sub">Weights (${g.league}): ${g.activeW.gem}% Gem · ${g.activeW.h2h}% Odds/H2H · ${g.activeW.ros}% Health/Live</div>
+            <div class="proof-sub">Weights (${g.league}): ${g.activeW.gem}% Gem · ${g.activeW.h2h}% Fair Odds/H2H · ${g.activeW.ros}% Form/Health</div>
           </div>
           <div class="context-box">
             <h4>+ Add Walkout Song, Performer, Refs or Coaches</h4>
@@ -1590,120 +1981,269 @@
           </div>
           ${hitsHtml}
         `;
-      } else if (currentTab === 'live') {
-        const liveWpStr = sum?.liveHomeWP != null ? `Live ESPN Home Win Prob: ${Math.round(sum.liveHomeWP * 100)}%` : 'Live win probability updates once game is active.';
-        const eventsHtml = g.liveEvents.length
-          ? g.liveEvents.map(ev => `<div class="proof-item ${ev.impact < 0 ? 'danger' : ''}"><strong>[${ev.tag}] ${ev.clock}</strong> (${ev.impact > 0 ? '+' : ''}${ev.impact}% shift)<div class="proof-sub">${ev.text}</div></div>`).join('')
-          : `<div class="proof-item"><strong>No Live Momentum Events Yet</strong><div class="proof-sub">Fouls, penalties, turnovers, injuries, and big scoring plays appear here live.</div></div>`;
-
-        body.innerHTML = `
-          <div class="proof-item">
-            <strong>Vegas &amp; Splits (${g.h2hScore}%)</strong>
-            <div class="proof-sub">Odds: ${g.oddsText || 'N/A'} · Broadcast: ${g.broadcast || 'N/A'}</div>
-            <div class="proof-sub">${g.away.short} Road: ${g.away.roadRecord || g.away.record || '—'} · ${g.home.short} Home: ${g.home.homeRecord || g.home.record || '—'}</div>
-          </div>
-          <div class="proof-item">
-            <strong>Live Shift: ${g.liveShift > 0 ? '+' : ''}${g.liveShift}%</strong>
-            <div class="proof-sub">${liveWpStr}</div>
-          </div>
-          ${sum?.officials?.length ? `<div class="proof-item"><strong>Officials (Auto-Decoded):</strong> ${sum.officials.join(', ')}</div>` : ''}
-          ${eventsHtml}
-        `;
       } else if (currentTab === 'ros') {
-        const uniqueLeaders = [];
-        (g.allLeaders || []).forEach(l => {
-          if (l.name && !uniqueLeaders.some(u => u.name === l.name && u.stat === l.stat)) {
-            uniqueLeaders.push(l);
-          }
-        });
+        if (FIGHT_LEAGUES.has(g.league)) {
+          const fA = findFighterStats(g.away.name);
+          const fB = findFighterStats(g.home.name);
+          const fi = fightIntelMap[g.id] || { awayCutPen: 0, awayInjPen: 0, homeCutPen: 0, homeInjPen: 0, notes: '' };
 
-        const leadersHtml = uniqueLeaders.length
-          ? `<div class="proof-item">
-               <strong>Tracked Key Stat Leaders</strong>
-               <div class="proof-sub">${uniqueLeaders.slice(0, 6).map(l => `${l.team} ${l.stat}: ${l.name} (${l.value})`).join(' · ')}</div>
-             </div>`
-          : '';
+          const edgeBanner = g.fightIQ?.hasData
+            ? `<div class="proof-item"><strong>UFC Fight IQ Edge Applied to CONF %: ${g.fightIQ.edge >= 0 ? g.home.short : g.away.short} +${Math.abs(g.fightIQ.edge)} pts</strong><div class="proof-sub">Striking Def: ${g.fightIQ.defDiff >= 0 ? '+' : ''}${g.fightIQ.defDiff} · Absorbed Rate: ${g.fightIQ.sapmDiff >= 0 ? '+' : ''}${g.fightIQ.sapmDiff} · Reach: ${g.fightIQ.reachDiff >= 0 ? '+' : ''}${g.fightIQ.reachDiff}</div></div>`
+            : '';
 
-        const sortedInj = [...(g.gradedInjuries || [])].sort((a, b) => b.pts - a.pts);
-        const injHtml = sortedInj.length
-          ? sortedInj.map(i => {
-              const badge = i.tier === 'star'
-                ? `<span class="star-badge">★ STAR ${i.statLabels ? '(' + i.statLabels + ')' : ''}</span>`
-                : i.tier === 'key'
-                  ? `<span class="key-badge">KEY (${i.statLabels})</span>`
-                  : `<span class="bench-badge">ROTATION</span>`;
-              const cls = i.tier === 'star' ? 'danger star-out' : i.pts > 0 ? 'danger' : '';
-              return `<div class="proof-item ${cls}">
-                ${badge}<strong>${i.player}</strong> (${i.team}) — ${i.status} (${i.pts > 0 ? '-' + i.pts + ' pts' : '0 pts'})
-                <div class="proof-sub">${i.detail || 'Listed on official ESPN injury report.'}</div>
-              </div>`;
-            }).join('')
-          : `<div class="proof-item"><strong>Clean Injury Report</strong><div class="proof-sub">No major ESPN injury deductions impacting this game.</div></div>`;
+          const renderFighterCard = (name, st) => {
+            if (!st) {
+              return `<div class="strike-card"><div class="strike-name">${name}</div><div class="proof-sub">Syncs automatically via agent.py (fighters.json).</div></div>`;
+            }
+            const headDefRisk = Math.min(100, Math.round(100 - (st.str_def || 55)));
+            return `
+              <div class="strike-card">
+                <div class="strike-name">${name}</div>
+                <div class="proof-sub" style="margin-bottom:6px;">${st.stance || 'Orthodox'} · Reach: ${st.reach || '—'} · Def: ${st.str_def || 55}%</div>
+                <div class="zone-row">
+                  <div class="zone-lbl"><span>Fav Target: Head</span><strong>${st.head_pct || 65}%</strong></div>
+                  <div class="zone-track"><div class="zone-fill" style="width:${st.head_pct || 65}%;background:var(--accent);"></div></div>
+                </div>
+                <div class="zone-row">
+                  <div class="zone-lbl"><span>Body / Leg</span><strong>${st.body_pct || 20}% / ${st.leg_pct || 15}%</strong></div>
+                  <div class="zone-track"><div class="zone-fill" style="width:${(st.body_pct || 20) + (st.leg_pct || 15)}%;background:var(--blue);"></div></div>
+                </div>
+                <div class="zone-row">
+                  <div class="zone-lbl"><span>Defense Gap (Absorbed)</span><strong style="color:#f87171;">${st.sapm || '3.2'}/m</strong></div>
+                  <div class="zone-track"><div class="zone-fill" style="width:${headDefRisk}%;background:var(--danger);"></div></div>
+                </div>
+              </div>
+            `;
+          };
 
-        body.innerHTML = `
-          <div class="proof-item">
-            <strong>Star-Weighted Health Score: ${g.rosScore}%</strong>
-            <div class="proof-sub">Pick Star/Injury Penalty: -${g.injuryPenalty} pts · Opponent Injury Boost: +${g.oppInjuryBonus} pts</div>
-          </div>
-          ${leadersHtml}
-          ${injHtml}
-        `;
+          body.innerHTML = `
+            ${edgeBanner}
+            <div class="strike-grid">
+              ${renderFighterCard(g.away.short, fA)}
+              ${renderFighterCard(g.home.short, fB)}
+            </div>
+            <div class="context-box">
+              <h4>⚖ Weight Cut &amp; Prior Injury Camp Intel (Live Confidence Impact)</h4>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>${g.away.short} Weight Cut</label>
+                  <select id="fi-away-cut" class="form-input">
+                    <option value="0" ${fi.awayCutPen==0?'selected':''}>Clean Cut (0 pts)</option>
+                    <option value="6" ${fi.awayCutPen==6?'selected':''}>Drained / Tough Cut (-6 pts)</option>
+                    <option value="12" ${fi.awayCutPen==12?'selected':''}>Missed Weight / Severe (-12 pts)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>${g.away.short} Prior Injury</label>
+                  <select id="fi-away-inj" class="form-input">
+                    <option value="0" ${fi.awayInjPen==0?'selected':''}>Healthy Camp (0 pts)</option>
+                    <option value="5" ${fi.awayInjPen==5?'selected':''}>Minor Knock (-5 pts)</option>
+                    <option value="12" ${fi.awayInjPen==12?'selected':''}>Major / Recent Surgery (-12 pts)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>${g.home.short} Weight Cut</label>
+                  <select id="fi-home-cut" class="form-input">
+                    <option value="0" ${fi.homeCutPen==0?'selected':''}>Clean Cut (0 pts)</option>
+                    <option value="6" ${fi.homeCutPen==6?'selected':''}>Drained / Tough Cut (-6 pts)</option>
+                    <option value="12" ${fi.homeCutPen==12?'selected':''}>Missed Weight / Severe (-12 pts)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>${g.home.short} Prior Injury</label>
+                  <select id="fi-home-inj" class="form-input">
+                    <option value="0" ${fi.homeInjPen==0?'selected':''}>Healthy Camp (0 pts)</option>
+                    <option value="5" ${fi.homeInjPen==5?'selected':''}>Minor Knock (-5 pts)</option>
+                    <option value="12" ${fi.homeInjPen==12?'selected':''}>Major / Recent Surgery (-12 pts)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group"><label>Camp / Weight Cut Notes</label><input id="fi-notes" class="form-input" value="${fi.notes || ''}" placeholder="e.g. Moving down to 145 lbs, rib injury in camp..." /></div>
+              <button class="primary-btn" onclick="saveFightIntel('${g.id}')">Apply Fight Camp Intel to Confidence</button>
+            </div>
+          `;
+        } else {
+          const uniqueLeaders = [];
+          (g.allLeaders || []).forEach(l => {
+            if (l.name && !uniqueLeaders.some(u => u.name === l.name && u.stat === l.stat)) uniqueLeaders.push(l);
+          });
+          const leadersHtml = uniqueLeaders.length
+            ? `<div class="proof-item"><strong>Tracked Key Stat Leaders</strong><div class="proof-sub">${uniqueLeaders.slice(0, 6).map(l => `${l.team} ${l.stat}: ${l.name} (${l.value})`).join(' · ')}</div></div>` : '';
+
+          const sortedInj = [...(g.gradedInjuries || [])].sort((a, b) => b.pts - a.pts);
+          const injHtml = sortedInj.length
+            ? sortedInj.map(i => {
+                const badge = i.tier === 'star' ? `<span class="star-badge">★ STAR ${i.statLabels ? '(' + i.statLabels + ')' : ''}</span>`
+                  : i.tier === 'key' ? `<span class="key-badge">KEY (${i.statLabels})</span>` : `<span class="bench-badge">ROTATION</span>`;
+                const cls = i.tier === 'star' ? 'danger star-out' : i.pts > 0 ? 'danger' : '';
+                return `<div class="proof-item ${cls}">${badge}<strong>${i.player}</strong> (${i.team}) — ${i.status} (${i.pts > 0 ? '-' + i.pts + ' pts' : '0 pts'})<div class="proof-sub">${i.detail || 'Listed on official ESPN injury report.'}</div></div>`;
+              }).join('')
+            : `<div class="proof-item"><strong>Clean Injury Report</strong><div class="proof-sub">No major ESPN injury deductions impacting this game.</div></div>`;
+
+          body.innerHTML = `
+            <div class="proof-item"><strong>Star-Weighted Health &amp; Form Score: ${g.rosScore}%</strong><div class="proof-sub">Pick Star/Injury Penalty: -${g.injuryPenalty} pts · Opponent Injury Boost: +${g.oppInjuryBonus} pts</div></div>
+            ${leadersHtml}${injHtml}
+          `;
+        }
       } else {
         const news = sum?.news || [];
         body.innerHTML = news.length
-          ? news.map(n => `
-              <a class="news-card" href="${n.url}" target="_blank" rel="noopener noreferrer">
-                <div class="news-title">${n.headline} ↗</div>
-                <div class="news-desc">${n.description}</div>
-                <div class="news-meta">ESPN · ${n.published || 'Latest'}</div>
-              </a>
-            `).join('')
+          ? news.map(n => `<a class="news-card" href="${n.url}" target="_blank" rel="noopener noreferrer"><div class="news-title">${n.headline} ↗</div><div class="news-desc">${n.description}</div><div class="news-meta">ESPN · ${n.published || 'Latest'}</div></a>`).join('')
           : `<div class="proof-item">No recent ESPN articles found for this matchup.</div>`;
       }
+    }
+
+    // --- PARLAY SLIP & CALCULATORS MODAL ---
+    function openToolsModal(tab = 'slip') {
+      currentToolsTab = tab;
+      document.getElementById('tools-modal').classList.add('open');
+      ['slip', 'calc', 'conv'].forEach(t => document.getElementById(`tool-tab-${t}`).classList.toggle('active', t === tab));
+      renderToolsTab();
+    }
+    function switchToolsTab(tab, btn) {
+      currentToolsTab = tab;
+      document.querySelectorAll('#tools-modal .tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderToolsTab();
+    }
+
+    function renderToolsTab() {
+      const body = document.getElementById('tools-body');
+      if (currentToolsTab === 'slip') {
+        const legs = allGames.filter(g => savedIds.has(g.id));
+        if (!legs.length) {
+          body.innerHTML = `<div class="empty-state">Your Parlay Slip is empty.<br/>Tap the <strong>☆</strong> icon on any game card to add legs.</div>`;
+          return;
+        }
+        let combDec = 1;
+        const legsHtml = legs.map(g => {
+          const cachedEv = oddsSportCache[g.oddsKey]?.data || [];
+          const oddsEv = g.oddsEventDirect || matchGameInOdds(g, cachedEv);
+          const oa = analyzeOddsEvent(oddsEv, g.home, g.away);
+          const best = g.pickSide === 'home' ? oa.homeRows[0] : oa.awayRows[0];
+          const dec = best ? best.dec : (1 / Math.max(0.15, g.confidence / 100));
+          combDec *= dec;
+          const am = best ? (best.price > 0 ? '+' + best.price : best.price) : 'Est';
+          return `
+            <div class="book-row" onclick="closeModal('tools-modal'); openGameDetail('${g.id}')">
+              <div class="book-left">
+                <div class="book-name">${g.pickLabel} <span class="ev-badge">${g.confidence}% CONF</span></div>
+                <div class="book-sub">${g.league} · ${g.away.short} @ ${g.home.short}</div>
+              </div>
+              <div class="book-right">
+                <div class="book-odds">${am}</div>
+                <button class="get-app-btn" onclick="toggleSave(event, '${g.id}'); renderToolsTab();">Remove</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        const combAm = decimalToAmerican(combDec);
+        body.innerHTML = `
+          ${legsHtml}
+          <div class="proof-item arb-box">
+            <strong>${legs.length}-Leg Parlay Odds: ${combAm > 0 ? '+' + combAm : combAm} (${combDec.toFixed(2)}x)</strong>
+            <div class="proof-sub">$50 Stake → <strong>$${(50 * combDec).toFixed(2)}</strong> Payout · $100 Stake → <strong>$${(100 * combDec).toFixed(2)}</strong> Payout</div>
+          </div>
+          <button class="primary-btn" onclick="shareParlaySlip(${combAm})">Two-Click Share Parlay Slip</button>
+        `;
+      } else if (currentToolsTab === 'calc') {
+        body.innerHTML = `
+          <div class="context-box">
+            <h4>⚡ Arbitrage / Hedge Splitter</h4>
+            <div class="form-grid">
+              <div class="form-group"><label>Side A Odds (e.g. +140)</label><input id="arb-a" class="form-input" type="number" value="140" oninput="calcArb()" /></div>
+              <div class="form-group"><label>Side B Odds (e.g. -120)</label><input id="arb-b" class="form-input" type="number" value="-120" oninput="calcArb()" /></div>
+            </div>
+            <div class="form-group"><label>Total Stake ($)</label><input id="arb-stake" class="form-input" type="number" value="100" oninput="calcArb()" /></div>
+            <div id="arb-out" class="proof-item" style="margin-bottom:0;"></div>
+          </div>
+          <div class="context-box">
+            <h4>📈 +EV Edge Calculator</h4>
+            <div class="form-grid">
+              <div class="form-group"><label>Sportsbook Odds</label><input id="ev-odds" class="form-input" type="number" value="130" oninput="calcEv()" /></div>
+              <div class="form-group"><label>Fair Win Prob (%)</label><input id="ev-prob" class="form-input" type="number" value="48" oninput="calcEv()" /></div>
+            </div>
+            <div id="ev-out" class="proof-item" style="margin-bottom:0;"></div>
+          </div>
+        `;
+        calcArb(); calcEv();
+      } else {
+        body.innerHTML = `
+          <div class="context-box">
+            <h4>🔄 American Odds ↔ Decimal ↔ Kalshi ¢</h4>
+            <div class="form-group"><label>Enter American Odds (e.g. -110 or +150)</label><input id="conv-am" class="form-input" type="number" value="-110" oninput="calcConv()" /></div>
+            <div id="conv-out" class="proof-item" style="margin-bottom:0;"></div>
+          </div>
+        `;
+        calcConv();
+      }
+    }
+
+    function calcArb() {
+      const a = Number(document.getElementById('arb-a')?.value || 0);
+      const b = Number(document.getElementById('arb-b')?.value || 0);
+      const st = Number(document.getElementById('arb-stake')?.value || 100);
+      const out = document.getElementById('arb-out');
+      if (!a || !b || !out) return;
+      const dA = americanToDecimal(a), dB = americanToDecimal(b);
+      const inv = (1 / dA) + (1 / dB);
+      const sA = st / (dA * inv), sB = st - sA;
+      const profit = (sA * dA) - st;
+      const roi = ((1 / inv) - 1) * 100;
+      out.innerHTML = `<strong style="color:${profit > 0 ? 'var(--accent)' : '#f87171'}">${profit > 0 ? 'Arbitrage Profit' : 'No Arb (Vig)'}: ${profit >= 0 ? '+$' : '-$'}${Math.abs(profit).toFixed(2)} (${roi.toFixed(2)}%)</strong><div class="proof-sub">Bet <strong>$${sA.toFixed(2)}</strong> on Side A &amp; <strong>$${sB.toFixed(2)}</strong> on Side B</div>`;
+    }
+
+    function calcEv() {
+      const o = Number(document.getElementById('ev-odds')?.value || 0);
+      const p = Number(document.getElementById('ev-prob')?.value || 50) / 100;
+      const out = document.getElementById('ev-out');
+      if (!o || !out) return;
+      const ev = ((p * americanToDecimal(o)) - 1) * 100;
+      out.innerHTML = `<strong style="color:${ev > 0 ? 'var(--accent)' : '#f87171'}">Expected Value: ${ev >= 0 ? '+' : ''}${ev.toFixed(2)}% EV</strong><div class="proof-sub">Expected profit per $100 wagered: ${ev >= 0 ? '+$' : '-$'}${Math.abs(ev).toFixed(2)}</div>`;
+    }
+
+    function calcConv() {
+      const o = Number(document.getElementById('conv-am')?.value || -110);
+      const out = document.getElementById('conv-out');
+      if (!o || !out) return;
+      out.innerHTML = `<strong>Decimal: ${americanToDecimal(o).toFixed(3)} · Kalshi Price: ${americanToCents(o)}¢</strong><div class="proof-sub">Implied Win Prob: ${(americanToImplied(o) * 100).toFixed(1)}% · Profit on $100: +$${americanToProfit100(o).toFixed(2)}</div>`;
+    }
+
+    async function shareParlaySlip(combAm) {
+      const legs = allGames.filter(g => savedIds.has(g.id));
+      const lines = legs.map(g => `• ${g.league}: ${g.pickLabel} (${g.confidence}%)`).join('\n');
+      const text = `AlignIQ ${legs.length}-Leg Parlay (${combAm > 0 ? '+' + combAm : combAm}):\n${lines}\nhttps://levaun2024.github.io/AlignIQ/`;
+      if (navigator.share) { try { await navigator.share({ title: 'AlignIQ Parlay', text }); return; } catch {} }
+      navigator.clipboard?.writeText(text);
+      alert('Parlay copied to clipboard!');
     }
 
     async function shareSelectedGame() {
       const g = allGames.find(x => x.id === selectedGameId);
       if (!g) return;
       const text = `AlignIQ Pick (${g.league}): ${g.pickLabel} — ${g.confidence}% Confidence | ${g.away.short} @ ${g.home.short}\nhttps://levaun2024.github.io/AlignIQ/`;
-      if (navigator.share) {
-        try { await navigator.share({ title: 'AlignIQ Pick', text }); return; } catch {}
-      }
+      if (navigator.share) { try { await navigator.share({ title: 'AlignIQ Pick', text }); return; } catch {} }
       navigator.clipboard?.writeText(text);
       alert('Pick copied to clipboard!');
     }
 
     // --- CUSTOM SCANNER ---
-    function openScanModal() {
-      document.getElementById('scan-result').innerHTML = '';
-      document.getElementById('scan-modal').classList.add('open');
-    }
-
+    function openScanModal() { document.getElementById('scan-result').innerHTML = ''; document.getElementById('scan-modal').classList.add('open'); }
     function runCustomScan() {
       const dm = getDateMath(currentDate);
       const awayFull = document.getElementById('sc-away').value.trim();
       const homeFull = document.getElementById('sc-home').value.trim();
       const custom = evaluateGame({
-        id: 'custom',
-        league: 'CUSTOM',
-        state: 'pre',
-        time: 'Custom Scan',
-        venue: document.getElementById('sc-venue').value,
-        leaders: [],
-        away: { name: awayFull, short: awayFull.split(' ').pop(), location: awayFull.split(' ')[0], mascot: awayFull.split(' ').pop(), record: document.getElementById('sc-away-rec').value },
-        home: { name: homeFull, short: homeFull.split(' ').pop(), location: homeFull.split(' ')[0], mascot: homeFull.split(' ').pop(), record: document.getElementById('sc-home-rec').value },
-        customCtx: {
-          artist: document.getElementById('sc-artist').value,
-          song: document.getElementById('sc-song').value,
-          extra: document.getElementById('sc-extra').value
-        }
+        id: 'custom', league: 'CUSTOM', state: 'pre', time: 'Custom Scan', venue: document.getElementById('sc-venue').value, leaders: [],
+        homeML: null, awayML: null,
+        away: { id: '', name: awayFull, short: awayFull.split(' ').pop(), location: awayFull.split(' ')[0], mascot: awayFull.split(' ').pop(), record: document.getElementById('sc-away-rec').value },
+        home: { id: '', name: homeFull, short: homeFull.split(' ').pop(), location: homeFull.split(' ')[0], mascot: homeFull.split(' ').pop(), record: document.getElementById('sc-home-rec').value },
+        customCtx: { artist: document.getElementById('sc-artist').value, song: document.getElementById('sc-song').value, extra: document.getElementById('sc-extra').value }
       }, dm);
-
       document.getElementById('scan-result').innerHTML = `
-        <div class="proof-item">
-          <strong>${custom.pickLabel} — ${custom.confidence}% Confidence</strong>
-          <div class="proof-sub">${custom.hitsCount} Gematria Hits across ${custom.entitiesCount} variables · Gematria Score: ${custom.gemScore}%</div>
-        </div>
+        <div class="proof-item"><strong>${custom.pickLabel} — ${custom.confidence}% Confidence</strong><div class="proof-sub">${custom.hitsCount} Gematria Hits across ${custom.entitiesCount} variables · Gematria Score: ${custom.gemScore}%</div></div>
         ${custom.primaryHits.map(h => `<div class="proof-item">${h}</div>`).join('') || '<div class="proof-item warn">Fewer than 2 references matched.</div>'}
       `;
     }
@@ -1721,23 +2261,17 @@
     }
 
     // --- CONTROLS & AUTH ---
-    function saveOddsKey(val) {
-      oddsApiKey = val.trim();
-      localStorage.setItem('aligniq_odds_key', oddsApiKey);
-      oddsSportCache = {};
-      loadSlate(false);
-    }
+    function saveOddsKey(val) { oddsApiKey = val.trim(); localStorage.setItem('aligniq_odds_key', oddsApiKey); oddsSportCache = {}; loadSlate(false); }
     function toggleSave(e, id) {
       e.stopPropagation();
-      if (savedIds.has(id)) savedIds.delete(id);
-      else savedIds.add(id);
+      if (savedIds.has(id)) savedIds.delete(id); else savedIds.add(id);
       localStorage.setItem('aligniq_saved', JSON.stringify(Array.from(savedIds)));
       document.getElementById('saved-count').textContent = savedIds.size;
       renderFeed();
     }
     function setFilterMode(m) {
       filterMode = m;
-      ['all', 'upcoming', 'live', 'saved'].forEach(k => document.getElementById(`mode-${k}`).classList.toggle('active', k === m));
+      ['all', 'high', 'gem', 'live', 'upcoming'].forEach(k => document.getElementById(`mode-${k}`).classList.toggle('active', k === m));
       renderFeed();
     }
     function setSport(s) { activeSport = s; renderSportsBar(); renderFeed(); }
@@ -1747,22 +2281,15 @@
       weights.gem = Number(document.getElementById('w-gem').value);
       weights.h2h = Number(document.getElementById('w-h2h').value);
       weights.ros = Number(document.getElementById('w-ros').value);
-      syncSlidersToWeights();
-      renderFeed();
+      syncSlidersToWeights(); renderFeed();
     }
     function resetToAgentWeights() {
       manualOverride = false;
       if (agentReport?.active_weights) weights = { ...agentReport.active_weights };
-      syncSlidersToWeights();
-      renderFeed();
+      syncSlidersToWeights(); renderFeed();
     }
     function shiftDate(delta) { currentDate.setDate(currentDate.getDate() + delta); loadSlate(false); }
-    function onPickDate(val) {
-      if (!val) return;
-      const [y, m, d] = val.split('-').map(Number);
-      currentDate = new Date(y, m - 1, d);
-      loadSlate(false);
-    }
+    function onPickDate(val) { if (!val) return; const [y, m, d] = val.split('-').map(Number); currentDate = new Date(y, m - 1, d); loadSlate(false); }
     function goToday() { currentDate = new Date(); loadSlate(false); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
     function closeModalOnBg(e, id) { if (e.target.id === id) closeModal(id); }
@@ -1771,8 +2298,7 @@
       localStorage.setItem('aligniq_user', provider);
       document.getElementById('auth-screen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'flex';
-      loadAgentReport();
-      loadSlate(false);
+      loadAgentReport(); loadSlate(false);
     }
     function signOut() {
       localStorage.removeItem('aligniq_user');
@@ -1784,8 +2310,7 @@
     if (localStorage.getItem('aligniq_user')) {
       document.getElementById('auth-screen').style.display = 'none';
       document.getElementById('dashboard').style.display = 'flex';
-      loadAgentReport();
-      loadSlate(false);
+      loadAgentReport(); loadSlate(false);
     }
   </script>
 
