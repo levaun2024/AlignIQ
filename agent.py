@@ -28,7 +28,7 @@ DEFAULT_WEIGHTS = {"gem": 42, "h2h": 21, "ros": 37}
 
 def fetch_json(url, timeout=12):
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/2.2"})
+        req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/2.3"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except Exception:
@@ -320,13 +320,17 @@ def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule
 
 def eval_weights(games, w):
     wins = 0
+    total = 0
     for g in games:
-        hs = g["home"]["gem"] * w["gem"] + g["home"]["h2h"] * w["h2h"] + g["home"]["ros"] * w["ros"]
-        as_ = g["away"]["gem"] * w["gem"] + g["away"]["h2h"] * w["h2h"] + g["away"]["ros"] * w["ros"]
+        if not isinstance(g.get("home"), dict) or not isinstance(g.get("away"), dict):
+            continue
+        total += 1
+        hs = g["home"].get("gem", 0) * w["gem"] + g["home"].get("h2h", 0) * w["h2h"] + g["home"].get("ros", 0) * w["ros"]
+        as_ = g["away"].get("gem", 0) * w["gem"] + g["away"].get("h2h", 0) * w["h2h"] + g["away"].get("ros", 0) * w["ros"]
         pick = "home" if hs >= as_ else "away"
-        if pick == g["actual_winner"]:
+        if pick == g.get("actual_winner"):
             wins += 1
-    return wins, len(games)
+    return wins, total
 
 
 def optimize_weights(games, current_w, max_step=10):
@@ -415,7 +419,6 @@ def sync_ufc_fighters():
         stance = (ath_obj.get("stance") or {}).get("text") or prev.get("stance") or "Orthodox"
         reach = ath_obj.get("displayReach") or prev.get("reach") or "—"
 
-        # Build verified ESPN source URLs
         espn_profile_url = f"https://www.espn.com/mma/fighter/_/id/{aid}"
         espn_stats_url = f"https://www.espn.com/mma/fighter/stats/_/id/{aid}"
         for lnk in ath_obj.get("links") or []:
@@ -424,7 +427,6 @@ def sync_ufc_fighters():
                 espn_profile_url = href
                 break
 
-        # Parse career striking metrics
         stat_map = {}
         for cat in (stats_data or {}).get("categories") or []:
             for k, v in zip(cat.get("names") or [], cat.get("totals") or []):
@@ -448,7 +450,6 @@ def sync_ufc_fighters():
             body_p = round((body_p / total_p) * 100)
             leg_p = max(0, 100 - head_p - body_p)
 
-        # Collect career fight weights (Biggest Cut = min_lbs, Lowest Cut = max_lbs)
         observed_weights = []
         missed_count = int((prev.get("weight_cut") or {}).get("missed_count") or 0)
 
@@ -460,14 +461,12 @@ def sync_ufc_fighters():
         if bout_w:
             observed_weights.append(bout_w)
 
-        # Preserve previously recorded career min/max
         prev_wc = prev.get("weight_cut") or {}
         for k in ("min_lbs", "max_lbs", "current_lbs"):
             if prev_wc.get(k):
                 observed_weights.append(float(prev_wc[k]))
 
-        # Scan ESPN gamelog events for historical divisions / catchweights / missed weights
-        for ev_id, ev_obj in ((gamelog or {}).get("events") or {}).items():
+        for _, ev_obj in ((gamelog or {}).get("events") or {}).items():
             txt = json.dumps(ev_obj)
             w_found = extract_weight_lbs_from_text(txt)
             if w_found:
@@ -483,7 +482,6 @@ def sync_ufc_fighters():
         if observed_weights and current_lbs:
             min_lbs = round(min(observed_weights), 1)
             max_lbs = round(max(observed_weights), 1)
-            # If fighter only has 1 recorded division, establish walk-around upper bound (+15 lbs)
             if max_lbs - min_lbs < 2.0 and current_lbs < 240:
                 max_lbs = round(current_lbs + 15.0, 1)
             weight_cut = {
@@ -517,10 +515,13 @@ def main():
     now = datetime.now(timezone.utc)
     today = now.date()
 
-    # Sync UFC fighter stats & weight-cut ranges first so grading uses latest Fight IQ data
     fighters_db = sync_ufc_fighters()
 
     history = load_json(HISTORY_FILE, [])
+    history = [
+        g for g in history
+        if isinstance(g, dict) and isinstance(g.get("home"), dict) and isinstance(g.get("away"), dict)
+    ]
     report = load_json(REPORT_FILE, {})
     existing_ids = {g["id"] for g in history}
     schedule_cache = {}
