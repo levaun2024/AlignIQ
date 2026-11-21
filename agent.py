@@ -5,32 +5,125 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 
 LEAGUES = [
-    {"key": "NBA", "path": "basketball/nba"},
-    {"key": "NFL", "path": "football/nfl"},
-    {"key": "NHL", "path": "hockey/nhl"},
-    {"key": "MLB", "path": "baseball/mlb"},
-    {"key": "NCAAF", "path": "football/college-football"},
-    {"key": "NCAAB", "path": "basketball/mens-college-basketball"},
-    {"key": "NCAAW", "path": "basketball/womens-college-basketball"},
-    {"key": "WNBA", "path": "basketball/wnba"},
-    {"key": "UFC", "path": "mma/ufc"},
-    {"key": "EPL", "path": "soccer/eng.1"},
-    {"key": "MLS", "path": "soccer/usa.1"},
-    {"key": "UCL", "path": "soccer/uefa.champions"},
+    ("NBA", "basketball/nba"),
+    ("NFL", "football/nfl"),
+    ("NHL", "hockey/nhl"),
+    ("MLB", "baseball/mlb"),
+    ("NCAAF", "football/college-football"),
+    ("NCAAB", "basketball/mens-college-basketball"),
+    ("NCAAW", "basketball/womens-college-basketball"),
+    ("WNBA", "basketball/wnba"),
+    ("UFC", "mma/ufc"),
+    ("EPL", "soccer/eng.1"),
+    ("MLS", "soccer/usa.1"),
+    ("UCL", "soccer/uefa.champions"),
 ]
 
+FIGHT_LEAGUES = {"UFC", "BOXING", "BKFC"}
 HISTORY_FILE = "history.json"
 REPORT_FILE = "agent_report.json"
-DEFAULT_WEIGHTS = {"gem": 45, "h2h": 25, "ros": 30}
-MAX_WEEKLY_SWING = 5  # Max +/- 5% change per pillar per weekly retune
-MIN_SAMPLE_SIZE = 100
-ROLLING_DAYS = 60
+FIGHTERS_FILE = "fighters.json"
+DEFAULT_WEIGHTS = {"gem": 42, "h2h": 21, "ros": 37}
 
 
-# --- 4-CIPHER GEMATRIA ENGINE ---
+def fetch_json(url, timeout=12):
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/2.1"})
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except Exception:
+        return None
+
+
+def load_json(path, default):
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return default
+
+
+def save_json(path, data):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+
+# --- ODDS, FORM & FIGHT IQ HELPERS ---
+def american_to_implied(odds):
+    if not odds:
+        return 0.5
+    return (100.0 / (odds + 100.0)) if odds > 0 else (abs(odds) / (abs(odds) + 100.0))
+
+
+def parse_reach_inches(reach_str):
+    m = re.search(r"(\d+(?:\.\d+)?)", str(reach_str or ""))
+    return float(m.group(1)) if m else None
+
+
+def norm_fighter_key(name):
+    return re.sub(r"[^a-z0-9]", "", (name or "").lower())
+
+
+def compute_fight_edge(home_name, away_name, fighters_db):
+    f_h = fighters_db.get(norm_fighter_key(home_name))
+    f_a = fighters_db.get(norm_fighter_key(away_name))
+    if not f_h or not f_a:
+        return 0
+    def_diff = ((f_h.get("str_def") or 55) - (f_a.get("str_def") or 55)) * 0.6
+    sapm_diff = ((f_a.get("sapm") or 3.2) - (f_h.get("sapm") or 3.2)) * 4.0
+    r_h = parse_reach_inches(f_h.get("reach"))
+    r_a = parse_reach_inches(f_a.get("reach"))
+    reach_diff = max(-6.0, min(6.0, (r_h - r_a) * 1.2)) if (r_h and r_a) else 0.0
+    return max(-22, min(22, round(def_diff + sapm_diff + reach_diff)))
+
+
+def get_team_form(lg_path, team_id, before_date_str, schedule_cache):
+    if not lg_path or not team_id:
+        return None
+    cache_key = f"{lg_path}_{team_id}"
+    if cache_key not in schedule_cache:
+        data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/{lg_path}/teams/{team_id}/schedule")
+        parsed = []
+        if data:
+            for ev in data.get("events") or []:
+                comp = (ev.get("competitions") or [None])[0]
+                if not comp or not comp.get("status", {}).get("type", {}).get("completed"):
+                    continue
+                ev_date = (ev.get("date") or "")[:10]
+                comps = comp.get("competitors") or []
+                me = next((c for c in comps if str(c.get("id")) == str(team_id)), None)
+                opp = next((c for c in comps if str(c.get("id")) != str(team_id)), None)
+                if not me or not opp:
+                    continue
+                try:
+                    my_s = float(me.get("score", {}).get("value") if isinstance(me.get("score"), dict) else me.get("score", 0))
+                    opp_s = float(opp.get("score", {}).get("value") if isinstance(opp.get("score"), dict) else opp.get("score", 0))
+                except Exception:
+                    continue
+                parsed.append({
+                    "date": ev_date,
+                    "won": bool(me.get("winner")) or (my_s > opp_s),
+                    "margin": my_s - opp_s,
+                })
+        schedule_cache[cache_key] = parsed
+
+    prior = [g for g in schedule_cache[cache_key] if g["date"] and g["date"] < before_date_str]
+    if not prior:
+        return None
+    l10 = prior[-10:]
+    l5 = prior[-5:]
+    l10_pct = sum(1 for g in l10 if g["won"]) / len(l10)
+    l5_pct = sum(1 for g in l5 if g["won"]) / len(l5)
+    avg_margin = sum(g["margin"] for g in l5) / len(l5)
+    return {"pct": l5_pct * 0.6 + l10_pct * 0.4, "avg_margin": avg_margin}
+
+
+# --- GEMATRIA & SCORING ENGINE ---
 def reduce_digit(n):
     while n > 9:
-        n = sum(int(ch) for ch in str(n))
+        n = sum(int(d) for d in str(n))
     return n
 
 
@@ -47,14 +140,14 @@ def calc_ciphers(text):
     return (ord_v, red_v, rev_v, rred_v)
 
 
-def get_date_math(dt):
-    m, d, y = dt.month, dt.day, dt.year
+def get_date_nums(d):
+    m, day, y = d.month, d.day, d.year
     y_top, y_bot = y // 100, y % 100
-    full = m + d + y_top + y_bot
-    short = m + d + y_bot
-    digits = sum(int(c) for c in f"{m}{d}{y}")
-    mixed = m + d + sum(int(c) for c in str(y))
-    doy = dt.timetuple().tm_yday
+    full = m + day + y_top + y_bot
+    short = m + day + y_bot
+    digits = sum(int(c) for c in f"{m}{day}{y}")
+    mixed = m + day + sum(int(c) for c in str(y))
+    doy = d.timetuple().tm_yday
     is_leap = (y % 4 == 0 and y % 100 != 0) or (y % 400 == 0)
     left = (366 if is_leap else 365) - doy
     return {full, short, digits, mixed, doy, left}
@@ -65,11 +158,10 @@ def parse_record(rec_str):
     return (int(m.group(1)), int(m.group(2))) if m else None
 
 
-def build_targets(w, l):
+def record_targets(w, l):
     t = set()
     concat = int(f"{w}{l}")
-    no_zero_str = f"{w}{l}".replace("0", "")
-    no_zero = int(no_zero_str) if no_zero_str else 0
+    no_zero = int(f"{w}{l}".replace("0", "") or 0)
     if concat > 0:
         t.add(concat)
     if no_zero > 0:
@@ -82,305 +174,313 @@ def build_targets(w, l):
 
 
 def progressive_score(hits):
-    if hits < 2:
-        return 0
     tiers = [0, 0, 42, 62, 76, 88, 95, 100]
     return tiers[min(hits, len(tiers) - 1)]
 
 
-# --- ESPN FETCHER ---
-def fetch_json(url):
-    req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/1.0"})
+def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule_cache):
+    comp = (ev.get("competitions") or [None])[0]
+    if not comp or len(comp.get("competitors") or []) < 2:
+        return None
+    if not comp.get("status", {}).get("type", {}).get("completed"):
+        return None
+
+    home = next((c for c in comp["competitors"] if c.get("homeAway") == "home"), comp["competitors"][0])
+    away = next((c for c in comp["competitors"] if c.get("homeAway") == "away"), comp["competitors"][1])
+
     try:
-        with urllib.request.urlopen(req, timeout=12) as resp:
-            if resp.status == 200:
-                return json.loads(resp.read().decode("utf-8"))
+        hs = int(float(home.get("score", 0)))
+        as_ = int(float(away.get("score", 0)))
     except Exception:
         return None
-    return None
+    if hs == as_:
+        return None
+
+    actual_winner = "home" if hs > as_ else "away"
+    ev_date = (ev.get("date") or "")[:10]
+
+    def team_info(c):
+        t = c.get("team") or {}
+        a = c.get("athlete") or {}
+        recs = c.get("records") or []
+        tot = next((r.get("summary") for r in recs if r.get("type") == "total"), recs[0].get("summary") if recs else "")
+        home_r = next((r.get("summary") for r in recs if r.get("type") == "home"), "")
+        road_r = next((r.get("summary") for r in recs if r.get("type") == "road"), "")
+        return {
+            "id": str(t.get("id") or c.get("id") or ""),
+            "name": t.get("displayName") or a.get("displayName") or "",
+            "short": t.get("shortDisplayName") or a.get("shortName") or t.get("name") or "",
+            "loc": t.get("location") or "",
+            "mascot": t.get("name") or a.get("displayName") or "",
+            "rec": parse_record(tot),
+            "home_rec": parse_record(home_r),
+            "road_rec": parse_record(road_r),
+        }
+
+    hi, ai = team_info(home), team_info(away)
+    venue = (comp.get("venue") or {}).get("fullName") or ""
+    entities = [x for x in {hi["name"], hi["loc"], hi["mascot"], ai["name"], ai["loc"], ai["mascot"], venue} if x]
+
+    # Reconstruct pre-game records
+    h_rec = hi["rec"]
+    a_rec = ai["rec"]
+    if h_rec:
+        h_rec = (max(0, h_rec[0] - (1 if actual_winner == "home" else 0)), max(0, h_rec[1] - (1 if actual_winner == "away" else 0)))
+    if a_rec:
+        a_rec = (max(0, a_rec[0] - (1 if actual_winner == "away" else 0)), max(0, a_rec[1] - (1 if actual_winner == "home" else 0)))
+
+    hw_t = record_targets(h_rec[0] + 1, h_rec[1]) if h_rec else set()
+    hl_t = record_targets(h_rec[0], h_rec[1] + 1) if h_rec else set()
+    aw_t = record_targets(a_rec[0] + 1, a_rec[1]) if a_rec else set()
+    al_t = record_targets(a_rec[0], a_rec[1] + 1) if a_rec else set()
+
+    def count_hits(win_t, opp_loss_t, short_nm):
+        hits = 0
+        for ent in entities:
+            for val in calc_ciphers(ent):
+                if val > 0 and (val in win_t or val in opp_loss_t):
+                    hits += 1
+        for val in calc_ciphers(short_nm):
+            if val in date_nums:
+                hits += 1
+        return hits
+
+    home_gem = progressive_score(count_hits(hw_t, al_t, hi["short"]))
+    away_gem = progressive_score(count_hits(aw_t, hl_t, ai["short"]))
+
+    # --- UPGRADE 1: SCALED NO-VIG FAIR ODDS ---
+    odds = (comp.get("odds") or [{}])[0]
+    h_ml = (odds.get("homeTeamOdds") or {}).get("moneyLine")
+    a_ml = (odds.get("awayTeamOdds") or {}).get("moneyLine")
+    fair_home_prob = 0.5
+    if isinstance(h_ml, (int, float)) and isinstance(a_ml, (int, float)):
+        ih, ia = american_to_implied(h_ml), american_to_implied(a_ml)
+        if ih + ia > 0:
+            fair_home_prob = ih / (ih + ia)
+    elif (odds.get("homeTeamOdds") or {}).get("favorite"):
+        fair_home_prob = 0.58
+    elif (odds.get("awayTeamOdds") or {}).get("favorite"):
+        fair_home_prob = 0.42
+    fair_away_prob = 1.0 - fair_home_prob
+
+    h_pct = (h_rec[0] / (h_rec[0] + h_rec[1])) if (h_rec and (h_rec[0] + h_rec[1]) > 0) else 0.5
+    a_pct = (a_rec[0] / (a_rec[0] + a_rec[1])) if (a_rec and (a_rec[0] + a_rec[1]) > 0) else 0.5
+
+    h_sp = hi["home_rec"]
+    a_sp = ai["road_rec"]
+    h_sp_pct = (h_sp[0] / (h_sp[0] + h_sp[1])) if (h_sp and (h_sp[0] + h_sp[1]) > 0) else h_pct
+    a_sp_pct = (a_sp[0] / (a_sp[0] + a_sp[1])) if (a_sp and (a_sp[0] + a_sp[1]) > 0) else a_pct
+
+    is_fight = league_key in FIGHT_LEAGUES
+    split_home = min(95, max(15, 50 + (h_sp_pct - a_sp_pct) * 45))
+    split_away = min(95, max(15, 50 + (a_sp_pct - h_sp_pct) * 45))
+    odds_home = min(95, max(12, round(fair_home_prob * 100)))
+    odds_away = min(95, max(12, round(fair_away_prob * 100)))
+
+    home_h2h = odds_home if is_fight else min(95, max(12, round(odds_home * 0.60 + split_home * 0.40)))
+    away_h2h = odds_away if is_fight else min(95, max(12, round(odds_away * 0.60 + split_away * 0.40)))
+
+    # --- UPGRADE 2: L5 / L10 RECENT FORM ---
+    home_form = None if is_fight else get_team_form(lg_path, hi["id"], ev_date, schedule_cache)
+    away_form = None if is_fight else get_team_form(lg_path, ai["id"], ev_date, schedule_cache)
+    blended_h = (h_pct * 0.50 + home_form["pct"] * 0.50) if home_form else h_pct
+    blended_a = (a_pct * 0.50 + away_form["pct"] * 0.50) if away_form else a_pct
+    margin_boost = max(-8, min(8, round((home_form["avg_margin"] - away_form["avg_margin"]) * 0.5))) if (home_form and away_form) else 0
+
+    # --- UPGRADE 3: UFC STRIKING DEFENSE & REACH EDGE ---
+    fight_edge = compute_fight_edge(hi["name"], ai["name"], fighters_db) if is_fight else 0
+
+    home_ros = min(95, max(12, round(56 + (blended_h - blended_a) * 32 + margin_boost + fight_edge)))
+    away_ros = min(95, max(12, round(52 + (blended_a - blended_h) * 32 - margin_boost - fight_edge)))
+
+    return {
+        "id": str(ev.get("id")),
+        "league": league_key,
+        "date": ev_date,
+        "actual_winner": actual_winner,
+        "home": {"gem": home_gem, "h2h": home_h2h, "ros": home_ros},
+        "away": {"gem": away_gem, "h2h": away_h2h, "ros": away_ros},
+    }
 
 
-def fetch_completed_games_for_date(dt):
-    ymd = dt.strftime("%Y%m%d")
-    dm = get_date_math(dt)
-    games = []
-
-    for lg in LEAGUES:
-        url = f"https://site.api.espn.com/apis/site/v2/sports/{lg['path']}/scoreboard?dates={ymd}"
-        data = fetch_json(url)
-        if not isinstance(data, dict):
-            continue
-
-        for ev in data.get("events") or []:
-            if not isinstance(ev, dict):
-                continue
-            comps = ev.get("competitions") or []
-            comp = comps[0] if (comps and isinstance(comps[0], dict)) else {}
-            competitors = comp.get("competitors") or []
-            if len(competitors) < 2:
-                continue
-
-            status_state = ((comp.get("status") or {}).get("type") or {}).get("state")
-            if status_state != "post":
-                continue
-
-            home = next((c for c in competitors if isinstance(c, dict) and c.get("homeAway") == "home"), competitors[0])
-            away = next((c for c in competitors if isinstance(c, dict) and c.get("homeAway") == "away"), competitors[1])
-            if not isinstance(home, dict) or not isinstance(away, dict):
-                continue
-
-            try:
-                h_score = int(float(home.get("score", 0)))
-                a_score = int(float(away.get("score", 0)))
-            except (ValueError, TypeError):
-                continue
-
-            if h_score == a_score:
-                continue  # Skip ties/draws
-
-            actual_winner = "home" if h_score > a_score else "away"
-
-            def get_rec(team_obj, rtype):
-                recs = team_obj.get("records") or []
-                for r in recs:
-                    if isinstance(r, dict) and r.get("type") == rtype:
-                        return r.get("summary", "")
-                return recs[0].get("summary", "") if (recs and isinstance(recs[0], dict) and rtype == "total") else ""
-
-            h_team = home.get("team") or {}
-            a_team = away.get("team") or {}
-            h_name = h_team.get("displayName") or (home.get("athlete") or {}).get("displayName") or "Home"
-            a_name = a_team.get("displayName") or (away.get("athlete") or {}).get("displayName") or "Away"
-            h_short = h_team.get("shortDisplayName") or h_team.get("name") or h_name
-            a_short = a_team.get("shortDisplayName") or a_team.get("name") or a_name
-
-            # Reconstruct pre-game records by subtracting the final result
-            h_rec_post = parse_record(get_rec(home, "total"))
-            a_rec_post = parse_record(get_rec(away, "total"))
-            if h_rec_post:
-                h_pre = (
-                    max(0, h_rec_post[0] - (1 if actual_winner == "home" else 0)),
-                    max(0, h_rec_post[1] - (1 if actual_winner == "away" else 0)),
-                )
-            else:
-                h_pre = None
-
-            if a_rec_post:
-                a_pre = (
-                    max(0, a_rec_post[0] - (1 if actual_winner == "away" else 0)),
-                    max(0, a_rec_post[1] - (1 if actual_winner == "home" else 0)),
-                )
-            else:
-                a_pre = None
-
-            venue = (comp.get("venue") or {}).get("fullName", "")
-            broadcasts = comp.get("broadcasts") or []
-            b_names = (broadcasts[0].get("names") or []) if (broadcasts and isinstance(broadcasts[0], dict)) else []
-            broadcast = b_names[0] if b_names else ""
-
-            entities = list({
-                t.strip() for t in [
-                    a_name, a_team.get("location", ""), a_team.get("name", ""),
-                    h_name, h_team.get("location", ""), h_team.get("name", ""),
-                    venue, broadcast
-                ] if t and isinstance(t, str) and t.strip()
-            })
-
-            a_win_t = build_targets(a_pre[0] + 1, a_pre[1]) if a_pre else set()
-            a_loss_t = build_targets(a_pre[0], a_pre[1] + 1) if a_pre else set()
-            h_win_t = build_targets(h_pre[0] + 1, h_pre[1]) if h_pre else set()
-            h_loss_t = build_targets(h_pre[0], h_pre[1] + 1) if h_pre else set()
-
-            def count_hits(win_t, opp_loss_t, team_short):
-                hits = 0
-                for ent in entities:
-                    for val in calc_ciphers(ent):
-                        if val > 0 and (val in win_t or val in opp_loss_t):
-                            hits += 1
-                for val in calc_ciphers(team_short):
-                    if val in dm:
-                        hits += 1
-                return hits
-
-            away_hits = count_hits(a_win_t, h_loss_t, a_short)
-            home_hits = count_hits(h_win_t, a_loss_t, h_short)
-            away_gem = progressive_score(away_hits)
-            home_gem = progressive_score(home_hits)
-
-            # Odds & Splits (null-safe)
-            odds_list = comp.get("odds") or []
-            odds_obj = odds_list[0] if (odds_list and isinstance(odds_list[0], dict)) else {}
-            odds_fav = None
-            if (odds_obj.get("homeTeamOdds") or {}).get("favorite"):
-                odds_fav = "home"
-            elif (odds_obj.get("awayTeamOdds") or {}).get("favorite"):
-                odds_fav = "away"
-
-            a_pct = (a_pre[0] / (a_pre[0] + a_pre[1])) if (a_pre and (a_pre[0] + a_pre[1]) > 0) else 0.5
-            h_pct = (h_pre[0] / (h_pre[0] + h_pre[1])) if (h_pre and (h_pre[0] + h_pre[1]) > 0) else 0.5
-
-            vegas_home = 10 if odds_fav == "home" else (-10 if odds_fav == "away" else 0)
-            h2h_home = min(95, max(15, round(50 + (h_pct - a_pct) * 38 + vegas_home)))
-            h2h_away = min(95, max(15, round(50 + (a_pct - h_pct) * 38 - vegas_home)))
-
-            # Baseline roster/form pillar (home-court + win% edge)
-            ros_home = min(95, max(15, round(58 + (h_pct - a_pct) * 28)))
-            ros_away = min(95, max(15, round(54 + (a_pct - h_pct) * 28)))
-
-            games.append({
-                "id": str(ev.get("id")),
-                "date": dt.strftime("%Y-%m-%d"),
-                "league": lg["key"],
-                "matchup": f"{a_short} @ {h_short}",
-                "actual_winner": actual_winner,
-                "home_gem": home_gem,
-                "away_gem": away_gem,
-                "home_h2h": h2h_home,
-                "away_h2h": h2h_away,
-                "home_ros": ros_home,
-                "away_ros": ros_away,
-            })
-
-    return games
+def eval_weights(games, w):
+    wins = 0
+    for g in games:
+        hs = g["home"]["gem"] * w["gem"] + g["home"]["h2h"] * w["h2h"] + g["home"]["ros"] * w["ros"]
+        as_ = g["away"]["gem"] * w["gem"] + g["away"]["h2h"] * w["h2h"] + g["away"]["ros"] * w["ros"]
+        pick = "home" if hs >= as_ else "away"
+        if pick == g["actual_winner"]:
+            wins += 1
+    return wins, len(games)
 
 
-# --- SCORING & OPTIMIZER ---
-def score_game(g, w):
-    total_w = (w["gem"] + w["h2h"] + w["ros"]) or 1
-    home_conf = round((g["home_gem"] * w["gem"] + g["home_h2h"] * w["h2h"] + g["home_ros"] * w["ros"]) / total_w)
-    away_conf = round((g["away_gem"] * w["gem"] + g["away_h2h"] * w["h2h"] + g["away_ros"] * w["ros"]) / total_w)
-
-    if home_conf >= away_conf:
-        pick, conf = "home", min(99, max(8, home_conf))
-    else:
-        pick, conf = "away", min(99, max(8, away_conf))
-
-    return pick, conf, (pick == g["actual_winner"])
-
-
-def evaluate_weights(games, w):
-    if not games:
-        return 0.0, 0, 0
-    wins = sum(1 for g in games if score_game(g, w)[2])
-    return (wins / len(games)), wins, len(games)
-
-
-def clamp_weights(old_w, target_w):
-    # Apply max +/- 5% weekly damping per pillar, then normalize to 100
-    clamped = {}
-    for k in ("gem", "h2h", "ros"):
-        diff = target_w[k] - old_w[k]
-        step = max(-MAX_WEEKLY_SWING, min(MAX_WEEKLY_SWING, diff))
-        clamped[k] = max(0, old_w[k] + step)
-    total = sum(clamped.values()) or 1
-    norm = {k: round(clamped[k] * 100 / total) for k in ("gem", "h2h", "ros")}
-    norm["ros"] = 100 - norm["gem"] - norm["h2h"]
-    return norm
-
-
-def optimize_weights(games, current_w):
+def optimize_weights(games, current_w, max_step=10):
+    if len(games) < 15:
+        return current_w, None
     best_w = dict(current_w)
-    best_acc, _, _ = evaluate_weights(games, current_w)
+    best_wins, _ = eval_weights(games, current_w)
 
-    for gem in range(0, 101, 5):
-        for h2h in range(0, 101 - gem, 5):
+    for gem in range(10, 71, 5):
+        for h2h in range(10, 71, 5):
             ros = 100 - gem - h2h
+            if ros < 10 or ros > 70:
+                continue
             cand = {"gem": gem, "h2h": h2h, "ros": ros}
-            acc, _, _ = evaluate_weights(games, cand)
-            if acc > best_acc + 0.002:  # Require real improvement
-                best_acc = acc
+            w_cnt, _ = eval_weights(games, cand)
+            if w_cnt > best_wins:
+                best_wins = w_cnt
                 best_w = cand
 
-    return clamp_weights(current_w, best_w), best_w
+    stepped = {}
+    for k in ("gem", "h2h", "ros"):
+        diff = best_w[k] - current_w[k]
+        stepped[k] = current_w[k] + max(-max_step, min(max_step, diff))
+    s = sum(stepped.values())
+    if s != 100:
+        stepped["ros"] += 100 - s
+    return stepped, best_w
+
+
+# --- UFC FIGHTER STRIKING & DEFENSE SYNC ---
+def sync_ufc_fighters():
+    fighters = load_json(FIGHTERS_FILE, {})
+    today = datetime.now(timezone.utc).date()
+    athlete_ids = {}
+
+    for offset in range(-3, 15):
+        d_str = (today + timedelta(days=offset)).strftime("%Y%m%d")
+        data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/mma/ufc/scoreboard?dates={d_str}")
+        if not data:
+            continue
+        for ev in data.get("events") or []:
+            for comp in ev.get("competitions") or []:
+                for c in comp.get("competitors") or []:
+                    ath = c.get("athlete") or {}
+                    aid = str(ath.get("id") or c.get("id") or "")
+                    name = ath.get("displayName") or ath.get("fullName") or ""
+                    if aid and name:
+                        athlete_ids[aid] = name
+
+    for aid, name in athlete_ids.items():
+        fkey = norm_fighter_key(name)
+        profile = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}")
+        stats_data = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}/stats")
+
+        ath_obj = (profile or {}).get("athlete") or {}
+        stance = (ath_obj.get("stance") or {}).get("text") or "Orthodox"
+        reach = ath_obj.get("displayReach") or "—"
+
+        stat_map = {}
+        for cat in (stats_data or {}).get("categories") or []:
+            for k, v in zip(cat.get("names") or [], cat.get("totals") or []):
+                stat_map[k.lower()] = v
+
+        def to_float(val, default):
+            try:
+                return float(str(val).replace("%", "").strip())
+            except Exception:
+                return default
+
+        str_def = round(to_float(stat_map.get("sigstrdef") or stat_map.get("strdef"), 55))
+        sapm = round(to_float(stat_map.get("sigstrabsorbedpermin") or stat_map.get("sapm"), 3.2), 2)
+
+        head_p = round(to_float(stat_map.get("sigstrheadpct") or stat_map.get("headpct"), 64))
+        body_p = round(to_float(stat_map.get("sigstrbodypct") or stat_map.get("bodypct"), 20))
+        leg_p = round(to_float(stat_map.get("sigstrlegpct") or stat_map.get("legpct"), 16))
+        total_p = head_p + body_p + leg_p
+        if total_p > 0 and total_p != 100:
+            head_p = round((head_p / total_p) * 100)
+            body_p = round((body_p / total_p) * 100)
+            leg_p = max(0, 100 - head_p - body_p)
+
+        fighters[fkey] = {
+            "name": name,
+            "stance": stance,
+            "reach": reach,
+            "str_def": str_def,
+            "sapm": sapm,
+            "head_pct": head_p,
+            "body_pct": body_p,
+            "leg_pct": leg_p,
+            "updated": today.isoformat(),
+        }
+
+    save_json(FIGHTERS_FILE, fighters)
+    print(f"Synced {len(athlete_ids)} active UFC fighters ({len(fighters)} total in {FIGHTERS_FILE}).")
+    return fighters
 
 
 def main():
-    now_utc = datetime.now(timezone.utc)
-    today = (now_utc - timedelta(hours=5)).date()  # EST reference
+    now = datetime.now(timezone.utc)
+    today = now.date()
 
-    # 1. Load existing history
-    if os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, "r", encoding="utf-8") as f:
-            history = json.load(f)
-    else:
-        history = []
+    # Sync UFC fighter stats first so grading uses up-to-date Fight IQ edges
+    fighters_db = sync_ufc_fighters()
 
+    history = load_json(HISTORY_FILE, [])
+    report = load_json(REPORT_FILE, {})
     existing_ids = {g["id"] for g in history}
+    schedule_cache = {}
 
-    # 2. Initial 30-day backfill OR daily yesterday sync
-    days_to_fetch = 30 if len(history) == 0 else 2
-    new_count = 0
-    for offset in range(1, days_to_fetch + 1):
-        target_day = today - timedelta(days=offset)
-        fetched = fetch_completed_games_for_date(datetime(target_day.year, target_day.month, target_day.day))
-        for g in fetched:
-            if g["id"] not in existing_ids:
-                history.append(g)
-                existing_ids.add(g["id"])
-                new_count += 1
+    new_games = []
+    for offset in range(1, 4):
+        d = today - timedelta(days=offset)
+        d_str = d.strftime("%Y%m%d")
+        d_nums = get_date_nums(d)
+        for lg_key, lg_path in LEAGUES:
+            data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/{lg_path}/scoreboard?dates={d_str}")
+            if not data:
+                continue
+            for ev in data.get("events") or []:
+                gid = str(ev.get("id"))
+                if gid in existing_ids:
+                    continue
+                scored = score_game_pillars(ev, lg_key, lg_path, d_nums, fighters_db, schedule_cache)
+                if scored:
+                    new_games.append(scored)
+                    existing_ids.add(gid)
 
-    # Keep history sorted by date
-    history.sort(key=lambda x: x["date"])
-    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(history, f, indent=2)
+    history.extend(new_games)
+    cutoff = (today - timedelta(days=60)).isoformat()
+    history = [g for g in history if g.get("date", "") >= cutoff]
+    save_json(HISTORY_FILE, history)
 
-    # 3. Load previous report & weights
-    prev_report = {}
-    if os.path.exists(REPORT_FILE):
-        with open(REPORT_FILE, "r", encoding="utf-8") as f:
-            prev_report = json.load(f)
-
-    active_weights = prev_report.get("active_weights", dict(DEFAULT_WEIGHTS))
-
-    # 4. Filter to rolling 60-day window
-    cutoff = (today - timedelta(days=ROLLING_DAYS)).strftime("%Y-%m-%d")
-    window_games = [g for g in history if g["date"] >= cutoff]
-
-    # 5. Retune ONLY on Mondays (weekday == 0) or first-ever run, AND if sample >= 100
+    active_w = report.get("active_weights") or dict(DEFAULT_WEIGHTS)
+    league_w = report.get("league_weights") or {}
     is_monday = today.weekday() == 0
-    is_first_run = not bool(prev_report)
-    retuned = False
-    ideal_unclamped = active_weights
+    reason = report.get("adjustment_reason") or "Monitoring 60-day rolling window. Next auto-retune runs Monday."
 
-    if (is_monday or is_first_run) and len(window_games) >= MIN_SAMPLE_SIZE:
-        active_weights, ideal_unclamped = optimize_weights(window_games, active_weights)
-        retuned = True
+    if is_monday or not league_w:
+        new_global, _ = optimize_weights(history, active_w, max_step=10)
+        if new_global != active_w:
+            reason = f"Retuned global weights from {active_w['gem']}/{active_w['h2h']}/{active_w['ros']} to {new_global['gem']}/{new_global['h2h']}/{new_global['ros']} (capped at ±10%) to maximize 60-day win rate."
+        else:
+            reason = f"Global weights ({active_w['gem']}/{active_w['h2h']}/{active_w['ros']}) held steady as highest-converting split."
+        active_w = new_global
 
-    # 6. Build Accuracy & Confidence Tier Report
-    overall_acc, overall_w, overall_n = evaluate_weights(window_games, active_weights)
+        by_league = {}
+        for g in history:
+            by_league.setdefault(g["league"], []).append(g)
+        for lg_key, lg_games in by_league.items():
+            if len(lg_games) >= 30:
+                cur_lw = league_w.get(lg_key) or dict(active_w)
+                opt_lw, _ = optimize_weights(lg_games, cur_lw, max_step=10)
+                league_w[lg_key] = opt_lw
 
-    tiers = {}
-    for thresh in (60, 65, 70, 75):
-        t_games = [g for g in window_games if score_game(g, active_weights)[1] >= thresh]
-        t_acc, t_w, t_n = evaluate_weights(t_games, active_weights)
-        tiers[f"{thresh}%+"] = {"wins": t_w, "total": t_n, "win_rate": round(t_acc * 100, 1)}
+    wins, total = eval_weights(history, active_w)
+    win_rate = round((wins / total) * 100, 1) if total else 0.0
 
-    by_league = {}
-    for lg in LEAGUES:
-        lg_games = [g for g in window_games if g["league"] == lg["key"]]
-        if lg_games:
-            l_acc, l_w, l_n = evaluate_weights(lg_games, active_weights)
-            by_league[lg["key"]] = {"wins": l_w, "total": l_n, "win_rate": round(l_acc * 100, 1)}
-
-    report = {
-        "last_updated": now_utc.strftime("%Y-%m-%d %H:%M UTC"),
-        "new_games_logged": new_count,
-        "rolling_window_days": ROLLING_DAYS,
-        "total_games_graded": overall_n,
-        "overall_win_rate": round(overall_acc * 100, 1),
-        "overall_record": f"{overall_w}-{overall_n - overall_w}",
-        "retuned_this_run": retuned,
-        "active_weights": active_weights,
-        "ideal_target_weights": ideal_unclamped,
-        "confidence_tiers": tiers,
-        "by_league": by_league,
+    new_report = {
+        "last_updated": today.isoformat(),
+        "total_games_graded": total,
+        "overall_record": f"{wins}-{total - wins}",
+        "overall_win_rate": win_rate,
+        "active_weights": active_w,
+        "league_weights": league_w,
+        "adjustment_reason": reason,
     }
-
-    with open(REPORT_FILE, "w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2)
-
-    print(f"Logged {new_count} new games. Rolling {overall_n} games: {report['overall_record']} ({report['overall_win_rate']}%)")
-    print(f"Active weights: {active_weights} (Retuned: {retuned})")
+    save_json(REPORT_FILE, new_report)
+    print(f"Agent complete: {new_report['overall_record']} ({win_rate}%) across {total} games.")
 
 
 if __name__ == "__main__":
