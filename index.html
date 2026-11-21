@@ -65,7 +65,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 28px 20px;
+      padding: calc(28px + env(safe-area-inset-top, 0px)) 20px calc(28px + env(safe-area-inset-bottom, 0px));
       position: relative;
       overflow: hidden;
     }
@@ -123,14 +123,14 @@
     .auth-note { font-size: 11px; color: var(--text-dim); margin-top: 10px; line-height: 1.4; }
 
     /* DASHBOARD */
-    #dashboard { display: none; flex-direction: column; flex: 1; padding-bottom: 32px; }
+    #dashboard { display: none; flex-direction: column; flex: 1; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
 
     .sticky-top {
       position: sticky; top: 0; z-index: 30;
       background: rgba(8, 13, 23, 0.95);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      padding: 11px 14px 10px;
+      padding: calc(11px + env(safe-area-inset-top, 0px)) calc(14px + env(safe-area-inset-right, 0px)) 10px calc(14px + env(safe-area-inset-left, 0px));
     }
 
     .top-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
@@ -357,7 +357,7 @@
     .modal-sheet {
       width: 100%; max-width: 480px; max-height: 90vh;
       background: var(--bg-surface); border-top: 1px solid var(--border-strong);
-      border-radius: 20px 20px 0 0; padding: 16px 15px 28px; overflow-y: auto;
+      border-radius: 20px 20px 0 0; padding: 16px 15px calc(28px + env(safe-area-inset-bottom, 0px)); overflow-y: auto;
     }
     .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 12px; }
     .modal-head h2 { font-size: 15px; font-weight: 800; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -953,7 +953,6 @@
       const h2hHome = Math.min(95, Math.max(15, Math.round(50 + (hSplitPct - aSplitPct) * 38 + vegasHomeBoost)));
       const h2hAway = Math.min(95, Math.max(15, Math.round(50 + (aSplitPct - hSplitPct) * 38 - vegasHomeBoost)));
 
-      // Combine scoreboard + summary stat leaders for Star-Weighted Injury scoring
       const allLeaders = [...(game.leaders || []), ...(sumData?.leaders || [])];
       let homeInjPen = 0, awayInjPen = 0;
       const gradedInjuries = (sumData?.injuries || []).map(inj => {
@@ -1206,7 +1205,10 @@
         });
       }
 
-      allGames = [...espnResults.flat(), ...fightGames].map(g => evaluateGame(g, dm));
+      const espnFlat = espnResults.flat();
+      if (silent && espnFlat.length === 0 && allGames.length > 0) return;
+
+      allGames = [...espnFlat, ...fightGames].map(g => evaluateGame(g, dm));
       renderSportsBar();
       renderFeed();
       setupLivePolling();
@@ -1222,9 +1224,17 @@
       if (livePollTimer) clearInterval(livePollTimer);
       const hasLive = allGames.some(g => g.state === 'in');
       if (hasLive && isSameDay(currentDate, new Date())) {
-        livePollTimer = setInterval(() => loadSlate(true), 30000);
+        livePollTimer = setInterval(() => {
+          if (!document.hidden) loadSlate(true);
+        }, 30000);
       }
     }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden && localStorage.getItem('aligniq_user')) {
+        setTimeout(() => loadSlate(true), 500);
+      }
+    });
 
     async function fetchGameSummary(game, silent = false) {
       if (!game.path) return null;
@@ -1600,7 +1610,6 @@
           ${eventsHtml}
         `;
       } else if (currentTab === 'ros') {
-        // Deduplicate key stat leaders for display
         const uniqueLeaders = [];
         (g.allLeaders || []).forEach(l => {
           if (l.name && !uniqueLeaders.some(u => u.name === l.name && u.stat === l.stat)) {
