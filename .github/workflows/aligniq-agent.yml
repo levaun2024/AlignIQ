@@ -1,10 +1,9 @@
-name: AlignIQ Daily Grading & Weekly Optimizer
+name: AlignIQ Daily Agent
 
 on:
   schedule:
-    # Runs every day at 7:15 AM EST (12:15 UTC)
-    - cron: '15 12 * * *'
-  workflow_dispatch: # Allows you to tap "Run workflow" manually anytime
+    - cron: '0 10 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,8 +12,7 @@ jobs:
   run-agent:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,10 +22,10 @@ jobs:
       - name: Run AlignIQ Agent
         run: python agent.py
 
-      - name: Commit updated history and report
+      - name: Commit updated history, report, and fighters
         run: |
           git config user.name "AlignIQ Agent"
-          git config user.email "actions@github.com"
-          git add history.json agent_report.json
-          git diff --staged --quiet || git commit -m "AlignIQ Agent: daily grade & report update"
+          git config user.email "agent@aligniq.app"
+          git add history.json agent_report.json fighters.json
+          git diff --staged --quiet || git commit -m "Auto-update AlignIQ stats, weights & fighters"
           git push
