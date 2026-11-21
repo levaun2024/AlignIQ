@@ -1,98 +1,13 @@
 {
-  "last_updated": "2026-11-20 19:34 UTC",
-  "new_games_logged": 0,
-  "rolling_window_days": 60,
-  "total_games_graded": 1104,
-  "overall_win_rate": 63.7,
-  "overall_record": "703-401",
-  "retuned_this_run": false,
+  "last_updated": "2026-11-21",
+  "total_games_graded": 92,
+  "overall_record": "66-26",
+  "overall_win_rate": 71.7,
   "active_weights": {
-    "gem": 42,
-    "h2h": 21,
+    "gem": 32,
+    "h2h": 31,
     "ros": 37
   },
-  "ideal_target_weights": {
-    "gem": 42,
-    "h2h": 21,
-    "ros": 37
-  },
-  "confidence_tiers": {
-    "60%+": {
-      "wins": 29,
-      "total": 47,
-      "win_rate": 61.7
-    },
-    "65%+": {
-      "wins": 13,
-      "total": 24,
-      "win_rate": 54.2
-    },
-    "70%+": {
-      "wins": 4,
-      "total": 9,
-      "win_rate": 44.4
-    },
-    "75%+": {
-      "wins": 2,
-      "total": 3,
-      "win_rate": 66.7
-    }
-  },
-  "by_league": {
-    "NBA": {
-      "wins": 143,
-      "total": 223,
-      "win_rate": 64.1
-    },
-    "NFL": {
-      "wins": 38,
-      "total": 58,
-      "win_rate": 65.5
-    },
-    "NHL": {
-      "wins": 119,
-      "total": 207,
-      "win_rate": 57.5
-    },
-    "MLB": {
-      "wins": 1,
-      "total": 5,
-      "win_rate": 20.0
-    },
-    "NCAAF": {
-      "wins": 144,
-      "total": 245,
-      "win_rate": 58.8
-    },
-    "NCAAB": {
-      "wins": 114,
-      "total": 142,
-      "win_rate": 80.3
-    },
-    "NCAAW": {
-      "wins": 95,
-      "total": 121,
-      "win_rate": 78.5
-    },
-    "WNBA": {
-      "wins": 2,
-      "total": 5,
-      "win_rate": 40.0
-    },
-    "EPL": {
-      "wins": 7,
-      "total": 23,
-      "win_rate": 30.4
-    },
-    "MLS": {
-      "wins": 29,
-      "total": 50,
-      "win_rate": 58.0
-    },
-    "UCL": {
-      "wins": 11,
-      "total": 25,
-      "win_rate": 44.0
-    }
-  }
+  "league_weights": {},
+  "adjustment_reason": "Retuned global weights from 42/21/37 to 32/31/37 (capped at \u00b110%) to maximize 60-day win rate."
 }

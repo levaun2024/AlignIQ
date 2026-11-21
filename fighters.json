@@ -1,0 +1,1058 @@
+{
+  "shoaibyousaf": {
+    "name": "Shoaib Yousaf",
+    "stance": "Orthodox",
+    "reach": "72\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 155.0,
+      "max_lbs": 170.0,
+      "current_lbs": 155.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4712356/shoaib-yousaf"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4712356/shoaib-yousaf",
+      "https://www.espn.com/mma/fighter/stats/_/id/4712356"
+    ],
+    "updated": "2026-11-21"
+  },
+  "johnmitchell": {
+    "name": "John Mitchell",
+    "stance": "Orthodox",
+    "reach": "74\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 155.0,
+      "max_lbs": 170.0,
+      "current_lbs": 155.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5080723/john-mitchell"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5080723/john-mitchell",
+      "https://www.espn.com/mma/fighter/stats/_/id/5080723"
+    ],
+    "updated": "2026-11-21"
+  },
+  "diyarnurgozhay": {
+    "name": "Diyar Nurgozhay",
+    "stance": "Southpaw",
+    "reach": "74\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 205.0,
+      "max_lbs": 220.0,
+      "current_lbs": 205.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5213352/diyar-nurgozhay"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5213352/diyar-nurgozhay",
+      "https://www.espn.com/mma/fighter/stats/_/id/5213352"
+    ],
+    "updated": "2026-11-21"
+  },
+  "aliklorenz": {
+    "name": "Alik Lorenz",
+    "stance": "Orthodox",
+    "reach": "77\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 205.0,
+      "max_lbs": 220.0,
+      "current_lbs": 205.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5220971/alik-lorenz"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5220971/alik-lorenz",
+      "https://www.espn.com/mma/fighter/stats/_/id/5220971"
+    ],
+    "updated": "2026-11-21"
+  },
+  "nikolasmotta": {
+    "name": "Nikolas Motta",
+    "stance": "Orthodox",
+    "reach": "70\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 155.0,
+      "max_lbs": 170.0,
+      "current_lbs": 155.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3897242/nikolas-motta"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3897242/nikolas-motta",
+      "https://www.espn.com/mma/fighter/stats/_/id/3897242"
+    ],
+    "updated": "2026-11-21"
+  },
+  "dommarfan": {
+    "name": "Dom Mar Fan",
+    "stance": "Orthodox",
+    "reach": "75\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 155.0,
+      "max_lbs": 170.0,
+      "current_lbs": 155.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5157806/dom-mar-fan"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5157806/dom-mar-fan",
+      "https://www.espn.com/mma/fighter/stats/_/id/5157806"
+    ],
+    "updated": "2026-11-21"
+  },
+  "jakematthews": {
+    "name": "Jake Matthews",
+    "stance": "Orthodox",
+    "reach": "73\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 170.0,
+      "max_lbs": 185.0,
+      "current_lbs": 170.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3089915/jake-matthews"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3089915/jake-matthews",
+      "https://www.espn.com/mma/fighter/stats/_/id/3089915"
+    ],
+    "updated": "2026-11-21"
+  },
+  "tahirabdullayev": {
+    "name": "Tahir Abdullayev",
+    "stance": "Orthodox",
+    "reach": "73\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 170.0,
+      "max_lbs": 172.0,
+      "current_lbs": 170.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4394753/tahir-abdullayev"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4394753/tahir-abdullayev",
+      "https://www.espn.com/mma/fighter/stats/_/id/4394753"
+    ],
+    "updated": "2026-11-21"
+  },
+  "amiralbazi": {
+    "name": "Amir Albazi",
+    "stance": "Orthodox",
+    "reach": "68\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 125.0,
+      "max_lbs": 140.0,
+      "current_lbs": 125.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4684848/amir-albazi"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4684848/amir-albazi",
+      "https://www.espn.com/mma/fighter/stats/_/id/4684848"
+    ],
+    "updated": "2026-11-21"
+  },
+  "alessandrocosta": {
+    "name": "Alessandro Costa",
+    "stance": "Orthodox",
+    "reach": "67\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 125.0,
+      "max_lbs": 140.0,
+      "current_lbs": 125.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5074121/alessandro-costa"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5074121/alessandro-costa",
+      "https://www.espn.com/mma/fighter/stats/_/id/5074121"
+    ],
+    "updated": "2026-11-21"
+  },
+  "shamilgaziev": {
+    "name": "Shamil Gaziev",
+    "stance": "Orthodox",
+    "reach": "78\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 262.0,
+      "max_lbs": 265.0,
+      "current_lbs": 265.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5145498/shamil-gaziev"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5145498/shamil-gaziev",
+      "https://www.espn.com/mma/fighter/stats/_/id/5145498"
+    ],
+    "updated": "2026-11-21"
+  },
+  "tallisonteixeira": {
+    "name": "Tallison Teixeira",
+    "stance": "Orthodox",
+    "reach": "83\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 253.0,
+      "max_lbs": 265.0,
+      "current_lbs": 265.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5212856/tallison-teixeira"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5212856/tallison-teixeira",
+      "https://www.espn.com/mma/fighter/stats/_/id/5212856"
+    ],
+    "updated": "2026-11-21"
+  },
+  "aleksandretopuria": {
+    "name": "Aleksandre Topuria",
+    "stance": "Orthodox",
+    "reach": "68\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 135.0,
+      "max_lbs": 150.0,
+      "current_lbs": 135.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5185662/aleksandre-topuria"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5185662/aleksandre-topuria",
+      "https://www.espn.com/mma/fighter/stats/_/id/5185662"
+    ],
+    "updated": "2026-11-21"
+  },
+  "santiagoluna": {
+    "name": "Santiago Luna",
+    "stance": "Orthodox",
+    "reach": "74\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 135.0,
+      "max_lbs": 150.0,
+      "current_lbs": 135.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5307799/santiago-luna"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5307799/santiago-luna",
+      "https://www.espn.com/mma/fighter/stats/_/id/5307799"
+    ],
+    "updated": "2026-11-21"
+  },
+  "jaredcannonier": {
+    "name": "Jared Cannonier",
+    "stance": "Switch",
+    "reach": "77\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 185.0,
+      "max_lbs": 200.0,
+      "current_lbs": 185.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3154860/jared-cannonier"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3154860/jared-cannonier",
+      "https://www.espn.com/mma/fighter/stats/_/id/3154860"
+    ],
+    "updated": "2026-11-21"
+  },
+  "ikramaliskerov": {
+    "name": "Ikram Aliskerov",
+    "stance": "Southpaw",
+    "reach": "76\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 185.0,
+      "max_lbs": 200.0,
+      "current_lbs": 185.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4684776/ikram-aliskerov"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4684776/ikram-aliskerov",
+      "https://www.espn.com/mma/fighter/stats/_/id/4684776"
+    ],
+    "updated": "2026-11-21"
+  },
+  "kyojihoriguchi": {
+    "name": "Kyoji Horiguchi",
+    "stance": "Orthodox",
+    "reach": "63\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 125.0,
+      "max_lbs": 140.0,
+      "current_lbs": 125.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/2613374/kyoji-horiguchi"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/2613374/kyoji-horiguchi",
+      "https://www.espn.com/mma/fighter/stats/_/id/2613374"
+    ],
+    "updated": "2026-11-21"
+  },
+  "asualmabayev": {
+    "name": "Asu Almabayev",
+    "stance": "Orthodox",
+    "reach": "65\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 125.0,
+      "max_lbs": 140.0,
+      "current_lbs": 125.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4294926/asu-almabayev"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4294926/asu-almabayev",
+      "https://www.espn.com/mma/fighter/stats/_/id/4294926"
+    ],
+    "updated": "2026-11-21"
+  },
+  "brianortega": {
+    "name": "Brian Ortega",
+    "stance": "Switch",
+    "reach": "69\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 155.0,
+      "max_lbs": 170.0,
+      "current_lbs": 155.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3045737/brian-ortega"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3045737/brian-ortega",
+      "https://www.espn.com/mma/fighter/stats/_/id/3045737"
+    ],
+    "updated": "2026-11-21"
+  },
+  "danhooker": {
+    "name": "Dan Hooker",
+    "stance": "Switch",
+    "reach": "75\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 155.0,
+      "max_lbs": 170.0,
+      "current_lbs": 155.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3109135/dan-hooker"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3109135/dan-hooker",
+      "https://www.espn.com/mma/fighter/stats/_/id/3109135"
+    ],
+    "updated": "2026-11-21"
+  },
+  "aljamainsterling": {
+    "name": "Aljamain Sterling",
+    "stance": "Orthodox",
+    "reach": "71\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 145.0,
+      "max_lbs": 160.0,
+      "current_lbs": 145.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3031559/aljamain-sterling"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3031559/aljamain-sterling",
+      "https://www.espn.com/mma/fighter/stats/_/id/3031559"
+    ],
+    "updated": "2026-11-21"
+  },
+  "kevinvallejos": {
+    "name": "Kevin Vallejos",
+    "stance": "Switch",
+    "reach": "68\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 145.0,
+      "max_lbs": 160.0,
+      "current_lbs": 145.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5145681/kevin-vallejos"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5145681/kevin-vallejos",
+      "https://www.espn.com/mma/fighter/stats/_/id/5145681"
+    ],
+    "updated": "2026-11-21"
+  },
+  "jiprochzka": {
+    "name": "Ji\u0159\u00ed Proch\u00e1zka",
+    "stance": "Orthodox",
+    "reach": "80\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 205.0,
+      "max_lbs": 220.0,
+      "current_lbs": 205.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3156612/jiri-prochazka"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3156612/jiri-prochazka",
+      "https://www.espn.com/mma/fighter/stats/_/id/3156612"
+    ],
+    "updated": "2026-11-21"
+  },
+  "navajostirling": {
+    "name": "Navajo Stirling",
+    "stance": "Orthodox",
+    "reach": "79\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 205.0,
+      "max_lbs": 220.0,
+      "current_lbs": 205.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5216713/navajo-stirling"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5216713/navajo-stirling",
+      "https://www.espn.com/mma/fighter/stats/_/id/5216713"
+    ],
+    "updated": "2026-11-21"
+  },
+  "abdulhussein": {
+    "name": "Abdul Hussein",
+    "stance": "Orthodox",
+    "reach": "67\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 135.0,
+      "max_lbs": 150.0,
+      "current_lbs": 135.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4905308/abdul-hussein"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4905308/abdul-hussein",
+      "https://www.espn.com/mma/fighter/stats/_/id/4905308"
+    ],
+    "updated": "2026-11-21"
+  },
+  "hechersosa": {
+    "name": "Hecher Sosa",
+    "stance": "Orthodox",
+    "reach": "70\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 135.0,
+      "max_lbs": 150.0,
+      "current_lbs": 135.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5236383/hecher-sosa"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5236383/hecher-sosa",
+      "https://www.espn.com/mma/fighter/stats/_/id/5236383"
+    ],
+    "updated": "2026-11-21"
+  },
+  "matthieulethoduclos": {
+    "name": "Matthieu Letho Duclos",
+    "stance": "Orthodox",
+    "reach": "77\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 185.0,
+      "max_lbs": 200.0,
+      "current_lbs": 185.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5013686/matthieu-letho-duclos"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5013686/matthieu-letho-duclos",
+      "https://www.espn.com/mma/fighter/stats/_/id/5013686"
+    ],
+    "updated": "2026-11-21"
+  },
+  "modestinorodrigues": {
+    "name": "Modestino Rodrigues",
+    "stance": "Orthodox",
+    "reach": "77\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 185.0,
+      "max_lbs": 200.0,
+      "current_lbs": 185.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5364355/modestino-rodrigues"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5364355/modestino-rodrigues",
+      "https://www.espn.com/mma/fighter/stats/_/id/5364355"
+    ],
+    "updated": "2026-11-21"
+  },
+  "mehemmedeliosmanli": {
+    "name": "Mehemmedeli Osmanli",
+    "stance": "Southpaw",
+    "reach": "71\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 135.0,
+      "max_lbs": 150.0,
+      "current_lbs": 135.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5345640/mehemmedeli-osmanli"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5345640/mehemmedeli-osmanli",
+      "https://www.espn.com/mma/fighter/stats/_/id/5345640"
+    ],
+    "updated": "2026-11-21"
+  },
+  "pavelandrusca": {
+    "name": "Pavel Andrusca",
+    "stance": "Orthodox",
+    "reach": "66\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 135.0,
+      "max_lbs": 145.0,
+      "current_lbs": 135.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5445620/pavel-andrusca"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5445620/pavel-andrusca",
+      "https://www.espn.com/mma/fighter/stats/_/id/5445620"
+    ],
+    "updated": "2026-11-21"
+  },
+  "junyongpark": {
+    "name": "JunYong Park",
+    "stance": "Orthodox",
+    "reach": "73\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 185.0,
+      "max_lbs": 200.0,
+      "current_lbs": 185.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4275043/junyong-park"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4275043/junyong-park",
+      "https://www.espn.com/mma/fighter/stats/_/id/4275043"
+    ],
+    "updated": "2026-11-21"
+  },
+  "marcotulio": {
+    "name": "Marco Tulio",
+    "stance": "Orthodox",
+    "reach": "74.5\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 185.0,
+      "max_lbs": 200.0,
+      "current_lbs": 185.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5138111/marco-tulio"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5138111/marco-tulio",
+      "https://www.espn.com/mma/fighter/stats/_/id/5138111"
+    ],
+    "updated": "2026-11-21"
+  },
+  "uransatybaldiev": {
+    "name": "Uran Satybaldiev",
+    "stance": "Orthodox",
+    "reach": "79\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 205.0,
+      "max_lbs": 220.0,
+      "current_lbs": 205.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5206516/uran-satybaldiev"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5206516/uran-satybaldiev",
+      "https://www.espn.com/mma/fighter/stats/_/id/5206516"
+    ],
+    "updated": "2026-11-21"
+  },
+  "ivangnizditskiy": {
+    "name": "Ivan Gnizditskiy",
+    "stance": "--",
+    "reach": "\u2014",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 205.0,
+      "max_lbs": 220.0,
+      "current_lbs": 205.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5292007/ivan-gnizditskiy"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5292007/ivan-gnizditskiy",
+      "https://www.espn.com/mma/fighter/stats/_/id/5292007"
+    ],
+    "updated": "2026-11-21"
+  },
+  "brunosilva": {
+    "name": "Bruno Silva",
+    "stance": "Orthodox",
+    "reach": "65\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 125.0,
+      "max_lbs": 140.0,
+      "current_lbs": 125.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3895544/bruno-silva"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3895544/bruno-silva",
+      "https://www.espn.com/mma/fighter/stats/_/id/3895544"
+    ],
+    "updated": "2026-11-21"
+  },
+  "jafelfilho": {
+    "name": "Jafel Filho",
+    "stance": "Orthodox",
+    "reach": "68.5\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 125.0,
+      "max_lbs": 135.5,
+      "current_lbs": 125.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3896934/jafel-filho"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3896934/jafel-filho",
+      "https://www.espn.com/mma/fighter/stats/_/id/3896934"
+    ],
+    "updated": "2026-11-21"
+  },
+  "ioncutelaba": {
+    "name": "Ion Cutelaba",
+    "stance": "Southpaw",
+    "reach": "75\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 205.0,
+      "max_lbs": 220.0,
+      "current_lbs": 205.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/3994033/ion-cutelaba"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/3994033/ion-cutelaba",
+      "https://www.espn.com/mma/fighter/stats/_/id/3994033"
+    ],
+    "updated": "2026-11-21"
+  },
+  "magomedtuchalov": {
+    "name": "Magomed Tuchalov",
+    "stance": "Orthodox",
+    "reach": "78\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 205.0,
+      "max_lbs": 220.0,
+      "current_lbs": 205.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5360467/magomed-tuchalov"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5360467/magomed-tuchalov",
+      "https://www.espn.com/mma/fighter/stats/_/id/5360467"
+    ],
+    "updated": "2026-11-21"
+  },
+  "maironsantos": {
+    "name": "Mairon Santos",
+    "stance": "Orthodox",
+    "reach": "72\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 145.0,
+      "max_lbs": 147.5,
+      "current_lbs": 145.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4914573/mairon-santos"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4914573/mairon-santos",
+      "https://www.espn.com/mma/fighter/stats/_/id/4914573"
+    ],
+    "updated": "2026-11-21"
+  },
+  "akbarabdullaev": {
+    "name": "Akbar Abdullaev",
+    "stance": "Orthodox",
+    "reach": "70\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 155.0,
+      "max_lbs": 170.0,
+      "current_lbs": 155.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5210077/akbar-abdullaev"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5210077/akbar-abdullaev",
+      "https://www.espn.com/mma/fighter/stats/_/id/5210077"
+    ],
+    "updated": "2026-11-21"
+  },
+  "levanchokheli": {
+    "name": "Levan Chokheli",
+    "stance": "Orthodox",
+    "reach": "73\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 170.0,
+      "max_lbs": 185.0,
+      "current_lbs": 170.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4867651/levan-chokheli"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4867651/levan-chokheli",
+      "https://www.espn.com/mma/fighter/stats/_/id/4867651"
+    ],
+    "updated": "2026-11-21"
+  },
+  "islamdulatov": {
+    "name": "Islam Dulatov",
+    "stance": "Orthodox",
+    "reach": "75\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 170.0,
+      "max_lbs": 185.0,
+      "current_lbs": 170.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5212748/islam-dulatov"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5212748/islam-dulatov",
+      "https://www.espn.com/mma/fighter/stats/_/id/5212748"
+    ],
+    "updated": "2026-11-21"
+  },
+  "sergheispivac": {
+    "name": "Serghei Spivac",
+    "stance": "Orthodox",
+    "reach": "78\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 257.0,
+      "max_lbs": 265.0,
+      "current_lbs": 265.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4421246/serghei-spivac"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4421246/serghei-spivac",
+      "https://www.espn.com/mma/fighter/stats/_/id/4421246"
+    ],
+    "updated": "2026-11-21"
+  },
+  "mariopinto": {
+    "name": "Mario Pinto",
+    "stance": "Orthodox",
+    "reach": "79\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 252.0,
+      "max_lbs": 265.0,
+      "current_lbs": 265.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5218817/mario-pinto"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5218817/mario-pinto",
+      "https://www.espn.com/mma/fighter/stats/_/id/5218817"
+    ],
+    "updated": "2026-11-21"
+  },
+  "yaroslavamosov": {
+    "name": "Yaroslav Amosov",
+    "stance": "Orthodox",
+    "reach": "75\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 170.0,
+      "max_lbs": 185.0,
+      "current_lbs": 170.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4275020/yaroslav-amosov"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4275020/yaroslav-amosov",
+      "https://www.espn.com/mma/fighter/stats/_/id/4275020"
+    ],
+    "updated": "2026-11-21"
+  },
+  "ianmachadogarry": {
+    "name": "Ian Machado Garry",
+    "stance": "Orthodox",
+    "reach": "74.5\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 170.0,
+      "max_lbs": 185.0,
+      "current_lbs": 170.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4738092/ian-machado-garry"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4738092/ian-machado-garry",
+      "https://www.espn.com/mma/fighter/stats/_/id/4738092"
+    ],
+    "updated": "2026-11-21"
+  },
+  "israeladesanya": {
+    "name": "Israel Adesanya",
+    "stance": "Switch",
+    "reach": "80\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 185.0,
+      "max_lbs": 200.0,
+      "current_lbs": 185.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4285679/israel-adesanya"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4285679/israel-adesanya",
+      "https://www.espn.com/mma/fighter/stats/_/id/4285679"
+    ],
+    "updated": "2026-11-21"
+  },
+  "sharamagomedov": {
+    "name": "Shara Magomedov",
+    "stance": "Orthodox",
+    "reach": "73\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 185.0,
+      "max_lbs": 200.0,
+      "current_lbs": 185.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/4421784/shara-magomedov"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/4421784/shara-magomedov",
+      "https://www.espn.com/mma/fighter/stats/_/id/4421784"
+    ],
+    "updated": "2026-11-21"
+  }
+}
