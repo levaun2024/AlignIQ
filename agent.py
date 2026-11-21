@@ -28,7 +28,7 @@ DEFAULT_WEIGHTS = {"gem": 42, "h2h": 21, "ros": 37}
 
 def fetch_json(url, timeout=12):
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/2.1"})
+        req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/2.2"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except Exception:
@@ -50,15 +50,15 @@ def save_json(path, data):
         json.dump(data, f, indent=2)
 
 
-# --- ODDS, FORM & FIGHT IQ HELPERS ---
+# --- ODDS, FORM, FIGHT IQ & WEIGHT-CUT HELPERS ---
 def american_to_implied(odds):
     if not odds:
         return 0.5
     return (100.0 / (odds + 100.0)) if odds > 0 else (abs(odds) / (abs(odds) + 100.0))
 
 
-def parse_reach_inches(reach_str):
-    m = re.search(r"(\d+(?:\.\d+)?)", str(reach_str or ""))
+def parse_float_num(val):
+    m = re.search(r"(\d+(?:\.\d+)?)", str(val or ""))
     return float(m.group(1)) if m else None
 
 
@@ -73,10 +73,24 @@ def compute_fight_edge(home_name, away_name, fighters_db):
         return 0
     def_diff = ((f_h.get("str_def") or 55) - (f_a.get("str_def") or 55)) * 0.6
     sapm_diff = ((f_a.get("sapm") or 3.2) - (f_h.get("sapm") or 3.2)) * 4.0
-    r_h = parse_reach_inches(f_h.get("reach"))
-    r_a = parse_reach_inches(f_a.get("reach"))
+    r_h = parse_float_num(f_h.get("reach"))
+    r_a = parse_float_num(f_a.get("reach"))
     reach_diff = max(-6.0, min(6.0, (r_h - r_a) * 1.2)) if (r_h and r_a) else 0.0
     return max(-22, min(22, round(def_diff + sapm_diff + reach_diff)))
+
+
+def compute_weight_cut_penalty(fighter_name, fighters_db):
+    f_obj = fighters_db.get(norm_fighter_key(fighter_name))
+    wc = (f_obj or {}).get("weight_cut") or {}
+    min_l = wc.get("min_lbs")
+    max_l = wc.get("max_lbs")
+    cur_l = wc.get("current_lbs")
+    if not min_l or not max_l or not cur_l:
+        return 0
+    span = max(0.0, float(max_l) - float(min_l))
+    cut_ratio = max(0.0, min(1.0, (float(max_l) - float(cur_l)) / span)) if span > 0 else 0.25
+    missed = int(wc.get("missed_count") or 0)
+    return min(16, round(cut_ratio * 10) + missed * 5)
 
 
 def get_team_form(lg_path, team_id, before_date_str, schedule_cache):
@@ -221,7 +235,6 @@ def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule
     venue = (comp.get("venue") or {}).get("fullName") or ""
     entities = [x for x in {hi["name"], hi["loc"], hi["mascot"], ai["name"], ai["loc"], ai["mascot"], venue} if x]
 
-    # Reconstruct pre-game records
     h_rec = hi["rec"]
     a_rec = ai["rec"]
     if h_rec:
@@ -248,7 +261,7 @@ def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule
     home_gem = progressive_score(count_hits(hw_t, al_t, hi["short"]))
     away_gem = progressive_score(count_hits(aw_t, hl_t, ai["short"]))
 
-    # --- UPGRADE 1: SCALED NO-VIG FAIR ODDS ---
+    # Scaled No-Vig Fair Odds
     odds = (comp.get("odds") or [{}])[0]
     h_ml = (odds.get("homeTeamOdds") or {}).get("moneyLine")
     a_ml = (odds.get("awayTeamOdds") or {}).get("moneyLine")
@@ -280,18 +293,20 @@ def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule
     home_h2h = odds_home if is_fight else min(95, max(12, round(odds_home * 0.60 + split_home * 0.40)))
     away_h2h = odds_away if is_fight else min(95, max(12, round(odds_away * 0.60 + split_away * 0.40)))
 
-    # --- UPGRADE 2: L5 / L10 RECENT FORM ---
+    # L5 / L10 Recent Form
     home_form = None if is_fight else get_team_form(lg_path, hi["id"], ev_date, schedule_cache)
     away_form = None if is_fight else get_team_form(lg_path, ai["id"], ev_date, schedule_cache)
     blended_h = (h_pct * 0.50 + home_form["pct"] * 0.50) if home_form else h_pct
     blended_a = (a_pct * 0.50 + away_form["pct"] * 0.50) if away_form else a_pct
     margin_boost = max(-8, min(8, round((home_form["avg_margin"] - away_form["avg_margin"]) * 0.5))) if (home_form and away_form) else 0
 
-    # --- UPGRADE 3: UFC STRIKING DEFENSE & REACH EDGE ---
+    # UFC Fight IQ Edge + Auto-Gauged Weight Cut Penalty
     fight_edge = compute_fight_edge(hi["name"], ai["name"], fighters_db) if is_fight else 0
+    home_cut_pen = compute_weight_cut_penalty(hi["name"], fighters_db) if is_fight else 0
+    away_cut_pen = compute_weight_cut_penalty(ai["name"], fighters_db) if is_fight else 0
 
-    home_ros = min(95, max(12, round(56 + (blended_h - blended_a) * 32 + margin_boost + fight_edge)))
-    away_ros = min(95, max(12, round(52 + (blended_a - blended_h) * 32 - margin_boost - fight_edge)))
+    home_ros = min(95, max(12, round(56 + (blended_h - blended_a) * 32 + margin_boost + fight_edge - home_cut_pen + away_cut_pen)))
+    away_ros = min(95, max(12, round(52 + (blended_a - blended_h) * 32 - margin_boost - fight_edge - away_cut_pen + home_cut_pen)))
 
     return {
         "id": str(ev.get("id")),
@@ -341,7 +356,33 @@ def optimize_weights(games, current_w, max_step=10):
     return stepped, best_w
 
 
-# --- UFC FIGHTER STRIKING & DEFENSE SYNC ---
+# --- UFC FIGHTER STRIKING, WEIGHT-CUT HISTORY & SOURCE SYNC ---
+WEIGHT_CLASS_LBS = {
+    "strawweight": 115,
+    "flyweight": 125,
+    "bantamweight": 135,
+    "featherweight": 145,
+    "lightweight": 155,
+    "welterweight": 170,
+    "middleweight": 185,
+    "light heavyweight": 205,
+    "heavyweight": 265,
+}
+
+
+def extract_weight_lbs_from_text(text):
+    t = (text or "").lower()
+    for wc_name, lbs in WEIGHT_CLASS_LBS.items():
+        if wc_name in t:
+            return float(lbs)
+    m = re.search(r"(\d{3}(?:\.\d+)?)\s*(?:lbs?|pounds?)", t)
+    if m:
+        val = float(m.group(1))
+        if 105 <= val <= 285:
+            return val
+    return None
+
+
 def sync_ufc_fighters():
     fighters = load_json(FIGHTERS_FILE, {})
     today = datetime.now(timezone.utc).date()
@@ -354,22 +395,36 @@ def sync_ufc_fighters():
             continue
         for ev in data.get("events") or []:
             for comp in ev.get("competitions") or []:
+                bout_wc = (comp.get("type") or {}).get("text") or ""
                 for c in comp.get("competitors") or []:
                     ath = c.get("athlete") or {}
                     aid = str(ath.get("id") or c.get("id") or "")
                     name = ath.get("displayName") or ath.get("fullName") or ""
                     if aid and name:
-                        athlete_ids[aid] = name
+                        athlete_ids[aid] = {"name": name, "bout_wc": bout_wc}
 
-    for aid, name in athlete_ids.items():
+    for aid, meta in athlete_ids.items():
+        name = meta["name"]
         fkey = norm_fighter_key(name)
+        prev = fighters.get(fkey) or {}
         profile = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}")
         stats_data = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}/stats")
+        gamelog = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}/gamelog")
 
         ath_obj = (profile or {}).get("athlete") or {}
-        stance = (ath_obj.get("stance") or {}).get("text") or "Orthodox"
-        reach = ath_obj.get("displayReach") or "—"
+        stance = (ath_obj.get("stance") or {}).get("text") or prev.get("stance") or "Orthodox"
+        reach = ath_obj.get("displayReach") or prev.get("reach") or "—"
 
+        # Build verified ESPN source URLs
+        espn_profile_url = f"https://www.espn.com/mma/fighter/_/id/{aid}"
+        espn_stats_url = f"https://www.espn.com/mma/fighter/stats/_/id/{aid}"
+        for lnk in ath_obj.get("links") or []:
+            href = lnk.get("href") or ""
+            if "espn.com/mma/fighter" in href and "/stats/" not in href:
+                espn_profile_url = href
+                break
+
+        # Parse career striking metrics
         stat_map = {}
         for cat in (stats_data or {}).get("categories") or []:
             for k, v in zip(cat.get("names") or [], cat.get("totals") or []):
@@ -381,17 +436,63 @@ def sync_ufc_fighters():
             except Exception:
                 return default
 
-        str_def = round(to_float(stat_map.get("sigstrdef") or stat_map.get("strdef"), 55))
-        sapm = round(to_float(stat_map.get("sigstrabsorbedpermin") or stat_map.get("sapm"), 3.2), 2)
+        str_def = round(to_float(stat_map.get("sigstrdef") or stat_map.get("strdef"), prev.get("str_def", 55)))
+        sapm = round(to_float(stat_map.get("sigstrabsorbedpermin") or stat_map.get("sapm"), prev.get("sapm", 3.2)), 2)
 
-        head_p = round(to_float(stat_map.get("sigstrheadpct") or stat_map.get("headpct"), 64))
-        body_p = round(to_float(stat_map.get("sigstrbodypct") or stat_map.get("bodypct"), 20))
-        leg_p = round(to_float(stat_map.get("sigstrlegpct") or stat_map.get("legpct"), 16))
+        head_p = round(to_float(stat_map.get("sigstrheadpct") or stat_map.get("headpct"), prev.get("head_pct", 64)))
+        body_p = round(to_float(stat_map.get("sigstrbodypct") or stat_map.get("bodypct"), prev.get("body_pct", 20)))
+        leg_p = round(to_float(stat_map.get("sigstrlegpct") or stat_map.get("legpct"), prev.get("leg_pct", 16)))
         total_p = head_p + body_p + leg_p
         if total_p > 0 and total_p != 100:
             head_p = round((head_p / total_p) * 100)
             body_p = round((body_p / total_p) * 100)
             leg_p = max(0, 100 - head_p - body_p)
+
+        # Collect career fight weights (Biggest Cut = min_lbs, Lowest Cut = max_lbs)
+        observed_weights = []
+        missed_count = int((prev.get("weight_cut") or {}).get("missed_count") or 0)
+
+        listed_w = parse_float_num(ath_obj.get("weight") or ath_obj.get("displayWeight"))
+        if listed_w and 105 <= listed_w <= 285:
+            observed_weights.append(listed_w)
+
+        bout_w = extract_weight_lbs_from_text(meta.get("bout_wc") or (ath_obj.get("weightClass") or {}).get("text"))
+        if bout_w:
+            observed_weights.append(bout_w)
+
+        # Preserve previously recorded career min/max
+        prev_wc = prev.get("weight_cut") or {}
+        for k in ("min_lbs", "max_lbs", "current_lbs"):
+            if prev_wc.get(k):
+                observed_weights.append(float(prev_wc[k]))
+
+        # Scan ESPN gamelog events for historical divisions / catchweights / missed weights
+        for ev_id, ev_obj in ((gamelog or {}).get("events") or {}).items():
+            txt = json.dumps(ev_obj)
+            w_found = extract_weight_lbs_from_text(txt)
+            if w_found:
+                observed_weights.append(w_found)
+            if "catchweight" in txt.lower() or "missed weight" in txt.lower():
+                missed_count = max(missed_count, 1)
+
+        current_lbs = bout_w or listed_w or prev_wc.get("current_lbs")
+        if current_lbs:
+            observed_weights.append(current_lbs)
+
+        weight_cut = None
+        if observed_weights and current_lbs:
+            min_lbs = round(min(observed_weights), 1)
+            max_lbs = round(max(observed_weights), 1)
+            # If fighter only has 1 recorded division, establish walk-around upper bound (+15 lbs)
+            if max_lbs - min_lbs < 2.0 and current_lbs < 240:
+                max_lbs = round(current_lbs + 15.0, 1)
+            weight_cut = {
+                "min_lbs": min_lbs,
+                "max_lbs": max_lbs,
+                "current_lbs": round(current_lbs, 1),
+                "missed_count": missed_count,
+                "source_url": espn_profile_url,
+            }
 
         fighters[fkey] = {
             "name": name,
@@ -402,6 +503,8 @@ def sync_ufc_fighters():
             "head_pct": head_p,
             "body_pct": body_p,
             "leg_pct": leg_p,
+            "weight_cut": weight_cut,
+            "sources": [espn_profile_url, espn_stats_url],
             "updated": today.isoformat(),
         }
 
@@ -414,7 +517,7 @@ def main():
     now = datetime.now(timezone.utc)
     today = now.date()
 
-    # Sync UFC fighter stats first so grading uses up-to-date Fight IQ edges
+    # Sync UFC fighter stats & weight-cut ranges first so grading uses latest Fight IQ data
     fighters_db = sync_ufc_fighters()
 
     history = load_json(HISTORY_FILE, [])
