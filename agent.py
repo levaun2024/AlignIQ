@@ -28,7 +28,7 @@ DEFAULT_WEIGHTS = {"gem": 42, "h2h": 21, "ros": 37}
 
 def fetch_json(url, timeout=12):
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/2.3"})
+        req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/2.4"})
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))
     except Exception:
@@ -100,13 +100,16 @@ def get_team_form(lg_path, team_id, before_date_str, schedule_cache):
     if cache_key not in schedule_cache:
         data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/{lg_path}/teams/{team_id}/schedule")
         parsed = []
-        if data:
+        if isinstance(data, dict):
             for ev in data.get("events") or []:
-                comp = (ev.get("competitions") or [None])[0]
-                if not comp or not comp.get("status", {}).get("type", {}).get("completed"):
+                if not isinstance(ev, dict):
+                    continue
+                comps_list = ev.get("competitions") or []
+                comp = comps_list[0] if (comps_list and isinstance(comps_list[0], dict)) else None
+                if not comp or not (comp.get("status") or {}).get("type", {}).get("completed"):
                     continue
                 ev_date = (ev.get("date") or "")[:10]
-                comps = comp.get("competitors") or []
+                comps = [c for c in (comp.get("competitors") or []) if isinstance(c, dict)]
                 me = next((c for c in comps if str(c.get("id")) == str(team_id)), None)
                 opp = next((c for c in comps if str(c.get("id")) != str(team_id)), None)
                 if not me or not opp:
@@ -193,14 +196,20 @@ def progressive_score(hits):
 
 
 def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule_cache):
-    comp = (ev.get("competitions") or [None])[0]
-    if not comp or len(comp.get("competitors") or []) < 2:
+    if not isinstance(ev, dict):
         return None
-    if not comp.get("status", {}).get("type", {}).get("completed"):
+    comps_list = ev.get("competitions") or []
+    comp = comps_list[0] if (comps_list and isinstance(comps_list[0], dict)) else None
+    if not comp:
+        return None
+    competitors = [c for c in (comp.get("competitors") or []) if isinstance(c, dict)]
+    if len(competitors) < 2:
+        return None
+    if not (comp.get("status") or {}).get("type", {}).get("completed"):
         return None
 
-    home = next((c for c in comp["competitors"] if c.get("homeAway") == "home"), comp["competitors"][0])
-    away = next((c for c in comp["competitors"] if c.get("homeAway") == "away"), comp["competitors"][1])
+    home = next((c for c in competitors if c.get("homeAway") == "home"), competitors[0])
+    away = next((c for c in competitors if c.get("homeAway") == "away"), competitors[1])
 
     try:
         hs = int(float(home.get("score", 0)))
@@ -214,9 +223,9 @@ def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule
     ev_date = (ev.get("date") or "")[:10]
 
     def team_info(c):
-        t = c.get("team") or {}
-        a = c.get("athlete") or {}
-        recs = c.get("records") or []
+        t = c.get("team") if isinstance(c.get("team"), dict) else {}
+        a = c.get("athlete") if isinstance(c.get("athlete"), dict) else {}
+        recs = [r for r in (c.get("records") or []) if isinstance(r, dict)]
         tot = next((r.get("summary") for r in recs if r.get("type") == "total"), recs[0].get("summary") if recs else "")
         home_r = next((r.get("summary") for r in recs if r.get("type") == "home"), "")
         road_r = next((r.get("summary") for r in recs if r.get("type") == "road"), "")
@@ -232,7 +241,8 @@ def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule
         }
 
     hi, ai = team_info(home), team_info(away)
-    venue = (comp.get("venue") or {}).get("fullName") or ""
+    venue_obj = comp.get("venue") if isinstance(comp.get("venue"), dict) else {}
+    venue = venue_obj.get("fullName") or ""
     entities = [x for x in {hi["name"], hi["loc"], hi["mascot"], ai["name"], ai["loc"], ai["mascot"], venue} if x]
 
     h_rec = hi["rec"]
@@ -261,18 +271,22 @@ def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule
     home_gem = progressive_score(count_hits(hw_t, al_t, hi["short"]))
     away_gem = progressive_score(count_hits(aw_t, hl_t, ai["short"]))
 
-    # Scaled No-Vig Fair Odds
-    odds = (comp.get("odds") or [{}])[0]
-    h_ml = (odds.get("homeTeamOdds") or {}).get("moneyLine")
-    a_ml = (odds.get("awayTeamOdds") or {}).get("moneyLine")
+    # Scaled No-Vig Fair Odds (safely handles null odds entries)
+    odds_list = comp.get("odds") or []
+    odds = odds_list[0] if (odds_list and isinstance(odds_list[0], dict)) else {}
+    h_odds = odds.get("homeTeamOdds") if isinstance(odds.get("homeTeamOdds"), dict) else {}
+    a_odds = odds.get("awayTeamOdds") if isinstance(odds.get("awayTeamOdds"), dict) else {}
+    h_ml = h_odds.get("moneyLine")
+    a_ml = a_odds.get("moneyLine")
+
     fair_home_prob = 0.5
     if isinstance(h_ml, (int, float)) and isinstance(a_ml, (int, float)):
         ih, ia = american_to_implied(h_ml), american_to_implied(a_ml)
         if ih + ia > 0:
             fair_home_prob = ih / (ih + ia)
-    elif (odds.get("homeTeamOdds") or {}).get("favorite"):
+    elif h_odds.get("favorite"):
         fair_home_prob = 0.58
-    elif (odds.get("awayTeamOdds") or {}).get("favorite"):
+    elif a_odds.get("favorite"):
         fair_home_prob = 0.42
     fair_away_prob = 1.0 - fair_home_prob
 
@@ -395,13 +409,19 @@ def sync_ufc_fighters():
     for offset in range(-3, 15):
         d_str = (today + timedelta(days=offset)).strftime("%Y%m%d")
         data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/mma/ufc/scoreboard?dates={d_str}")
-        if not data:
+        if not isinstance(data, dict):
             continue
         for ev in data.get("events") or []:
+            if not isinstance(ev, dict):
+                continue
             for comp in ev.get("competitions") or []:
+                if not isinstance(comp, dict):
+                    continue
                 bout_wc = (comp.get("type") or {}).get("text") or ""
                 for c in comp.get("competitors") or []:
-                    ath = c.get("athlete") or {}
+                    if not isinstance(c, dict):
+                        continue
+                    ath = c.get("athlete") if isinstance(c.get("athlete"), dict) else {}
                     aid = str(ath.get("id") or c.get("id") or "")
                     name = ath.get("displayName") or ath.get("fullName") or ""
                     if aid and name:
@@ -415,22 +435,29 @@ def sync_ufc_fighters():
         stats_data = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}/stats")
         gamelog = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}/gamelog")
 
-        ath_obj = (profile or {}).get("athlete") or {}
-        stance = (ath_obj.get("stance") or {}).get("text") or prev.get("stance") or "Orthodox"
+        ath_obj = (profile or {}).get("athlete") if isinstance(profile, dict) else {}
+        if not isinstance(ath_obj, dict):
+            ath_obj = {}
+        stance = (ath_obj.get("stance") or {}).get("text") if isinstance(ath_obj.get("stance"), dict) else None
+        stance = stance or prev.get("stance") or "Orthodox"
         reach = ath_obj.get("displayReach") or prev.get("reach") or "—"
 
         espn_profile_url = f"https://www.espn.com/mma/fighter/_/id/{aid}"
         espn_stats_url = f"https://www.espn.com/mma/fighter/stats/_/id/{aid}"
         for lnk in ath_obj.get("links") or []:
+            if not isinstance(lnk, dict):
+                continue
             href = lnk.get("href") or ""
             if "espn.com/mma/fighter" in href and "/stats/" not in href:
                 espn_profile_url = href
                 break
 
         stat_map = {}
-        for cat in (stats_data or {}).get("categories") or []:
+        for cat in ((stats_data or {}).get("categories") or []) if isinstance(stats_data, dict) else []:
+            if not isinstance(cat, dict):
+                continue
             for k, v in zip(cat.get("names") or [], cat.get("totals") or []):
-                stat_map[k.lower()] = v
+                stat_map[str(k).lower()] = v
 
         def to_float(val, default):
             try:
@@ -451,28 +478,31 @@ def sync_ufc_fighters():
             leg_p = max(0, 100 - head_p - body_p)
 
         observed_weights = []
-        missed_count = int((prev.get("weight_cut") or {}).get("missed_count") or 0)
+        prev_wc = prev.get("weight_cut") if isinstance(prev.get("weight_cut"), dict) else {}
+        missed_count = int(prev_wc.get("missed_count") or 0)
 
         listed_w = parse_float_num(ath_obj.get("weight") or ath_obj.get("displayWeight"))
         if listed_w and 105 <= listed_w <= 285:
             observed_weights.append(listed_w)
 
-        bout_w = extract_weight_lbs_from_text(meta.get("bout_wc") or (ath_obj.get("weightClass") or {}).get("text"))
+        wc_obj = ath_obj.get("weightClass") if isinstance(ath_obj.get("weightClass"), dict) else {}
+        bout_w = extract_weight_lbs_from_text(meta.get("bout_wc") or wc_obj.get("text"))
         if bout_w:
             observed_weights.append(bout_w)
 
-        prev_wc = prev.get("weight_cut") or {}
         for k in ("min_lbs", "max_lbs", "current_lbs"):
             if prev_wc.get(k):
                 observed_weights.append(float(prev_wc[k]))
 
-        for _, ev_obj in ((gamelog or {}).get("events") or {}).items():
-            txt = json.dumps(ev_obj)
-            w_found = extract_weight_lbs_from_text(txt)
-            if w_found:
-                observed_weights.append(w_found)
-            if "catchweight" in txt.lower() or "missed weight" in txt.lower():
-                missed_count = max(missed_count, 1)
+        events_map = (gamelog or {}).get("events") if isinstance(gamelog, dict) else {}
+        if isinstance(events_map, dict):
+            for _, ev_obj in events_map.items():
+                txt = json.dumps(ev_obj)
+                w_found = extract_weight_lbs_from_text(txt)
+                if w_found:
+                    observed_weights.append(w_found)
+                if "catchweight" in txt.lower() or "missed weight" in txt.lower():
+                    missed_count = max(missed_count, 1)
 
         current_lbs = bout_w or listed_w or prev_wc.get("current_lbs")
         if current_lbs:
@@ -533,9 +563,11 @@ def main():
         d_nums = get_date_nums(d)
         for lg_key, lg_path in LEAGUES:
             data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/{lg_path}/scoreboard?dates={d_str}")
-            if not data:
+            if not isinstance(data, dict):
                 continue
             for ev in data.get("events") or []:
+                if not isinstance(ev, dict):
+                    continue
                 gid = str(ev.get("id"))
                 if gid in existing_ids:
                     continue
