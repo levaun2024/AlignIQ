@@ -23,6 +23,7 @@
   let isListening = false;
   let isSpeaking = false;
   let speechPulse = 0;
+  let waveTimer = 0;
   let highlightedEl = null;
 
   // --- 1. STYLES ---
@@ -37,7 +38,7 @@
     }
 
     #maya-hitbox {
-      position: fixed; z-index: 88; width: 68px; height: 68px;
+      position: fixed; z-index: 88; width: 72px; height: 72px;
       transform: translate(-50%, -50%); border-radius: 50%;
       cursor: pointer; touch-action: manipulation; background: transparent;
     }
@@ -176,63 +177,133 @@
   renderer.toneMappingExposure = 1.15;
 
   const scene = new THREE.Scene();
-  const OVERHEAD_Y = 12.5;
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.05, 100);
-  camera.position.set(0, OVERHEAD_Y, 0.05);
-  const camTarget = new THREE.Vector3(0, 0, 0);
-  const desiredCamPos = new THREE.Vector3(0, OVERHEAD_Y, 0.05);
-  const desiredCamTarget = new THREE.Vector3(0, 0, 0);
 
-  // Studio 3-point lighting for realistic skin & clothing
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x334155, 1.4));
-  const keyLight = new THREE.DirectionalLight(0xfff5e8, 1.6);
-  keyLight.position.set(3, 8, 6);
+  // Slight angled bird's-eye camera so her body, stepping legs & clipboard are clearly visible
+  const PATROL_CAM_POS = new THREE.Vector3(0, 10.8, 2.6);
+  const PATROL_CAM_TGT = new THREE.Vector3(0, 0, 0);
+
+  const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.05, 100);
+  camera.position.copy(PATROL_CAM_POS);
+  camera.lookAt(PATROL_CAM_TGT);
+
+  const camTarget = PATROL_CAM_TGT.clone();
+  const desiredCamPos = PATROL_CAM_POS.clone();
+  const desiredCamTarget = PATROL_CAM_TGT.clone();
+
+  // Fixed patrol camera for accurate screen-to-floor raycasting
+  const patrolRayCam = camera.clone();
+  const raycaster = new THREE.Raycaster();
+  const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+
+  // Studio 3-point lighting
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x334155, 1.45));
+  const keyLight = new THREE.DirectionalLight(0xfff6eb, 1.65);
+  keyLight.position.set(3, 9, 6);
   scene.add(keyLight);
-  const fillLight = new THREE.DirectionalLight(0xe0f2fe, 0.85);
+  const fillLight = new THREE.DirectionalLight(0xe0f2fe, 0.9);
   fillLight.position.set(-4, 5, 4);
   scene.add(fillLight);
   const rimLight = new THREE.DirectionalLight(0x34d399, 0.65);
   rimLight.position.set(0, 5, -5);
   scene.add(rimLight);
 
-  // --- 4. LOAD AVATURN MAYA.GLB & BIND SKELETON + ARKIT BLENDSHAPES ---
+  // --- 4. AVATURN RIG + REAL-WORLD SCALE CLIPBOARD & PEN ---
   const avatarRoot = new THREE.Group();
   scene.add(avatarRoot);
 
-  // Soft ground shadow disc beneath Maya's feet
   const shadowDisc = new THREE.Mesh(
-    new THREE.CircleGeometry(0.32, 24),
-    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35 })
+    new THREE.CircleGeometry(0.34, 24),
+    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.34 })
   );
   shadowDisc.rotation.x = -Math.PI / 2;
   shadowDisc.position.y = 0.01;
   avatarRoot.add(shadowDisc);
 
-  let avatarModel = null;
-  let mixer = null;
-  const bones = {};
-  const restRot = {};
-  const morphMeshes = [];
+  // High-visibility Clipboard (real-world size, synced to leftHand so Armature scaling can't shrink it)
+  function createClipboardProp() {
+    const grp = new THREE.Group();
+    const wood = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.55 });
+    const paper = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x334155, emissiveIntensity: 0.35, roughness: 0.4 });
+    const gold = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.25, metalness: 0.85 });
+    const green = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+    const blue = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
 
-  function normBoneName(name) {
-    return (name || '').toLowerCase().replace(/^mixamorig[:_]?/, '').replace(/[^a-z0-9]/g, '');
+    const board = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.36, 0.016), wood);
+    grp.add(board);
+
+    const sheet = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.30, 0.018), paper);
+    sheet.position.set(0, -0.01, 0.002);
+    grp.add(sheet);
+
+    const clip = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.032, 0.026), gold);
+    clip.position.set(0, 0.155, 0.008);
+    grp.add(clip);
+
+    // Checklist lines visible from bird's-eye view
+    [0.09, 0.03, -0.03, -0.09].forEach((ly, idx) => {
+      const line = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.018, 0.022), idx % 2 === 0 ? green : blue);
+      line.position.set(0.01, ly, 0.003);
+      grp.add(line);
+    });
+    grp.visible = false;
+    return grp;
   }
 
-  function buildClipboardMesh() {
+  function createPenProp() {
     const grp = new THREE.Group();
-    const wood = new THREE.MeshStandardMaterial({ color: 0x9a5b25, roughness: 0.6 });
-    const paper = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.5 });
-    const clipMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, roughness: 0.3, metalness: 0.8 });
-
-    const board = new THREE.Mesh(new THREE.BoxGeometry(0.20, 0.27, 0.012), wood);
-    grp.add(board);
-    const sheet = new THREE.Mesh(new THREE.BoxGeometry(0.17, 0.22, 0.014), paper);
-    sheet.position.z = 0.002;
-    grp.add(sheet);
-    const clip = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.025, 0.02), clipMat);
-    clip.position.set(0, 0.115, 0.006);
-    grp.add(clip);
+    const body = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.008, 0.006, 0.18, 10),
+      new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.25, metalness: 0.8 })
+    );
+    body.rotation.x = Math.PI / 2;
+    grp.add(body);
+    grp.visible = false;
     return grp;
+  }
+
+  const clipboardProp = createClipboardProp();
+  const penProp = createPenProp();
+  scene.add(clipboardProp);
+  scene.add(penProp);
+
+  let avatarModel = null;
+  let baseModelY = 0;
+  let armDropRad = 0.65; // Auto-calibrated on load for T-pose vs A-pose
+  const bones = {};
+  const restLocalQuat = {};
+  const morphMeshes = [];
+
+  // Reusable math objects (zero GC churn at 60fps)
+  const _rootQuatInv = new THREE.Quaternion();
+  const _parentWorldQ = new THREE.Quaternion();
+  const _parentCharQ = new THREE.Quaternion();
+  const _parentCharQInv = new THREE.Quaternion();
+  const _deltaQ = new THREE.Quaternion();
+  const _targetLocalQ = new THREE.Quaternion();
+  const _euler = new THREE.Euler(0, 0, 0, 'XYZ');
+  const _vA = new THREE.Vector3();
+  const _vB = new THREE.Vector3();
+  const _qTmp = new THREE.Quaternion();
+
+  // Character-space bone rotator: works identically on ANY Mixamo / Avaturn / RPM rig
+  // rx: + pitches forward/down (legs back, head down); - pitches backward/up (legs/arms forward)
+  // ry: + turns character-left; - turns character-right
+  // rz: + rolls left (lowers rightArm, raises leftArm); - rolls right (lowers leftArm, raises rightArm)
+  function poseBone(key, rx, ry, rz, lerpAmt = 0.22) {
+    const b = bones[key];
+    const rQ = restLocalQuat[key];
+    if (!b || !rQ || !b.parent) return;
+
+    b.parent.updateWorldMatrix(true, false);
+    b.parent.getWorldQuaternion(_parentWorldQ);
+    _parentCharQ.copy(_rootQuatInv).multiply(_parentWorldQ);
+    _parentCharQInv.copy(_parentCharQ).invert();
+
+    _euler.set(rx, ry, rz, 'XYZ');
+    _deltaQ.setFromEuler(_euler);
+
+    _targetLocalQ.copy(_parentCharQInv).multiply(_deltaQ).multiply(_parentCharQ).multiply(rQ);
+    b.quaternion.slerp(_targetLocalQ, lerpAmt);
   }
 
   function setMorph(names, value) {
@@ -249,47 +320,43 @@
     }
   }
 
-  function setBoneOffset(key, rx = 0, ry = 0, rz = 0, lerpAmt = 0.18) {
-    const b = bones[key];
-    const r = restRot[key];
-    if (!b || !r) return;
-    b.rotation.x += (r.x + rx - b.rotation.x) * lerpAmt;
-    b.rotation.y += (r.y + ry - b.rotation.y) * lerpAmt;
-    b.rotation.z += (r.z + rz - b.rotation.z) * lerpAmt;
+  function matchBone(name) {
+    const n = (name || '').toLowerCase().replace(/^mixamorig[:_]?/, '').replace(/[^a-z0-9]/g, '');
+    if (/^(hips|pelvis)$/.test(n)) return 'hips';
+    if (/^(spine|spine01)$/.test(n)) return 'spine';
+    if (/^(spine1|spine2|chest|upperchest)$/.test(n)) return 'chest';
+    if (/^(neck|neck01)$/.test(n)) return 'neck';
+    if (/^head$/.test(n)) return 'head';
+    if (/^(leftupleg|leftupperleg|thighl|leftthigh)$/.test(n)) return 'leftUpLeg';
+    if (/^(leftleg|leftlowerleg|calfl|leftcalf|leftshin)$/.test(n)) return 'leftLeg';
+    if (/^(leftfoot|footl)$/.test(n)) return 'leftFoot';
+    if (/^(rightupleg|rightupperleg|thighr|rightthigh)$/.test(n)) return 'rightUpLeg';
+    if (/^(rightleg|rightlowerleg|calfr|rightcalf|rightshin)$/.test(n)) return 'rightLeg';
+    if (/^(rightfoot|footr)$/.test(n)) return 'rightFoot';
+    if (/^(leftarm|leftupperarm|upperarml)$/.test(n)) return 'leftArm';
+    if (/^(leftforearm|leftlowerarm|lowerarml)$/.test(n)) return 'leftForeArm';
+    if (/^(lefthand|handl)$/.test(n)) return 'leftHand';
+    if (/^(rightarm|rightupperarm|upperarmr)$/.test(n)) return 'rightArm';
+    if (/^(rightforearm|rightlowerarm|lowerarmr)$/.test(n)) return 'rightForeArm';
+    if (/^(righthand|handr)$/.test(n)) return 'rightHand';
+    return null;
   }
 
   const loader = new GLTFLoader();
   loader.load(
-    './maya.glb?v=4',
+    './maya.glb?v=5',
     (gltf) => {
       avatarModel = gltf.scene;
 
-      // Scale cleanly to 1.72m tall with feet planted on y = 0
+      // Scale cleanly to 1.85m so she reads crisply from bird's-eye view
       const box = new THREE.Box3().setFromObject(avatarModel);
       const size = box.getSize(new THREE.Vector3());
-      const scale = 1.72 / (size.y || 1.72);
+      const scale = 1.85 / (size.y || 1.85);
       avatarModel.scale.setScalar(scale);
 
       const scaledBox = new THREE.Box3().setFromObject(avatarModel);
-      avatarModel.position.y = -scaledBox.min.y;
-
-      const wanted = {
-        hips: ['hips', 'pelvis'],
-        spine: ['spine', 'spine01'],
-        chest: ['spine1', 'spine2', 'chest', 'upperchest'],
-        neck: ['neck', 'neck01'],
-        head: ['head'],
-        leftUpLeg: ['leftupleg', 'leftupperleg', 'thighl'],
-        leftLeg: ['leftleg', 'leftlowerleg', 'calfl'],
-        rightUpLeg: ['rightupleg', 'rightupperleg', 'thighr'],
-        rightLeg: ['rightleg', 'rightlowerleg', 'calfr'],
-        leftArm: ['leftarm', 'leftupperarm', 'upperarml'],
-        leftForeArm: ['leftforearm', 'leftlowerarm', 'lowerarml'],
-        leftHand: ['lefthand', 'handl'],
-        rightArm: ['rightarm', 'rightupperarm', 'upperarmr'],
-        rightForeArm: ['rightforearm', 'rightlowerarm', 'lowerarmr'],
-        rightHand: ['righthand', 'handr']
-      };
+      baseModelY = -scaledBox.min.y;
+      avatarModel.position.y = baseModelY;
 
       avatarModel.traverse((obj) => {
         if (obj.isMesh) {
@@ -299,61 +366,62 @@
           }
         }
         if (obj.isBone) {
-          const n = normBoneName(obj.name);
-          for (const [key, aliases] of Object.entries(wanted)) {
-            if (!bones[key] && aliases.includes(n)) {
-              bones[key] = obj;
-              restRot[key] = obj.rotation.clone();
-            }
+          const key = matchBone(obj.name);
+          if (key && !bones[key]) {
+            bones[key] = obj;
+            restLocalQuat[key] = obj.quaternion.clone();
           }
         }
       });
 
-      // Attach clipboard to Maya's left hand if the bone exists
-      if (bones.leftHand) {
-        const cb = buildClipboardMesh();
-        cb.position.set(0.03, 0.08, 0.04);
-        cb.rotation.set(0.2, 0.3, -0.2);
-        bones.leftHand.add(cb);
-      }
-
-      if (gltf.animations && gltf.animations.length) {
-        mixer = new THREE.AnimationMixer(avatarModel);
-        mixer.clipAction(gltf.animations[0]).play();
-      }
-
       avatarRoot.add(avatarModel);
+      avatarRoot.updateMatrixWorld(true);
+
+      // Auto-measure whether Avaturn exported T-pose or A-pose so arms hang naturally
+      if (bones.leftArm && bones.leftForeArm) {
+        bones.leftArm.getWorldPosition(_vA);
+        bones.leftForeArm.getWorldPosition(_vB);
+        _vB.sub(_vA).normalize();
+        const currentDownAngle = Math.atan2(-_vB.y, Math.abs(_vB.x));
+        armDropRad = Math.max(0.15, 1.30 - currentDownAngle);
+      }
+
+      clipboardProp.visible = true;
+      penProp.visible = true;
     },
     undefined,
-    (err) => {
-      console.warn('Could not load ./maya.glb yet:', err);
-    }
+    (err) => console.warn('Could not load ./maya.glb:', err)
   );
 
-  // --- 5. COORDINATE HELPERS ---
+  // --- 5. SCREEN-TO-FLOOR RAYCASTING FOR PIXEL-ACCURATE BORDER PATROL ---
   function screenToWorld(px, py) {
-    const vFov = (camera.fov * Math.PI) / 180;
-    const visH = 2 * OVERHEAD_Y * Math.tan(vFov / 2);
-    const visW = visH * camera.aspect;
-    const nx = (px / window.innerWidth) * 2 - 1;
-    const ny = (py / window.innerHeight) * 2 - 1;
-    return new THREE.Vector3(nx * (visW / 2), 0, ny * (visH / 2));
+    patrolRayCam.aspect = window.innerWidth / window.innerHeight;
+    patrolRayCam.position.copy(PATROL_CAM_POS);
+    patrolRayCam.lookAt(PATROL_CAM_TGT);
+    patrolRayCam.updateProjectionMatrix();
+    patrolRayCam.updateMatrixWorld(true);
+
+    const ndc = new THREE.Vector2((px / window.innerWidth) * 2 - 1, -(py / window.innerHeight) * 2 + 1);
+    raycaster.setFromCamera(ndc, patrolRayCam);
+    const hit = new THREE.Vector3();
+    raycaster.ray.intersectPlane(floorPlane, hit);
+    return hit;
   }
 
   function getBorderWaypoints() {
     const appEl = document.getElementById('app');
     const r = appEl ? appEl.getBoundingClientRect() : { left: 0, right: window.innerWidth };
-    const leftX = Math.max(28, r.left + 28);
-    const rightX = Math.min(window.innerWidth - 28, r.right - 28);
-    const topY = 92;
-    const botY = window.innerHeight - 54;
+    const leftX = Math.max(32, r.left + 32);
+    const rightX = Math.min(window.innerWidth - 32, r.right - 32);
+    const topY = 105;
+    const botY = window.innerHeight - 62;
     return [
-      { pos: screenToWorld(rightX, topY + 30), pause: false },
-      { pos: screenToWorld(rightX, botY - 120), pause: true },
-      { pos: screenToWorld(rightX, botY), pause: false },
-      { pos: screenToWorld(leftX, botY), pause: true },
-      { pos: screenToWorld(leftX, topY + 120), pause: false },
-      { pos: screenToWorld(leftX, topY + 20), pause: true }
+      { pos: screenToWorld(rightX, topY + 25), pause: true, faceIn: -Math.PI / 2 },
+      { pos: screenToWorld(rightX, botY - 125), pause: true, faceIn: -Math.PI / 2 },
+      { pos: screenToWorld(rightX, botY), pause: false, faceIn: -Math.PI / 2 },
+      { pos: screenToWorld(leftX, botY), pause: true, faceIn: Math.PI / 2 },
+      { pos: screenToWorld(leftX, topY + 125), pause: true, faceIn: Math.PI / 2 },
+      { pos: screenToWorld(leftX, topY + 25), pause: false, faceIn: Math.PI / 2 }
     ];
   }
 
@@ -376,8 +444,8 @@
       const voices = window.speechSynthesis.getVoices();
       const pref = voices.find(v => /samantha|google us english|aria|jenny|zira|female/i.test(v.name)) || voices.find(v => v.lang.startsWith('en'));
       if (pref) u.voice = pref;
-      u.rate = 1.03;
-      u.pitch = 1.08;
+      u.rate = 1.02;
+      u.pitch = 1.07;
       u.onstart = () => { isSpeaking = true; };
       u.onboundary = () => { speechPulse = 1.0; };
       u.onend = () => { isSpeaking = false; speechPulse = 0; };
@@ -414,13 +482,14 @@
   function startPatrol() {
     mode = 'patrol';
     isPointing = false;
+    waveTimer = 0;
     clearHighlight();
     walkDock.classList.remove('open');
     stageUI.classList.remove('open');
     document.body.classList.remove('maya-3d-focus');
     hitbox.classList.remove('hidden');
-    desiredCamPos.set(0, OVERHEAD_Y, 0.05);
-    desiredCamTarget.set(0, 0, 0);
+    desiredCamPos.copy(PATROL_CAM_POS);
+    desiredCamTarget.copy(PATROL_CAM_TGT);
     waypoints = getBorderWaypoints();
     targetPos.copy(waypoints[wpIdx % waypoints.length].pos);
   }
@@ -428,15 +497,15 @@
   function openCloseup() {
     mode = 'closeup';
     isPointing = false;
+    waveTimer = 1.45; // Friendly natural greeting wave!
     clearHighlight();
     walkDock.classList.remove('open');
     hitbox.classList.add('hidden');
     document.body.classList.add('maya-3d-focus');
     stageUI.classList.add('open');
 
-    // Swoop 3D camera cleanly to Maya's head & shoulders above the chat card
     const mx = avatarRoot.position.x, mz = avatarRoot.position.z;
-    desiredCamPos.set(mx, 1.50, mz + 1.45);
+    desiredCamPos.set(mx, 1.56, mz + 1.55);
     desiredCamTarget.set(mx, 1.24, mz);
 
     if (!hasIntroduced) {
@@ -444,7 +513,7 @@
       localStorage.setItem(STORAGE_INTRO_KEY, '1');
       waitingForName = !userName;
       const intro = userName
-        ? `Hi ${userName}! I'm ${AGENT_NAME}, your AlignIQ assistant. I patrol your dashboard doing inventory and can walk right over to any feature. How can I help you today?`
+        ? `Hi ${userName}! I'm ${AGENT_NAME}, your AlignIQ assistant. I keep count of your dashboard inventory and can walk you right over to any feature. How can I help you today?`
         : `Hi! I'm ${AGENT_NAME}, your personal AlignIQ assistant. I patrol your dashboard doing inventory and can walk you through any feature. What's your name?`;
       addMessage('bot', intro, true);
     } else if (chatHistory.length === 0) {
@@ -460,8 +529,8 @@
     document.body.classList.remove('maya-3d-focus');
     hitbox.classList.remove('hidden');
 
-    desiredCamPos.set(0, OVERHEAD_Y, 0.05);
-    desiredCamTarget.set(0, 0, 0);
+    desiredCamPos.copy(PATROL_CAM_POS);
+    desiredCamTarget.copy(PATROL_CAM_TGT);
 
     addMessage('bot', replyText, true);
     document.getElementById('maya-walk-text').textContent = `${AGENT_NAME}: ${replyText}`;
@@ -475,8 +544,8 @@
         highlightedEl = target;
         target.classList.add('maya-highlight-ring');
         const r = target.getBoundingClientRect();
-        const px = Math.max(30, Math.min(window.innerWidth - 30, r.right - 10));
-        const py = Math.max(70, Math.min(window.innerHeight - 140, r.bottom + 10));
+        const px = Math.max(36, Math.min(window.innerWidth - 36, r.right - 10));
+        const py = Math.max(85, Math.min(window.innerHeight - 145, r.bottom + 14));
         targetPos.copy(screenToWorld(px, py));
         isPointing = true;
       }
@@ -520,7 +589,7 @@
       return;
     }
     if (/agent|weight|api key|credit|slider/.test(q)) {
-      runVisualWalkthrough('button[onclick*="toggleTuner"]', 'Follow me to the AI Agent panel. Here you can view your 60-day verified record, adjust pillar weights, and save your private Odds API key.', () => {
+      runVisualWalkthrough('button[onclick*="toggleTuner"]', 'Follow me to the AI Agent panel. Here you can check your 60-day verified record, adjust pillar weights, and save your private Odds API key.', () => {
         const panel = document.getElementById('tuner-panel');
         if (panel && !panel.classList.contains('open') && typeof toggleTuner === 'function') toggleTuner();
       });
@@ -564,7 +633,7 @@
     addMessage('bot', ans, true);
   }
 
-  // --- 9. 60FPS ANIMATION LOOP (AVATURN BONES + ARKIT LIP-SYNC & BLINK) ---
+  // --- 9. 60FPS ANIMATION LOOP ---
   const clock = new THREE.Clock();
   const projVec = new THREE.Vector3();
 
@@ -578,6 +647,8 @@
     camera.lookAt(camTarget);
 
     isWalking = false;
+    let desiredYaw = avatarRoot.rotation.y;
+
     if (mode === 'patrol' || mode === 'walkthrough') {
       const dx = targetPos.x - avatarRoot.position.x;
       const dz = targetPos.z - avatarRoot.position.z;
@@ -589,106 +660,204 @@
         const step = Math.min(dist, speed * dt);
         avatarRoot.position.x += (dx / dist) * step;
         avatarRoot.position.z += (dz / dist) * step;
-
-        const targetAngle = Math.atan2(dx, dz);
-        let diff = targetAngle - avatarRoot.rotation.y;
-        while (diff > Math.PI) diff -= Math.PI * 2;
-        while (diff < -Math.PI) diff += Math.PI * 2;
-        avatarRoot.rotation.y += diff * Math.min(1, dt * 8);
+        desiredYaw = Math.atan2(dx, dz);
       } else if (mode === 'patrol') {
+        const curWp = waypoints[wpIdx % waypoints.length];
         if (pauseTimer <= 0) {
-          pauseTimer = waypoints[wpIdx % waypoints.length].pause ? 2.2 : 0.2;
+          pauseTimer = curWp.pause ? 3.4 : 0.25;
         } else {
           pauseTimer -= dt;
+          // Turn slightly inward toward the dashboard while counting inventory
+          desiredYaw = curWp.faceIn ?? 0;
           if (pauseTimer <= 0) {
             wpIdx = (wpIdx + 1) % waypoints.length;
             targetPos.copy(waypoints[wpIdx].pos);
           }
         }
+      } else if (mode === 'walkthrough') {
+        desiredYaw = 0; // Face user while pointing
       }
     } else if (mode === 'closeup') {
-      let diff = 0 - avatarRoot.rotation.y;
-      while (diff > Math.PI) diff -= Math.PI * 2;
-      while (diff < -Math.PI) diff += Math.PI * 2;
-      avatarRoot.rotation.y += diff * Math.min(1, dt * 7);
+      desiredYaw = 0;
     }
 
-    if (mixer) mixer.update(dt);
+    let yawDiff = desiredYaw - avatarRoot.rotation.y;
+    while (yawDiff > Math.PI) yawDiff -= Math.PI * 2;
+    while (yawDiff < -Math.PI) yawDiff += Math.PI * 2;
+    avatarRoot.rotation.y += yawDiff * Math.min(1, dt * 6.5);
 
-    // Skeletal procedural motion on Avaturn humanoid rig
-    if (avatarModel && !mixer) {
+    // Update root inverse quaternion for character-space bone solver
+    avatarRoot.updateMatrixWorld(true);
+    _rootQuatInv.copy(avatarRoot.quaternion).invert();
+
+    // --- PROCEDURAL NATURAL HUMANOID MOTION ---
+    if (avatarModel) {
       if (isWalking) {
-        walkCycle += dt * 7.8;
+        walkCycle += dt * 7.6;
         const s = Math.sin(walkCycle);
-        setBoneOffset('leftUpLeg', s * 0.48, 0, 0, 0.25);
-        setBoneOffset('rightUpLeg', -s * 0.48, 0, 0, 0.25);
-        setBoneOffset('leftLeg', Math.max(0, -s * 0.55), 0, 0, 0.25);
-        setBoneOffset('rightLeg', Math.max(0, s * 0.55), 0, 0, 0.25);
-        setBoneOffset('spine', 0.04, s * 0.06, 0, 0.15);
-        setBoneOffset('head', 0.15, 0, 0, 0.12);
-        // Relax A-pose arms: left cradles clipboard, right swings naturally
-        setBoneOffset('leftArm', 0.42, 0, -0.55, 0.18);
-        setBoneOffset('leftForeArm', 0, 0.65, 0.45, 0.18);
-        setBoneOffset('rightArm', -s * 0.30, 0, 0.78, 0.18);
-        setBoneOffset('rightForeArm', 0, -0.25, 0, 0.18);
-        avatarModel.position.y = Math.abs(Math.cos(walkCycle)) * 0.035;
+        const c = Math.cos(walkCycle);
+
+        // Natural stride: hips sway, thighs swing, knees bend on recovery, feet flex
+        poseBone('hips', 0.03, s * 0.08, s * 0.05, 0.25);
+        poseBone('spine', 0.04, -s * 0.07, -s * 0.03, 0.22);
+        poseBone('chest', 0.03, -s * 0.05, 0, 0.20);
+
+        poseBone('leftUpLeg', -s * 0.52, 0, 0, 0.28);
+        poseBone('rightUpLeg', s * 0.52, 0, 0, 0.28);
+        poseBone('leftLeg', Math.max(0.06, (c + 0.35) * 0.62), 0, 0, 0.28);
+        poseBone('rightLeg', Math.max(0.06, (-c + 0.35) * 0.62), 0, 0, 0.28);
+        poseBone('leftFoot', -s * 0.18, 0, 0, 0.25);
+        poseBone('rightFoot', s * 0.18, 0, 0, 0.25);
+
+        // Left arm holds clipboard out slightly in front; right arm swings naturally with pen
+        poseBone('leftArm', -0.45, 0.18, -armDropRad + 0.18, 0.22);
+        poseBone('leftForeArm', -0.92, -0.25, 0, 0.22);
+        poseBone('rightArm', s * 0.34 - 0.12, 0, armDropRad, 0.22);
+        poseBone('rightForeArm', -0.35 - Math.max(0, s * 0.25), 0, 0, 0.22);
+
+        // Glancing down toward clipboard & path
+        poseBone('neck', 0.12, 0, 0, 0.15);
+        poseBone('head', 0.18, Math.sin(t * 1.6) * 0.12, 0, 0.15);
+
+        avatarModel.position.y = baseModelY + Math.abs(c) * 0.042;
       } else {
-        setBoneOffset('leftUpLeg', 0, 0, 0, 0.15);
-        setBoneOffset('rightUpLeg', 0, 0, 0, 0.15);
-        setBoneOffset('leftLeg', 0, 0, 0, 0.15);
-        setBoneOffset('rightLeg', 0, 0, 0, 0.15);
-        avatarModel.position.y = Math.sin(t * 2.0) * 0.008;
+        // Standing legs relaxed + gentle weight shift
+        const sway = Math.sin(t * 1.15);
+        poseBone('hips', 0, sway * 0.03, sway * 0.02, 0.12);
+        poseBone('leftUpLeg', 0.03, 0.04, -0.02, 0.14);
+        poseBone('rightUpLeg', -0.03, -0.04, 0.02, 0.14);
+        poseBone('leftLeg', 0.05, 0, 0, 0.14);
+        poseBone('rightLeg', 0.05, 0, 0, 0.14);
+        poseBone('leftFoot', 0, 0, 0, 0.14);
+        poseBone('rightFoot', 0, 0, 0, 0.14);
+        avatarModel.position.y = baseModelY + Math.sin(t * 2.1) * 0.006;
 
-        // Subtle breathing
-        setBoneOffset('spine', Math.sin(t * 2.0) * 0.02, 0, 0, 0.12);
+        if (mode === 'patrol') {
+          // COUNTING & INVENTORY CHECK: Look up at dashboard -> count 1-2-3 -> look down & check off clipboard
+          const cycle = t % 3.2;
+          const isCheckingBoard = cycle > 1.75;
 
-        if (mode === 'walkthrough' && isPointing) {
-          setBoneOffset('leftArm', 0.38, 0, -0.55, 0.15);
-          setBoneOffset('leftForeArm', 0, 0.6, 0.4, 0.15);
-          setBoneOffset('rightArm', -1.1 + Math.sin(t * 5) * 0.06, 0, 0.25, 0.16);
-          setBoneOffset('rightForeArm', 0, -0.15, 0, 0.16);
-          setBoneOffset('head', 0.12, 0, 0, 0.12);
-        } else if (mode === 'patrol') {
-          // Checking inventory on clipboard
-          setBoneOffset('leftArm', 0.45, 0, -0.52, 0.15);
-          setBoneOffset('leftForeArm', 0, 0.72, 0.48, 0.15);
-          setBoneOffset('rightArm', 0.42, -0.25 + Math.sin(t * 8) * 0.05, 0.58, 0.15);
-          setBoneOffset('rightForeArm', 0, -0.65, -0.35, 0.15);
-          setBoneOffset('head', 0.28, 0, 0, 0.12);
+          poseBone('spine', 0.05 + Math.sin(t * 2.1) * 0.015, sway * 0.04, 0, 0.14);
+          poseBone('chest', 0.04, 0, 0, 0.14);
+
+          // Hold clipboard clearly forward and angled up so it's readable from bird's-eye view
+          poseBone('leftArm', -0.58, 0.28, -armDropRad + 0.15, 0.18);
+          poseBone('leftForeArm', -1.05, -0.35, 0, 0.18);
+
+          if (isCheckingBoard) {
+            // Writing checkmark on clipboard with right hand
+            poseBone('rightArm', -0.55, -0.32, armDropRad - 0.15, 0.20);
+            poseBone('rightForeArm', -1.05 + Math.sin(t * 14) * 0.12, 0.35 + Math.cos(t * 11) * 0.10, 0, 0.22);
+            poseBone('neck', 0.22, 0, 0, 0.14);
+            poseBone('head', 0.32 + Math.sin(t * 6) * 0.04, 0.10, 0, 0.14);
+          } else {
+            // Looking out at the dashboard games & counting with pen taps
+            const countTap = Math.sin(t * 5.5) * 0.12;
+            poseBone('rightArm', -0.72 + countTap, -0.15 + Math.sin(t * 2.2) * 0.18, armDropRad - 0.22, 0.18);
+            poseBone('rightForeArm', -0.68 + countTap, 0.12, 0, 0.18);
+            poseBone('neck', -0.05, Math.sin(t * 2.2) * 0.15, 0, 0.14);
+            poseBone('head', -0.06 + Math.sin(t * 5.5) * 0.05, Math.sin(t * 2.2) * 0.24, 0, 0.14);
+          }
+        } else if (mode === 'walkthrough' && isPointing) {
+          // Pointing directly at the highlighted UI feature
+          poseBone('spine', 0.04, -0.12, 0, 0.14);
+          poseBone('chest', 0.02, -0.08, 0, 0.14);
+          poseBone('leftArm', -0.45, 0.22, -armDropRad + 0.15, 0.18);
+          poseBone('leftForeArm', -0.95, -0.25, 0, 0.18);
+          poseBone('rightArm', -1.25 + Math.sin(t * 4.5) * 0.08, -0.2, armDropRad - 0.55, 0.18);
+          poseBone('rightForeArm', -0.25, 0, 0, 0.18);
+          poseBone('neck', 0.06, -0.1, 0, 0.14);
+          poseBone('head', 0.1, Math.sin(t * 2) * 0.08, 0, 0.14);
         } else {
-          // Close-up conversational posture
-          setBoneOffset('leftArm', 0.35, 0, -0.62, 0.14);
-          setBoneOffset('leftForeArm', 0, 0.65, 0.4, 0.14);
-          setBoneOffset('rightArm', isSpeaking ? (0.18 + Math.sin(t * 4.2) * 0.08) : 0.06, 0, 0.75, 0.14);
-          setBoneOffset('rightForeArm', 0, isSpeaking ? (-0.45 + Math.cos(t * 4.8) * 0.1) : -0.22, 0, 0.14);
-          setBoneOffset('head', isSpeaking ? Math.sin(t * 3.6) * 0.05 : Math.sin(t * 1.2) * 0.02, isSpeaking ? Math.sin(t * 2.1) * 0.07 : Math.sin(t * 0.8) * 0.03, 0, 0.12);
+          // CLOSE-UP INTERACTION: Natural breathing, friendly wave on greet, expressive talking gestures
+          poseBone('spine', Math.sin(t * 2.0) * 0.018, sway * 0.03, sway * 0.015, 0.12);
+          poseBone('chest', Math.sin(t * 2.0) * 0.022, 0, 0, 0.12);
+
+          // Left arm cradles clipboard comfortably at waist
+          poseBone('leftArm', -0.32, 0.22, -armDropRad + 0.12, 0.14);
+          poseBone('leftForeArm', -0.88, -0.3, 0, 0.14);
+
+          if (waveTimer > 0) {
+            waveTimer -= dt;
+            // Friendly hello wave!
+            poseBone('rightArm', -0.55, -0.18, armDropRad - 0.85, 0.20);
+            poseBone('rightForeArm', -1.25, 0.15, Math.sin(t * 11) * 0.28, 0.22);
+            poseBone('neck', -0.02, 0, 0.05, 0.14);
+            poseBone('head', -0.03, 0.04, 0.06, 0.14);
+          } else if (isSpeaking) {
+            // Expressive conversational gestures & natural head nods
+            const g1 = Math.sin(t * 3.4);
+            const g2 = Math.cos(t * 4.7);
+            poseBone('rightArm', -0.45 + g1 * 0.14, -0.15 + g2 * 0.10, armDropRad - 0.18, 0.14);
+            poseBone('rightForeArm', -0.95 + g2 * 0.18, 0.22 + g1 * 0.12, 0, 0.14);
+            poseBone('neck', Math.sin(t * 3.2) * 0.04, Math.sin(t * 1.9) * 0.05, 0, 0.12);
+            poseBone('head', Math.sin(t * 3.8) * 0.06, Math.sin(t * 2.1) * 0.08, Math.sin(t * 1.4) * 0.04, 0.12);
+          } else {
+            // Attentive relaxed listening pose
+            poseBone('rightArm', -0.18, -0.05, armDropRad - 0.04, 0.12);
+            poseBone('rightForeArm', -0.52 + Math.sin(t * 1.3) * 0.05, 0.18, 0, 0.12);
+            poseBone('neck', Math.sin(t * 1.1) * 0.02, Math.sin(t * 0.7) * 0.03, 0, 0.10);
+            poseBone('head', Math.sin(t * 1.1) * 0.025, Math.sin(t * 0.8) * 0.05, Math.sin(t * 0.6) * 0.035, 0.10);
+          }
         }
+      }
+
+      // Sync Clipboard & Pen to real-world hand positions (immune to Avaturn bone scaling)
+      avatarRoot.updateMatrixWorld(true);
+      if (bones.leftHand) {
+        bones.leftHand.getWorldPosition(_vA);
+        bones.leftHand.getWorldQuaternion(_qTmp);
+        clipboardProp.position.copy(_vA);
+        clipboardProp.quaternion.copy(_qTmp);
+        clipboardProp.translateY(0.09);
+        clipboardProp.translateZ(0.05);
+        clipboardProp.rotateX(-0.55);
+        clipboardProp.rotateY(0.25);
+      }
+      if (bones.rightHand) {
+        bones.rightHand.getWorldPosition(_vA);
+        bones.rightHand.getWorldQuaternion(_qTmp);
+        penProp.position.copy(_vA);
+        penProp.quaternion.copy(_qTmp);
+        penProp.translateY(0.07);
+        penProp.translateZ(0.03);
       }
     }
 
-    // ARKit Facial Expressions (Blinking, Warm Smile, Real-Time Lip-Sync)
+    // --- ARKIT FACIAL EXPRESSIONS (BLINK, SMILE, MULTI-VISEME LIP-SYNC) ---
     if (morphMeshes.length) {
       blinkTimer -= dt;
-      if (blinkTimer <= 0) blinkTimer = 2.4 + Math.random() * 3.0;
+      if (blinkTimer <= 0) blinkTimer = 2.4 + Math.random() * 2.8;
       const blinkVal = blinkTimer < 0.13 ? Math.sin((blinkTimer / 0.13) * Math.PI) : 0;
       setMorph(['eyeBlinkLeft', 'eyesClosed'], blinkVal);
       setMorph(['eyeBlinkRight', 'eyesClosed'], blinkVal);
 
-      const smileVal = mode === 'closeup' ? 0.38 : 0.2;
-      setMorph(['mouthSmileLeft', 'mouthSmile'], smileVal);
-      setMorph(['mouthSmileRight', 'mouthSmile'], smileVal);
+      const smileBase = mode === 'closeup' ? (waveTimer > 0 ? 0.58 : 0.36) : 0.18;
+      setMorph(['mouthSmileLeft', 'mouthSmile'], smileBase);
+      setMorph(['mouthSmileRight', 'mouthSmile'], smileBase);
+      setMorph(['cheekSquintLeft'], smileBase * 0.45);
+      setMorph(['cheekSquintRight'], smileBase * 0.45);
 
       speechPulse = Math.max(0, speechPulse - dt * 5.0);
-      const jawVal = isSpeaking
-        ? Math.min(0.82, 0.18 + Math.abs(Math.sin(t * 13.5) * Math.cos(t * 6.8)) * 0.55 + speechPulse * 0.22)
-        : 0;
-      setMorph(['jawOpen', 'viseme_aa', 'mouthOpen'], jawVal);
-      setMorph(['browInnerUp'], isSpeaking ? 0.18 + Math.sin(t * 3.5) * 0.08 : 0);
+      if (isSpeaking) {
+        const jawVal = Math.min(0.78, 0.15 + Math.abs(Math.sin(t * 13.0) * Math.cos(t * 6.4)) * 0.52 + speechPulse * 0.22);
+        const funnelVal = Math.max(0, Math.sin(t * 9.2) * 0.32);
+        const puckerVal = Math.max(0, Math.cos(t * 7.8) * 0.24);
+        setMorph(['jawOpen', 'viseme_aa', 'mouthOpen'], jawVal);
+        setMorph(['mouthFunnel', 'viseme_O'], funnelVal);
+        setMorph(['mouthPucker', 'viseme_U'], puckerVal);
+        setMorph(['browInnerUp'], 0.18 + Math.sin(t * 3.4) * 0.10);
+      } else {
+        setMorph(['jawOpen', 'viseme_aa', 'mouthOpen'], 0);
+        setMorph(['mouthFunnel', 'viseme_O'], 0);
+        setMorph(['mouthPucker', 'viseme_U'], 0);
+        setMorph(['browInnerUp'], waveTimer > 0 ? 0.25 : 0.04);
+      }
     }
 
     // Sync 2D Double-Tap Hitbox to Maya's 3D Screen Position
     if (mode !== 'closeup') {
-      projVec.copy(avatarRoot.position).add(new THREE.Vector3(0, 0.9, 0)).project(camera);
+      projVec.copy(avatarRoot.position).add(new THREE.Vector3(0, 1.0, 0)).project(camera);
       const sx = (projVec.x * 0.5 + 0.5) * window.innerWidth;
       const sy = (-projVec.y * 0.5 + 0.5) * window.innerHeight;
       hitbox.style.left = `${sx}px`;
