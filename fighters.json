@@ -2,7 +2,7 @@
   "shoaibyousaf": {
     "name": "Shoaib Yousaf",
     "stance": "Orthodox",
-    "reach": "72\"",
+    "reach": "72.5\"",
     "str_def": 55,
     "sapm": 3.2,
     "head_pct": 64,
@@ -19,12 +19,12 @@
       "https://www.espn.com/mma/fighter/_/id/4712356/shoaib-yousaf",
       "https://www.espn.com/mma/fighter/stats/_/id/4712356"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "johnmitchell": {
     "name": "John Mitchell",
     "stance": "Orthodox",
-    "reach": "74\"",
+    "reach": "74.5\"",
     "str_def": 55,
     "sapm": 3.2,
     "head_pct": 64,
@@ -41,7 +41,7 @@
       "https://www.espn.com/mma/fighter/_/id/5080723/john-mitchell",
       "https://www.espn.com/mma/fighter/stats/_/id/5080723"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "diyarnurgozhay": {
     "name": "Diyar Nurgozhay",
@@ -63,7 +63,7 @@
       "https://www.espn.com/mma/fighter/_/id/5213352/diyar-nurgozhay",
       "https://www.espn.com/mma/fighter/stats/_/id/5213352"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "aliklorenz": {
     "name": "Alik Lorenz",
@@ -85,7 +85,7 @@
       "https://www.espn.com/mma/fighter/_/id/5220971/alik-lorenz",
       "https://www.espn.com/mma/fighter/stats/_/id/5220971"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "nikolasmotta": {
     "name": "Nikolas Motta",
@@ -107,7 +107,7 @@
       "https://www.espn.com/mma/fighter/_/id/3897242/nikolas-motta",
       "https://www.espn.com/mma/fighter/stats/_/id/3897242"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "dommarfan": {
     "name": "Dom Mar Fan",
@@ -129,7 +129,7 @@
       "https://www.espn.com/mma/fighter/_/id/5157806/dom-mar-fan",
       "https://www.espn.com/mma/fighter/stats/_/id/5157806"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "jakematthews": {
     "name": "Jake Matthews",
@@ -151,7 +151,7 @@
       "https://www.espn.com/mma/fighter/_/id/3089915/jake-matthews",
       "https://www.espn.com/mma/fighter/stats/_/id/3089915"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "tahirabdullayev": {
     "name": "Tahir Abdullayev",
@@ -173,7 +173,7 @@
       "https://www.espn.com/mma/fighter/_/id/4394753/tahir-abdullayev",
       "https://www.espn.com/mma/fighter/stats/_/id/4394753"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "amiralbazi": {
     "name": "Amir Albazi",
@@ -195,7 +195,7 @@
       "https://www.espn.com/mma/fighter/_/id/4684848/amir-albazi",
       "https://www.espn.com/mma/fighter/stats/_/id/4684848"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "alessandrocosta": {
     "name": "Alessandro Costa",
@@ -217,7 +217,7 @@
       "https://www.espn.com/mma/fighter/_/id/5074121/alessandro-costa",
       "https://www.espn.com/mma/fighter/stats/_/id/5074121"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "shamilgaziev": {
     "name": "Shamil Gaziev",
@@ -239,7 +239,7 @@
       "https://www.espn.com/mma/fighter/_/id/5145498/shamil-gaziev",
       "https://www.espn.com/mma/fighter/stats/_/id/5145498"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "tallisonteixeira": {
     "name": "Tallison Teixeira",
@@ -261,7 +261,7 @@
       "https://www.espn.com/mma/fighter/_/id/5212856/tallison-teixeira",
       "https://www.espn.com/mma/fighter/stats/_/id/5212856"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "aleksandretopuria": {
     "name": "Aleksandre Topuria",
@@ -283,7 +283,7 @@
       "https://www.espn.com/mma/fighter/_/id/5185662/aleksandre-topuria",
       "https://www.espn.com/mma/fighter/stats/_/id/5185662"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "santiagoluna": {
     "name": "Santiago Luna",
@@ -305,12 +305,12 @@
       "https://www.espn.com/mma/fighter/_/id/5307799/santiago-luna",
       "https://www.espn.com/mma/fighter/stats/_/id/5307799"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "jaredcannonier": {
     "name": "Jared Cannonier",
     "stance": "Switch",
-    "reach": "77\"",
+    "reach": "77.5\"",
     "str_def": 55,
     "sapm": 3.2,
     "head_pct": 64,
@@ -327,7 +327,7 @@
       "https://www.espn.com/mma/fighter/_/id/3154860/jared-cannonier",
       "https://www.espn.com/mma/fighter/stats/_/id/3154860"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "ikramaliskerov": {
     "name": "Ikram Aliskerov",
@@ -349,7 +349,7 @@
       "https://www.espn.com/mma/fighter/_/id/4684776/ikram-aliskerov",
       "https://www.espn.com/mma/fighter/stats/_/id/4684776"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "kyojihoriguchi": {
     "name": "Kyoji Horiguchi",
@@ -371,7 +371,7 @@
       "https://www.espn.com/mma/fighter/_/id/2613374/kyoji-horiguchi",
       "https://www.espn.com/mma/fighter/stats/_/id/2613374"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "asualmabayev": {
     "name": "Asu Almabayev",
@@ -393,7 +393,7 @@
       "https://www.espn.com/mma/fighter/_/id/4294926/asu-almabayev",
       "https://www.espn.com/mma/fighter/stats/_/id/4294926"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "brianortega": {
     "name": "Brian Ortega",
@@ -415,7 +415,7 @@
       "https://www.espn.com/mma/fighter/_/id/3045737/brian-ortega",
       "https://www.espn.com/mma/fighter/stats/_/id/3045737"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "danhooker": {
     "name": "Dan Hooker",
@@ -437,7 +437,7 @@
       "https://www.espn.com/mma/fighter/_/id/3109135/dan-hooker",
       "https://www.espn.com/mma/fighter/stats/_/id/3109135"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "aljamainsterling": {
     "name": "Aljamain Sterling",
@@ -459,7 +459,7 @@
       "https://www.espn.com/mma/fighter/_/id/3031559/aljamain-sterling",
       "https://www.espn.com/mma/fighter/stats/_/id/3031559"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "kevinvallejos": {
     "name": "Kevin Vallejos",
@@ -481,7 +481,7 @@
       "https://www.espn.com/mma/fighter/_/id/5145681/kevin-vallejos",
       "https://www.espn.com/mma/fighter/stats/_/id/5145681"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "jiprochzka": {
     "name": "Ji\u0159\u00ed Proch\u00e1zka",
@@ -503,7 +503,7 @@
       "https://www.espn.com/mma/fighter/_/id/3156612/jiri-prochazka",
       "https://www.espn.com/mma/fighter/stats/_/id/3156612"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "navajostirling": {
     "name": "Navajo Stirling",
@@ -525,7 +525,7 @@
       "https://www.espn.com/mma/fighter/_/id/5216713/navajo-stirling",
       "https://www.espn.com/mma/fighter/stats/_/id/5216713"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "abdulhussein": {
     "name": "Abdul Hussein",
@@ -547,7 +547,7 @@
       "https://www.espn.com/mma/fighter/_/id/4905308/abdul-hussein",
       "https://www.espn.com/mma/fighter/stats/_/id/4905308"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "hechersosa": {
     "name": "Hecher Sosa",
@@ -569,7 +569,7 @@
       "https://www.espn.com/mma/fighter/_/id/5236383/hecher-sosa",
       "https://www.espn.com/mma/fighter/stats/_/id/5236383"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "matthieulethoduclos": {
     "name": "Matthieu Letho Duclos",
@@ -591,7 +591,7 @@
       "https://www.espn.com/mma/fighter/_/id/5013686/matthieu-letho-duclos",
       "https://www.espn.com/mma/fighter/stats/_/id/5013686"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "modestinorodrigues": {
     "name": "Modestino Rodrigues",
@@ -613,7 +613,7 @@
       "https://www.espn.com/mma/fighter/_/id/5364355/modestino-rodrigues",
       "https://www.espn.com/mma/fighter/stats/_/id/5364355"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "mehemmedeliosmanli": {
     "name": "Mehemmedeli Osmanli",
@@ -635,7 +635,7 @@
       "https://www.espn.com/mma/fighter/_/id/5345640/mehemmedeli-osmanli",
       "https://www.espn.com/mma/fighter/stats/_/id/5345640"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "pavelandrusca": {
     "name": "Pavel Andrusca",
@@ -657,7 +657,7 @@
       "https://www.espn.com/mma/fighter/_/id/5445620/pavel-andrusca",
       "https://www.espn.com/mma/fighter/stats/_/id/5445620"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "junyongpark": {
     "name": "JunYong Park",
@@ -679,7 +679,7 @@
       "https://www.espn.com/mma/fighter/_/id/4275043/junyong-park",
       "https://www.espn.com/mma/fighter/stats/_/id/4275043"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "marcotulio": {
     "name": "Marco Tulio",
@@ -701,7 +701,7 @@
       "https://www.espn.com/mma/fighter/_/id/5138111/marco-tulio",
       "https://www.espn.com/mma/fighter/stats/_/id/5138111"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "uransatybaldiev": {
     "name": "Uran Satybaldiev",
@@ -723,7 +723,7 @@
       "https://www.espn.com/mma/fighter/_/id/5206516/uran-satybaldiev",
       "https://www.espn.com/mma/fighter/stats/_/id/5206516"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "ivangnizditskiy": {
     "name": "Ivan Gnizditskiy",
@@ -745,7 +745,7 @@
       "https://www.espn.com/mma/fighter/_/id/5292007/ivan-gnizditskiy",
       "https://www.espn.com/mma/fighter/stats/_/id/5292007"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "brunosilva": {
     "name": "Bruno Silva",
@@ -767,7 +767,7 @@
       "https://www.espn.com/mma/fighter/_/id/3895544/bruno-silva",
       "https://www.espn.com/mma/fighter/stats/_/id/3895544"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "jafelfilho": {
     "name": "Jafel Filho",
@@ -789,7 +789,7 @@
       "https://www.espn.com/mma/fighter/_/id/3896934/jafel-filho",
       "https://www.espn.com/mma/fighter/stats/_/id/3896934"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "ioncutelaba": {
     "name": "Ion Cutelaba",
@@ -811,7 +811,7 @@
       "https://www.espn.com/mma/fighter/_/id/3994033/ion-cutelaba",
       "https://www.espn.com/mma/fighter/stats/_/id/3994033"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "magomedtuchalov": {
     "name": "Magomed Tuchalov",
@@ -833,7 +833,7 @@
       "https://www.espn.com/mma/fighter/_/id/5360467/magomed-tuchalov",
       "https://www.espn.com/mma/fighter/stats/_/id/5360467"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "maironsantos": {
     "name": "Mairon Santos",
@@ -855,7 +855,7 @@
       "https://www.espn.com/mma/fighter/_/id/4914573/mairon-santos",
       "https://www.espn.com/mma/fighter/stats/_/id/4914573"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "akbarabdullaev": {
     "name": "Akbar Abdullaev",
@@ -877,7 +877,7 @@
       "https://www.espn.com/mma/fighter/_/id/5210077/akbar-abdullaev",
       "https://www.espn.com/mma/fighter/stats/_/id/5210077"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "levanchokheli": {
     "name": "Levan Chokheli",
@@ -899,7 +899,7 @@
       "https://www.espn.com/mma/fighter/_/id/4867651/levan-chokheli",
       "https://www.espn.com/mma/fighter/stats/_/id/4867651"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "islamdulatov": {
     "name": "Islam Dulatov",
@@ -921,7 +921,7 @@
       "https://www.espn.com/mma/fighter/_/id/5212748/islam-dulatov",
       "https://www.espn.com/mma/fighter/stats/_/id/5212748"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "sergheispivac": {
     "name": "Serghei Spivac",
@@ -943,7 +943,7 @@
       "https://www.espn.com/mma/fighter/_/id/4421246/serghei-spivac",
       "https://www.espn.com/mma/fighter/stats/_/id/4421246"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "mariopinto": {
     "name": "Mario Pinto",
@@ -965,7 +965,7 @@
       "https://www.espn.com/mma/fighter/_/id/5218817/mario-pinto",
       "https://www.espn.com/mma/fighter/stats/_/id/5218817"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "yaroslavamosov": {
     "name": "Yaroslav Amosov",
@@ -987,7 +987,7 @@
       "https://www.espn.com/mma/fighter/_/id/4275020/yaroslav-amosov",
       "https://www.espn.com/mma/fighter/stats/_/id/4275020"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "ianmachadogarry": {
     "name": "Ian Machado Garry",
@@ -1009,7 +1009,7 @@
       "https://www.espn.com/mma/fighter/_/id/4738092/ian-machado-garry",
       "https://www.espn.com/mma/fighter/stats/_/id/4738092"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "israeladesanya": {
     "name": "Israel Adesanya",
@@ -1031,7 +1031,7 @@
       "https://www.espn.com/mma/fighter/_/id/4285679/israel-adesanya",
       "https://www.espn.com/mma/fighter/stats/_/id/4285679"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
   },
   "sharamagomedov": {
     "name": "Shara Magomedov",
@@ -1053,6 +1053,50 @@
       "https://www.espn.com/mma/fighter/_/id/4421784/shara-magomedov",
       "https://www.espn.com/mma/fighter/stats/_/id/4421784"
     ],
-    "updated": "2026-11-21"
+    "updated": "2026-11-22"
+  },
+  "gabrielsantos": {
+    "name": "Gabriel Santos",
+    "stance": "Orthodox",
+    "reach": "70\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 145.0,
+      "max_lbs": 160.0,
+      "current_lbs": 145.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5109762/gabriel-santos"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5109762/gabriel-santos",
+      "https://www.espn.com/mma/fighter/stats/_/id/5109762"
+    ],
+    "updated": "2026-11-22"
+  },
+  "lukeriley": {
+    "name": "Luke Riley",
+    "stance": "Orthodox",
+    "reach": "69\"",
+    "str_def": 55,
+    "sapm": 3.2,
+    "head_pct": 64,
+    "body_pct": 20,
+    "leg_pct": 16,
+    "weight_cut": {
+      "min_lbs": 145.0,
+      "max_lbs": 160.0,
+      "current_lbs": 145.0,
+      "missed_count": 0,
+      "source_url": "https://www.espn.com/mma/fighter/_/id/5146696/luke-riley"
+    },
+    "sources": [
+      "https://www.espn.com/mma/fighter/_/id/5146696/luke-riley",
+      "https://www.espn.com/mma/fighter/stats/_/id/5146696"
+    ],
+    "updated": "2026-11-22"
   }
 }
