@@ -22,15 +22,46 @@
   let recognition = null;
   let isListening = false;
   let isSpeaking = false;
-  let speechPulse = 0;
+  let currentTone = 'friendly'; // 'friendly' | 'explaining' | 'question' | 'understanding'
   let waveTimer = 0;
   let highlightedEl = null;
+
+  // Phoneme / viseme lip-sync timeline state
+  let activeVisemes = [];
+  let speechStartTime = 0;
+  let speechSafetyTimer = null;
+
+  // --- SPRING-DAMPER HELPER FOR NATURAL GRAVITY & SECONDARY MOTION ---
+  class Spring {
+    constructor(stiffness = 120, damping = 14) {
+      this.value = 0;
+      this.velocity = 0;
+      this.stiffness = stiffness;
+      this.damping = damping;
+    }
+    update(target, dt) {
+      const force = (target - this.value) * this.stiffness;
+      this.velocity += (force - this.velocity * this.damping) * dt;
+      this.value += this.velocity * dt;
+      return this.value;
+    }
+  }
+
+  const spChestBounce = new Spring(95, 11);
+  const spHeadNod = new Spring(80, 12);
+  const spHeadTilt = new Spring(65, 11);
+  const spGestureAmp = new Spring(75, 12);
+  const spJaw = new Spring(260, 22);
+  const spFunnel = new Spring(200, 18);
+  const spPucker = new Spring(200, 18);
+  const spWide = new Spring(180, 18);
+  const spClosed = new Spring(260, 22);
 
   // --- 1. STYLES ---
   const style = document.createElement('style');
   style.textContent = `
     #app { transition: filter 0.6s ease; }
-    body.maya-3d-focus #app { filter: blur(5px) brightness(0.38); pointer-events: none; }
+    body.maya-3d-focus #app { filter: blur(5px) brightness(0.36); pointer-events: none; }
 
     #maya-3d-canvas {
       position: fixed; inset: 0; width: 100vw; height: 100vh;
@@ -38,7 +69,7 @@
     }
 
     #maya-hitbox {
-      position: fixed; z-index: 88; width: 74px; height: 74px;
+      position: fixed; z-index: 88; width: 76px; height: 76px;
       transform: translate(-50%, -50%); border-radius: 50%;
       cursor: pointer; touch-action: manipulation; background: transparent;
     }
@@ -81,7 +112,7 @@
       backdrop-filter: blur(10px); border: 1px solid #2b3f63; border-radius: 18px; padding: 12px;
       box-shadow: 0 18px 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 8px;
     }
-    .maya-chat-log { max-height: 155px; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; padding-right: 2px; }
+    .maya-chat-log { max-height: 145px; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; padding-right: 2px; }
     .maya-msg { max-width: 88%; padding: 8px 11px; border-radius: 12px; font-size: 12px; line-height: 1.4; }
     .maya-msg.bot { align-self: flex-start; background: #131d31; border: 1px solid #1e2d47; color: #f1f5f9; }
     .maya-msg.user { align-self: flex-end; background: #10b981; color: #04130d; font-weight: 700; }
@@ -174,15 +205,14 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.18;
+  renderer.toneMappingExposure = 1.16;
 
   const scene = new THREE.Scene();
 
-  // Bird's-eye overhead camera with slight tilt so legs, posture & clipboard read clearly
-  const PATROL_CAM_POS = new THREE.Vector3(0, 11.8, 1.35);
+  const PATROL_CAM_POS = new THREE.Vector3(0, 11.4, 1.4);
   const PATROL_CAM_TGT = new THREE.Vector3(0, 0, 0);
 
-  const camera = new THREE.PerspectiveCamera(44, window.innerWidth / window.innerHeight, 0.05, 100);
+  const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.05, 100);
   camera.position.copy(PATROL_CAM_POS);
   camera.lookAt(PATROL_CAM_TGT);
 
@@ -194,24 +224,24 @@
   const raycaster = new THREE.Raycaster();
   const floorPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x334155, 1.5));
-  const keyLight = new THREE.DirectionalLight(0xfff6eb, 1.7);
-  keyLight.position.set(3, 10, 6);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x334155, 1.45));
+  const keyLight = new THREE.DirectionalLight(0xfff6eb, 1.65);
+  keyLight.position.set(2.5, 8, 6);
   scene.add(keyLight);
-  const fillLight = new THREE.DirectionalLight(0xe0f2fe, 0.95);
-  fillLight.position.set(-4, 6, 4);
+  const fillLight = new THREE.DirectionalLight(0xe0f2fe, 0.9);
+  fillLight.position.set(-4, 5, 4);
   scene.add(fillLight);
-  const rimLight = new THREE.DirectionalLight(0x34d399, 0.7);
-  rimLight.position.set(0, 5, -5);
+  const rimLight = new THREE.DirectionalLight(0x34d399, 0.55);
+  rimLight.position.set(0, 4.5, -5);
   scene.add(rimLight);
 
-  // --- 4. AVATURN RIG + HIGH-VISIBILITY CLIPBOARD & PEN ---
+  // --- 4. AVATURN RIG + REALISTICALLY SCALED CLIPBOARD & PEN ---
   const avatarRoot = new THREE.Group();
   scene.add(avatarRoot);
 
   const shadowDisc = new THREE.Mesh(
-    new THREE.CircleGeometry(0.36, 24),
-    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.36 })
+    new THREE.CircleGeometry(0.32, 24),
+    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.34 })
   );
   shadowDisc.rotation.x = -Math.PI / 2;
   shadowDisc.position.y = 0.01;
@@ -219,26 +249,25 @@
 
   function createClipboardProp() {
     const grp = new THREE.Group();
-    const wood = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.5 });
-    const paper = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x475569, emissiveIntensity: 0.45, roughness: 0.35 });
+    const wood = new THREE.MeshStandardMaterial({ color: 0x9a5418, roughness: 0.55 });
+    const paper = new THREE.MeshStandardMaterial({ color: 0xf8fafc, emissive: 0x334155, emissiveIntensity: 0.3, roughness: 0.4 });
     const gold = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.25, metalness: 0.85 });
     const green = new THREE.MeshBasicMaterial({ color: 0x10b981 });
     const blue = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
 
-    const board = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.42, 0.018), wood);
+    // Realistic handheld clipboard proportions (22cm x 30cm)
+    const board = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.30, 0.012), wood);
     grp.add(board);
-
-    const sheet = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.35, 0.020), paper);
-    sheet.position.set(0, -0.01, 0.002);
+    const sheet = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.25, 0.014), paper);
+    sheet.position.set(0, -0.008, 0.002);
     grp.add(sheet);
-
-    const clip = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.036, 0.028), gold);
-    clip.position.set(0, 0.18, 0.009);
+    const clip = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.026, 0.022), gold);
+    clip.position.set(0, 0.13, 0.007);
     grp.add(clip);
 
-    [0.10, 0.03, -0.04, -0.11].forEach((ly, idx) => {
-      const line = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.022, 0.024), idx % 2 === 0 ? green : blue);
-      line.position.set(0.01, ly, 0.003);
+    [0.075, 0.025, -0.025, -0.075].forEach((ly, idx) => {
+      const line = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.014, 0.018), idx % 2 === 0 ? green : blue);
+      line.position.set(0.008, ly, 0.003);
       grp.add(line);
     });
     grp.visible = false;
@@ -248,7 +277,7 @@
   function createPenProp() {
     const grp = new THREE.Group();
     const body = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.010, 0.007, 0.22, 10),
+      new THREE.CylinderGeometry(0.006, 0.0045, 0.15, 10),
       new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.2, metalness: 0.85 })
     );
     body.rotation.x = Math.PI / 2;
@@ -264,10 +293,12 @@
 
   let avatarModel = null;
   let baseModelY = 0;
-  let armDropRad = 0.72;
+  let headHeight = 1.66;
+  let leftDropZ = -0.85;
+  let rightDropZ = 0.85;
   const bones = {};
   const restLocalQuat = {};
-  const morphMeshes = [];
+  const morphEntries = []; // { mesh, lowerMap: { lowercaseName: index } }
 
   const _rootQuatInv = new THREE.Quaternion();
   const _parentWorldQ = new THREE.Quaternion();
@@ -280,11 +311,8 @@
   const _vB = new THREE.Vector3();
   const _qTmp = new THREE.Quaternion();
 
-  // Character-space rotation solver (handles any Avaturn / Mixamo bone orientation)
-  // rx: negative swings forward/up (+Z in char space); positive swings backward (-Z)
-  // ry: positive turns character-left; negative turns character-right
-  // rz: positive raises leftArm / lowers rightArm; negative lowers leftArm / raises rightArm
-  function poseBone(key, rx, ry, rz, lerpAmt = 0.25) {
+  // Character-space quaternion solver
+  function poseBone(key, rx, ry, rz, lerpAmt = 0.22) {
     const b = bones[key];
     const rQ = restLocalQuat[key];
     if (!b || !rQ || !b.parent) return;
@@ -301,28 +329,31 @@
     b.quaternion.slerp(_targetLocalQ, lerpAmt);
   }
 
+  // Case-insensitive ARKit + Oculus morph target setter
   function setMorph(names, value) {
-    for (let i = 0; i < morphMeshes.length; i++) {
-      const m = morphMeshes[i];
-      const dict = m.morphTargetDictionary;
+    const clamped = Math.max(0, Math.min(1, value));
+    for (let i = 0; i < morphEntries.length; i++) {
+      const { mesh, lowerMap } = morphEntries[i];
       for (let j = 0; j < names.length; j++) {
-        const idx = dict[names[j]];
+        const idx = lowerMap[names[j].toLowerCase()];
         if (idx !== undefined) {
-          m.morphTargetInfluences[idx] = value;
+          mesh.morphTargetInfluences[idx] = clamped;
           break;
         }
       }
     }
   }
 
-  // Fuzzy matcher catches LeftArm, LeftArm_01, LeftShoulder, LeftUpLeg, etc.
   function matchBone(name) {
     const n = (name || '').toLowerCase().replace(/^mixamorig[:_]?/, '').replace(/[^a-z]/g, '');
     if (n === 'hips' || n === 'pelvis') return 'hips';
     if (n === 'spine') return 'spine';
-    if (n === 'chest' || n === 'upperchest') return 'chest';
+    if (n === 'chest' || n === 'upperchest' || n === 'spine2' || n === 'spine1') return 'chest';
     if (n === 'neck') return 'neck';
     if (n === 'head') return 'head';
+    if (n === 'jaw') return 'jaw';
+    if (n.includes('left') && n.includes('eye')) return 'leftEye';
+    if (n.includes('right') && n.includes('eye')) return 'rightEye';
     if (n.includes('left') && (n.includes('upleg') || n.includes('upperleg') || n.includes('thigh'))) return 'leftUpLeg';
     if (n.includes('left') && (n === 'leftleg' || n.includes('lowerleg') || n.includes('calf') || n.includes('shin'))) return 'leftLeg';
     if (n.includes('left') && n.includes('foot')) return 'leftFoot';
@@ -333,22 +364,22 @@
     if (n.includes('right') && n.includes('shoulder')) return 'rightShoulder';
     if (n.includes('left') && (n === 'leftarm' || n.includes('upperarm'))) return 'leftArm';
     if (n.includes('left') && (n.includes('forearm') || n.includes('lowerarm'))) return 'leftForeArm';
-    if (n.includes('left') && n.includes('hand') && !n.includes('thumb') && !n.includes('index') && !n.includes('middle') && !n.includes('ring') && !n.includes('pinky')) return 'leftHand';
+    if (n.includes('left') && n.includes('hand') && !/thumb|index|middle|ring|pinky/.test(n)) return 'leftHand';
     if (n.includes('right') && (n === 'rightarm' || n.includes('upperarm'))) return 'rightArm';
     if (n.includes('right') && (n.includes('forearm') || n.includes('lowerarm'))) return 'rightForeArm';
-    if (n.includes('right') && n.includes('hand') && !n.includes('thumb') && !n.includes('index') && !n.includes('middle') && !n.includes('ring') && !n.includes('pinky')) return 'rightHand';
+    if (n.includes('right') && n.includes('hand') && !/thumb|index|middle|ring|pinky/.test(n)) return 'rightHand';
     return null;
   }
 
   const loader = new GLTFLoader();
   loader.load(
-    './maya.glb?v=6',
+    './maya.glb?v=8',
     (gltf) => {
       avatarModel = gltf.scene;
 
       const box = new THREE.Box3().setFromObject(avatarModel);
       const size = box.getSize(new THREE.Vector3());
-      const scale = 1.92 / (size.y || 1.92);
+      const scale = 1.80 / (size.y || 1.80);
       avatarModel.scale.setScalar(scale);
 
       const scaledBox = new THREE.Box3().setFromObject(avatarModel);
@@ -359,7 +390,11 @@
         if (obj.isMesh) {
           obj.frustumCulled = false;
           if (obj.morphTargetDictionary && obj.morphTargetInfluences) {
-            morphMeshes.push(obj);
+            const lowerMap = {};
+            for (const [k, idx] of Object.entries(obj.morphTargetDictionary)) {
+              lowerMap[k.toLowerCase()] = idx;
+            }
+            morphEntries.push({ mesh: obj, lowerMap });
           }
         }
         if (obj.isBone) {
@@ -374,12 +409,21 @@
       avatarRoot.add(avatarModel);
       avatarRoot.updateMatrixWorld(true);
 
+      // Measure exact head height for eye-level close-up framing
+      if (bones.head) {
+        bones.head.getWorldPosition(_vA);
+        headHeight = _vA.y + 0.06;
+      }
+
+      // Measure exact angle to bring both arms naturally down alongside her hips (no T-pose/A-pose)
       if (bones.leftArm && bones.leftForeArm) {
         bones.leftArm.getWorldPosition(_vA);
         bones.leftForeArm.getWorldPosition(_vB);
         _vB.sub(_vA).normalize();
-        const currentDownAngle = Math.atan2(-_vB.y, Math.abs(_vB.x));
-        armDropRad = Math.max(0.15, 1.32 - currentDownAngle);
+        const curAngleFromHoriz = Math.atan2(-_vB.y, Math.abs(_vB.x));
+        const neededDrop = Math.max(0.25, 1.42 - curAngleFromHoriz); // ~81° down from horizontal
+        leftDropZ = -neededDrop;
+        rightDropZ = neededDrop;
       }
 
       clipboardProp.visible = true;
@@ -430,24 +474,138 @@
   let isPointing = false;
   let walkCycle = 0;
   let blinkTimer = 2.6;
+  let saccadeTimer = 1.8;
+  let saccadeX = 0;
+  let saccadeY = 0;
 
-  // --- 6. VOICE ---
+  // --- 6. PHONEME LIP-SYNC + NATURAL TONALITY VOICE ENGINE ---
+  function buildVisemeTimeline(text, rate = 1.0) {
+    const clean = (text || '').toLowerCase();
+    const stepMs = 68 / rate;
+    const frames = [];
+    let tMs = 0;
+    for (let i = 0; i < clean.length; i++) {
+      const ch = clean[i];
+      if (ch === ' ') {
+        frames.push({ t: tMs, jaw: 0.04, funnel: 0, pucker: 0, wide: 0.1, closed: 0.1 });
+        tMs += stepMs * 0.75;
+      } else if (/[,.!?;:]/.test(ch)) {
+        frames.push({ t: tMs, jaw: 0, funnel: 0, pucker: 0, wide: 0.12, closed: 0.3 });
+        tMs += stepMs * 2.2;
+      } else if (/[mbp]/.test(ch)) {
+        frames.push({ t: tMs, jaw: 0.02, funnel: 0, pucker: 0.15, wide: 0, closed: 0.9 });
+        tMs += stepMs * 0.9;
+      } else if (/[fv]/.test(ch)) {
+        frames.push({ t: tMs, jaw: 0.12, funnel: 0.15, pucker: 0, wide: 0.15, closed: 0.45 });
+        tMs += stepMs * 0.9;
+      } else if (/[ow]/.test(ch)) {
+        frames.push({ t: tMs, jaw: 0.48, funnel: 0.72, pucker: 0.55, wide: 0, closed: 0 });
+        tMs += stepMs * 1.15;
+      } else if (/[u]/.test(ch)) {
+        frames.push({ t: tMs, jaw: 0.30, funnel: 0.45, pucker: 0.78, wide: 0, closed: 0 });
+        tMs += stepMs * 1.1;
+      } else if (/[a]/.test(ch)) {
+        frames.push({ t: tMs, jaw: 0.72, funnel: 0.12, pucker: 0, wide: 0.25, closed: 0 });
+        tMs += stepMs * 1.15;
+      } else if (/[ei]/.test(ch)) {
+        frames.push({ t: tMs, jaw: 0.42, funnel: 0, pucker: 0, wide: 0.65, closed: 0 });
+        tMs += stepMs * 1.05;
+      } else if (/[sztdnlrkghjcqxy]/.test(ch)) {
+        frames.push({ t: tMs, jaw: 0.24, funnel: 0.08, pucker: 0, wide: 0.35, closed: 0.08 });
+        tMs += stepMs * 0.85;
+      }
+    }
+    frames.push({ t: tMs + 60, jaw: 0, funnel: 0, pucker: 0, wide: 0, closed: 0 });
+    return { frames, totalMs: tMs + 120 };
+  }
+
+  function detectClauseTone(clause) {
+    const s = clause.trim();
+    if (s.endsWith('?')) return 'question';
+    if (/\b(hi|hey|nice to meet|welcome|good to see)\b/i.test(s) || s.endsWith('!')) return 'friendly';
+    if (/\b(got it|right here|no problem|understand|sure|happy to)\b/i.test(s)) return 'understanding';
+    return 'explaining';
+  }
+
+  function pickBestVoice() {
+    const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    return (
+      voices.find(v => /en[-_]us/i.test(v.lang) && /natural|neural|aria|jenny|samantha|ava|allison|google us english/i.test(v.name)) ||
+      voices.find(v => /samantha|google us english|aria|jenny|zira|female/i.test(v.name)) ||
+      voices.find(v => /^en/i.test(v.lang)) ||
+      null
+    );
+  }
+
   function speak(text) {
-    if (!('speechSynthesis' in window)) return;
+    if (speechSafetyTimer) clearTimeout(speechSafetyTimer);
+    const clauses = (text.match(/[^.!?]+[.!?]*/g) || [text]).map(s => s.trim()).filter(Boolean);
+    if (!clauses.length) return;
+
+    if (!('speechSynthesis' in window)) {
+      // Visual lip-sync even if TTS unavailable
+      const tl = buildVisemeTimeline(text, 1.0);
+      activeVisemes = tl.frames;
+      speechStartTime = performance.now();
+      isSpeaking = true;
+      speechSafetyTimer = setTimeout(() => { isSpeaking = false; }, tl.totalMs);
+      return;
+    }
+
     try {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      const voices = window.speechSynthesis.getVoices();
-      const pref = voices.find(v => /samantha|google us english|aria|jenny|zira|female/i.test(v.name)) || voices.find(v => v.lang.startsWith('en'));
-      if (pref) u.voice = pref;
-      u.rate = 1.02;
-      u.pitch = 1.07;
-      u.onstart = () => { isSpeaking = true; };
-      u.onboundary = () => { speechPulse = 1.0; };
-      u.onend = () => { isSpeaking = false; speechPulse = 0; };
-      u.onerror = () => { isSpeaking = false; speechPulse = 0; };
-      window.speechSynthesis.speak(u);
-    } catch {}
+      const voice = pickBestVoice();
+      let idx = 0;
+
+      const speakNextClause = () => {
+        if (idx >= clauses.length) {
+          isSpeaking = false;
+          activeVisemes = [];
+          return;
+        }
+        const clause = clauses[idx++];
+        const tone = detectClauseTone(clause);
+        currentTone = tone;
+
+        // Vary vocal prosody naturally by intent
+        let rate = 0.99, pitch = 1.04;
+        if (tone === 'friendly') { rate = 1.04; pitch = 1.12; }
+        else if (tone === 'question') { rate = 1.01; pitch = 1.14; }
+        else if (tone === 'understanding') { rate = 0.95; pitch = 0.99; }
+        else { rate = 0.98; pitch = 1.03; }
+
+        const u = new SpeechSynthesisUtterance(clause);
+        if (voice) u.voice = voice;
+        u.rate = rate;
+        u.pitch = pitch;
+
+        const tl = buildVisemeTimeline(clause, rate);
+        activeVisemes = tl.frames;
+        speechStartTime = performance.now();
+        isSpeaking = true;
+
+        if (speechSafetyTimer) clearTimeout(speechSafetyTimer);
+        speechSafetyTimer = setTimeout(() => {
+          if (idx >= clauses.length) isSpeaking = false;
+        }, tl.totalMs + 900);
+
+        u.onstart = () => {
+          speechStartTime = performance.now();
+          isSpeaking = true;
+        };
+        u.onend = () => {
+          setTimeout(speakNextClause, 130);
+        };
+        u.onerror = () => {
+          isSpeaking = false;
+        };
+        window.speechSynthesis.speak(u);
+      };
+
+      speakNextClause();
+    } catch {
+      isSpeaking = false;
+    }
   }
 
   function toggleMic() {
@@ -493,16 +651,17 @@
   function openCloseup() {
     mode = 'closeup';
     isPointing = false;
-    waveTimer = 1.6;
+    waveTimer = 1.4;
     clearHighlight();
     walkDock.classList.remove('open');
     hitbox.classList.add('hidden');
     document.body.classList.add('maya-3d-focus');
     stageUI.classList.add('open');
 
+    // Eye-level portrait framing: full head, eyes, shoulders & hands cleanly above chat box
     const mx = avatarRoot.position.x, mz = avatarRoot.position.z;
-    desiredCamPos.set(mx, 1.56, mz + 1.62);
-    desiredCamTarget.set(mx, 1.22, mz);
+    desiredCamPos.set(mx, headHeight - 0.04, mz + 1.32);
+    desiredCamTarget.set(mx, headHeight - 0.28, mz);
 
     if (!hasIntroduced) {
       hasIntroduced = true;
@@ -581,7 +740,7 @@
     const q = text.toLowerCase();
     if (/done|bye|thank|back to inventory|resume|close/.test(q)) {
       addMessage('bot', userName ? `You got it, ${userName}! Heading back to my inventory patrol. Double-tap me anytime.` : `You got it! Heading back to my inventory patrol.`, true);
-      setTimeout(startPatrol, 1600);
+      setTimeout(startPatrol, 1700);
       return;
     }
     if (/agent|weight|api key|credit|slider/.test(q)) {
@@ -633,13 +792,22 @@
   const clock = new THREE.Clock();
   const projVec = new THREE.Vector3();
 
+  function sampleActiveViseme() {
+    if (!isSpeaking || !activeVisemes.length) return { jaw: 0, funnel: 0, pucker: 0, wide: 0, closed: 0 };
+    const elapsed = performance.now() - speechStartTime;
+    for (let i = activeVisemes.length - 1; i >= 0; i--) {
+      if (elapsed >= activeVisemes[i].t) return activeVisemes[i];
+    }
+    return activeVisemes[0];
+  }
+
   function animate() {
     requestAnimationFrame(animate);
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
 
-    camera.position.lerp(desiredCamPos, Math.min(1, dt * 4.5));
-    camTarget.lerp(desiredCamTarget, Math.min(1, dt * 5.0));
+    camera.position.lerp(desiredCamPos, Math.min(1, dt * 4.8));
+    camTarget.lerp(desiredCamTarget, Math.min(1, dt * 5.2));
     camera.lookAt(camTarget);
 
     isWalking = false;
@@ -652,7 +820,7 @@
 
       if (dist > 0.08) {
         isWalking = true;
-        const speed = mode === 'walkthrough' ? 3.8 : 1.5;
+        const speed = mode === 'walkthrough' ? 3.8 : 1.45;
         const step = Math.min(dist, speed * dt);
         avatarRoot.position.x += (dx / dist) * step;
         avatarRoot.position.z += (dz / dist) * step;
@@ -684,176 +852,238 @@
     avatarRoot.updateMatrixWorld(true);
     _rootQuatInv.copy(avatarRoot.quaternion).invert();
 
+    // Spring-damper secondary motion targets
+    const breath = Math.sin(t * 1.9);
+    const stepImpulse = isWalking ? Math.abs(Math.cos(walkCycle)) * 0.04 : 0;
+    const chestBounce = spChestBounce.update(breath * 0.022 + stepImpulse * 0.7, dt);
+    const gestAmp = spGestureAmp.update(isSpeaking ? 1 : 0, dt);
+
     // --- PROCEDURAL NATURAL HUMANOID MOTION ---
     if (avatarModel) {
       if (isWalking) {
-        walkCycle += dt * 7.8;
+        walkCycle += dt * 7.4;
         const s = Math.sin(walkCycle);
         const c = Math.cos(walkCycle);
 
-        // Smooth human walk cycle
-        poseBone('hips', 0.04, s * 0.10, s * 0.06, 0.28);
-        poseBone('spine', 0.05, -s * 0.08, -s * 0.04, 0.24);
-        poseBone('chest', 0.04, -s * 0.06, 0, 0.22);
+        // Grounded human stride with hip sway & torso counter-rotation
+        poseBone('hips', 0.03, s * 0.09, s * 0.045, 0.26);
+        poseBone('spine', 0.04 + chestBounce * 0.5, -s * 0.07, -s * 0.03, 0.22);
+        poseBone('chest', 0.03 + chestBounce, -s * 0.05, 0, 0.20);
 
-        poseBone('leftUpLeg', -s * 0.60, 0, 0, 0.30);
-        poseBone('rightUpLeg', s * 0.60, 0, 0, 0.30);
-        poseBone('leftLeg', Math.max(0.08, (c + 0.35) * 0.72), 0, 0, 0.30);
-        poseBone('rightLeg', Math.max(0.08, (-c + 0.35) * 0.72), 0, 0, 0.30);
-        poseBone('leftFoot', -s * 0.22, 0, 0, 0.26);
-        poseBone('rightFoot', s * 0.22, 0, 0, 0.26);
+        poseBone('leftUpLeg', -s * 0.55, 0, 0, 0.28);
+        poseBone('rightUpLeg', s * 0.55, 0, 0, 0.28);
+        poseBone('leftLeg', Math.max(0.06, (c + 0.35) * 0.65), 0, 0, 0.28);
+        poseBone('rightLeg', Math.max(0.06, (-c + 0.35) * 0.65), 0, 0, 0.28);
+        poseBone('leftFoot', -s * 0.18, 0, 0, 0.24);
+        poseBone('rightFoot', s * 0.18, 0, 0, 0.24);
 
-        // Left arm cradles clipboard in front; right arm swings naturally
-        poseBone('leftShoulder', 0, 0.08, 0.05, 0.2);
-        poseBone('leftArm', -0.52, 0.22, -armDropRad + 0.18, 0.24);
-        poseBone('leftForeArm', -1.02, -0.35, 0, 0.24);
+        // Left arm holds clipboard tucked naturally in front; right arm swings smoothly at side
+        poseBone('leftShoulder', 0, 0.05, 0, 0.18);
+        poseBone('leftArm', -0.42, 0.18, leftDropZ + 0.10, 0.24);
+        poseBone('leftForeArm', -1.05, 0.35, 0, 0.24);
 
-        poseBone('rightShoulder', 0, -s * 0.06, 0, 0.2);
-        poseBone('rightArm', s * 0.38 - 0.10, 0, armDropRad, 0.24);
-        poseBone('rightForeArm', -0.38 - Math.max(0, s * 0.30), 0, 0, 0.24);
+        poseBone('rightShoulder', 0, -s * 0.05, 0, 0.18);
+        poseBone('rightArm', s * 0.34, 0, rightDropZ, 0.24);
+        poseBone('rightForeArm', -0.28 - Math.max(0, s * 0.22), 0, 0, 0.24);
 
-        poseBone('neck', 0.12, 0, 0, 0.16);
-        poseBone('head', 0.18, Math.sin(t * 1.8) * 0.14, 0, 0.16);
+        poseBone('neck', 0.10, 0, 0, 0.16);
+        poseBone('head', 0.14, Math.sin(t * 1.5) * 0.10, 0, 0.16);
 
-        avatarModel.position.y = baseModelY + Math.abs(c) * 0.048;
+        avatarModel.position.y = baseModelY + stepImpulse;
       } else {
-        // Relaxed standing stance with gentle weight shift
-        const sway = Math.sin(t * 1.2);
-        poseBone('hips', 0, sway * 0.04, sway * 0.025, 0.14);
-        poseBone('leftUpLeg', 0.03, 0.05, -0.02, 0.16);
-        poseBone('rightUpLeg', -0.03, -0.05, 0.02, 0.16);
-        poseBone('leftLeg', 0.06, 0, 0, 0.16);
-        poseBone('rightLeg', 0.06, 0, 0, 0.16);
-        poseBone('leftFoot', 0, 0, 0, 0.16);
-        poseBone('rightFoot', 0, 0, 0, 0.16);
-        avatarModel.position.y = baseModelY + Math.sin(t * 2.1) * 0.006;
+        const sway = Math.sin(t * 1.1);
+        poseBone('hips', 0, sway * 0.03, sway * 0.018, 0.14);
+        poseBone('leftUpLeg', 0.02, 0.04, -0.015, 0.14);
+        poseBone('rightUpLeg', -0.02, -0.04, 0.015, 0.14);
+        poseBone('leftLeg', 0.04, 0, 0, 0.14);
+        poseBone('rightLeg', 0.04, 0, 0, 0.14);
+        poseBone('leftFoot', 0, 0, 0, 0.14);
+        poseBone('rightFoot', 0, 0, 0, 0.14);
+        avatarModel.position.y = baseModelY + chestBounce * 0.18;
 
         if (mode === 'patrol') {
-          // COUNTING & CHECKING INVENTORY: Look out & count games (1-2-3), then look down & check off clipboard
+          // BIRD'S-EYE COUNTING & INVENTORY CHECK
           const cycle = t % 3.4;
           const isCheckingBoard = cycle > 1.85;
 
-          poseBone('spine', 0.05 + Math.sin(t * 2.1) * 0.015, sway * 0.05, 0, 0.16);
-          poseBone('chest', 0.04, 0, 0, 0.16);
-          poseBone('leftShoulder', 0, 0.12, 0.06, 0.16);
-          poseBone('leftArm', -0.68, 0.32, -armDropRad + 0.14, 0.20);
-          poseBone('leftForeArm', -1.15, -0.45, 0, 0.20);
+          poseBone('spine', 0.04 + chestBounce * 0.5, sway * 0.04, 0, 0.15);
+          poseBone('chest', 0.03 + chestBounce, 0, 0, 0.15);
+
+          // Hold clipboard cleanly in front of chest so it's visible from overhead
+          poseBone('leftShoulder', 0, 0.08, 0, 0.16);
+          poseBone('leftArm', -0.58, 0.24, leftDropZ + 0.10, 0.20);
+          poseBone('leftForeArm', -1.18, 0.45, 0, 0.20);
 
           if (isCheckingBoard) {
-            // Checking items off the clipboard with pen
-            poseBone('rightShoulder', 0, -0.10, 0, 0.18);
-            poseBone('rightArm', -0.62, -0.35, armDropRad - 0.14, 0.22);
-            poseBone('rightForeArm', -1.12 + Math.sin(t * 14) * 0.14, 0.42 + Math.cos(t * 11) * 0.12, 0, 0.24);
-            poseBone('neck', 0.24, 0, 0, 0.16);
-            poseBone('head', 0.34 + Math.sin(t * 6) * 0.04, 0.12, 0, 0.16);
+            // Checking items off clipboard with pen
+            poseBone('rightShoulder', 0, -0.08, 0, 0.18);
+            poseBone('rightArm', -0.55, -0.26, rightDropZ - 0.10, 0.22);
+            poseBone('rightForeArm', -1.12 + Math.sin(t * 13) * 0.10, -0.45 + Math.cos(t * 10) * 0.08, 0, 0.22);
+            poseBone('neck', 0.18, 0, 0, 0.14);
+            poseBone('head', 0.26 + Math.sin(t * 5.5) * 0.04, 0.10, 0, 0.14);
           } else {
-            // Counting games on dashboard with pen gestures & head nods
-            const countNod = Math.sin(t * 5.8) * 0.14;
-            poseBone('rightShoulder', 0, -0.06, 0, 0.18);
-            poseBone('rightArm', -0.82 + countNod, -0.18 + Math.sin(t * 2.2) * 0.22, armDropRad - 0.22, 0.20);
-            poseBone('rightForeArm', -0.74 + countNod, 0.15, 0, 0.20);
-            poseBone('neck', -0.04, Math.sin(t * 2.2) * 0.16, 0, 0.16);
-            poseBone('head', -0.05 + Math.sin(t * 5.8) * 0.06, Math.sin(t * 2.2) * 0.26, 0, 0.16);
+            // Counting games on the screen with rhythmic pen taps & head nods
+            const countTap = Math.sin(t * 5.2) * 0.12;
+            poseBone('rightShoulder', 0, -0.04, 0, 0.16);
+            poseBone('rightArm', -0.72 + countTap, -0.12 + Math.sin(t * 2.0) * 0.16, rightDropZ - 0.16, 0.18);
+            poseBone('rightForeArm', -0.68 + countTap, -0.15, 0, 0.18);
+            poseBone('neck', -0.02, Math.sin(t * 2.0) * 0.14, 0, 0.14);
+            poseBone('head', -0.03 + Math.sin(t * 5.2) * 0.05, Math.sin(t * 2.0) * 0.22, 0, 0.14);
           }
         } else if (mode === 'walkthrough' && isPointing) {
-          poseBone('spine', 0.04, -0.14, 0, 0.16);
-          poseBone('chest', 0.02, -0.10, 0, 0.16);
-          poseBone('leftArm', -0.52, 0.25, -armDropRad + 0.15, 0.18);
-          poseBone('leftForeArm', -1.0, -0.3, 0, 0.18);
-          poseBone('rightShoulder', 0, -0.12, -0.08, 0.18);
-          poseBone('rightArm', -1.35 + Math.sin(t * 4.5) * 0.09, -0.22, armDropRad - 0.55, 0.20);
-          poseBone('rightForeArm', -0.25, 0, 0, 0.20);
-          poseBone('neck', 0.06, -0.1, 0, 0.16);
-          poseBone('head', 0.1, Math.sin(t * 2) * 0.08, 0, 0.16);
+          poseBone('spine', 0.03 + chestBounce * 0.5, -0.10, 0, 0.15);
+          poseBone('chest', 0.02 + chestBounce, -0.08, 0, 0.15);
+          poseBone('leftArm', -0.45, 0.20, leftDropZ + 0.10, 0.18);
+          poseBone('leftForeArm', -1.05, 0.35, 0, 0.18);
+          poseBone('rightArm', -1.25 + Math.sin(t * 4.5) * 0.08, -0.18, rightDropZ - 0.45, 0.18);
+          poseBone('rightForeArm', -0.22, 0, 0, 0.18);
+          poseBone('neck', 0.06, -0.08, 0, 0.14);
+          poseBone('head', 0.08, Math.sin(t * 2) * 0.06, 0, 0.14);
         } else {
-          // CLOSE-UP INTERACTION: Natural breathing, friendly wave, expressive talking gestures
-          poseBone('spine', Math.sin(t * 2.0) * 0.02, sway * 0.035, sway * 0.02, 0.14);
-          poseBone('chest', Math.sin(t * 2.0) * 0.025, 0, 0, 0.14);
+          // CLOSE-UP INTERACTION: Direct eye contact, natural breathing, tone-synced gestures
+          poseBone('spine', chestBounce * 0.6, sway * 0.025, sway * 0.015, 0.12);
+          poseBone('chest', chestBounce * 1.15, 0, 0, 0.12);
 
-          poseBone('leftShoulder', 0, 0.08, 0.04, 0.14);
-          poseBone('leftArm', -0.42, 0.25, -armDropRad + 0.12, 0.16);
-          poseBone('leftForeArm', -0.96, -0.35, 0, 0.16);
+          // Left arm relaxes naturally at waist holding clipboard neatly tucked
+          poseBone('leftShoulder', 0, 0.04, 0, 0.12);
+          poseBone('leftArm', -0.28, 0.16, leftDropZ + 0.06, 0.14);
+          poseBone('leftForeArm', -0.92, 0.38, 0, 0.14);
 
           if (waveTimer > 0) {
             waveTimer -= dt;
-            poseBone('rightShoulder', 0, -0.08, -0.12, 0.20);
-            poseBone('rightArm', -0.62, -0.20, armDropRad - 0.92, 0.22);
-            poseBone('rightForeArm', -1.32, 0.18, Math.sin(t * 11) * 0.30, 0.24);
-            poseBone('neck', -0.02, 0, 0.05, 0.16);
-            poseBone('head', -0.03, 0.04, 0.07, 0.16);
-          } else if (isSpeaking) {
-            const g1 = Math.sin(t * 3.5);
-            const g2 = Math.cos(t * 4.8);
-            poseBone('rightShoulder', 0, -0.05, 0, 0.16);
-            poseBone('rightArm', -0.52 + g1 * 0.16, -0.18 + g2 * 0.12, armDropRad - 0.18, 0.16);
-            poseBone('rightForeArm', -1.02 + g2 * 0.20, 0.25 + g1 * 0.14, 0, 0.16);
-            poseBone('neck', Math.sin(t * 3.2) * 0.04, Math.sin(t * 1.9) * 0.05, 0, 0.14);
-            poseBone('head', Math.sin(t * 3.8) * 0.06, Math.sin(t * 2.1) * 0.09, Math.sin(t * 1.4) * 0.04, 0.14);
+            poseBone('rightShoulder', 0, -0.04, -0.08, 0.18);
+            poseBone('rightArm', -0.58, -0.12, rightDropZ - 0.65, 0.20);
+            poseBone('rightForeArm', -1.35, -0.15, Math.sin(t * 10) * 0.22, 0.22);
           } else {
-            poseBone('rightShoulder', 0, 0, 0, 0.14);
-            poseBone('rightArm', -0.20, -0.06, armDropRad - 0.04, 0.14);
-            poseBone('rightForeArm', -0.56 + Math.sin(t * 1.3) * 0.06, 0.20, 0, 0.14);
-            poseBone('neck', Math.sin(t * 1.1) * 0.02, Math.sin(t * 0.7) * 0.03, 0, 0.12);
-            poseBone('head', Math.sin(t * 1.1) * 0.03, Math.sin(t * 0.8) * 0.06, Math.sin(t * 0.6) * 0.04, 0.12);
+            // Smooth conversational hand gestures scaled by speech & tone
+            const toneSpeed = currentTone === 'friendly' ? 3.4 : currentTone === 'understanding' ? 2.1 : 2.8;
+            const g1 = Math.sin(t * toneSpeed) * gestAmp;
+            const g2 = Math.cos(t * (toneSpeed * 1.35)) * gestAmp;
+
+            poseBone('rightShoulder', 0, -0.03 * gestAmp, 0, 0.14);
+            poseBone('rightArm', -0.14 - 0.32 * gestAmp + g1 * 0.12, -0.10 * gestAmp + g2 * 0.08, rightDropZ - 0.10 * gestAmp, 0.14);
+            poseBone('rightForeArm', -0.35 - 0.68 * gestAmp + g2 * 0.16, -0.25 * gestAmp, 0, 0.14);
           }
+
+          // Natural head motion + continuous eye-contact lock onto camera
+          let targetNod = 0.06; // slight downward pitch to look straight into eye-level lens
+          let targetTilt = Math.sin(t * 0.7) * 0.03;
+          let targetYaw = Math.sin(t * 0.65) * 0.04;
+
+          if (isSpeaking) {
+            if (currentTone === 'question') {
+              targetNod = 0.03 + Math.sin(t * 2.5) * 0.03;
+              targetTilt = 0.09; // curious head tilt
+            } else if (currentTone === 'understanding') {
+              targetNod = 0.08 + Math.sin(t * 3.0) * 0.06; // warm reassuring nods
+              targetTilt = -0.05;
+            } else if (currentTone === 'friendly') {
+              targetNod = 0.05 + Math.sin(t * 3.6) * 0.05;
+              targetTilt = Math.sin(t * 1.8) * 0.06;
+              targetYaw = Math.sin(t * 1.9) * 0.06;
+            } else {
+              targetNod = 0.06 + Math.sin(t * 3.2) * 0.045;
+              targetYaw = Math.sin(t * 1.7) * 0.07;
+            }
+          }
+
+          const nod = spHeadNod.update(targetNod, dt);
+          const tilt = spHeadTilt.update(targetTilt, dt);
+          poseBone('neck', nod * 0.4, targetYaw * 0.4, tilt * 0.4, 0.14);
+          poseBone('head', nod * 0.6, targetYaw * 0.6, tilt * 0.6, 0.14);
+
+          // Micro eye saccades while keeping direct eye contact with user
+          saccadeTimer -= dt;
+          if (saccadeTimer <= 0) {
+            saccadeTimer = 1.4 + Math.random() * 2.2;
+            saccadeX = (Math.random() - 0.5) * 0.04;
+            saccadeY = (Math.random() - 0.5) * 0.025;
+          }
+          poseBone('leftEye', 0.04 + saccadeY, -targetYaw * 0.5 + saccadeX, 0, 0.25);
+          poseBone('rightEye', 0.04 + saccadeY, -targetYaw * 0.5 + saccadeX, 0, 0.25);
         }
       }
 
-      // Sync Clipboard & Pen to real-world hand positions
+      // Sync Clipboard & Pen cleanly to her hands
       avatarRoot.updateMatrixWorld(true);
       if (bones.leftHand) {
         bones.leftHand.getWorldPosition(_vA);
         bones.leftHand.getWorldQuaternion(_qTmp);
         clipboardProp.position.copy(_vA);
         clipboardProp.quaternion.copy(_qTmp);
-        clipboardProp.translateY(0.11);
-        clipboardProp.translateZ(0.06);
-        clipboardProp.rotateX(-0.65);
-        clipboardProp.rotateY(0.28);
+        clipboardProp.translateY(0.06);
+        clipboardProp.translateZ(0.04);
+        clipboardProp.rotateX(-0.75);
+        clipboardProp.rotateY(0.18);
       }
       if (bones.rightHand) {
         bones.rightHand.getWorldPosition(_vA);
         bones.rightHand.getWorldQuaternion(_qTmp);
         penProp.position.copy(_vA);
         penProp.quaternion.copy(_qTmp);
-        penProp.translateY(0.08);
-        penProp.translateZ(0.04);
+        penProp.translateY(0.06);
+        penProp.translateZ(0.02);
+        penProp.visible = mode !== 'closeup'; // Free open hand for natural gestures in close-up
       }
     }
 
-    // --- ARKIT FACIAL EXPRESSIONS ---
-    if (morphMeshes.length) {
+    // --- ARKIT FACIAL EXPRESSIONS + REAL PHONEME LIP-SYNC ---
+    const vis = sampleActiveViseme();
+    const jawVal = spJaw.update(vis.jaw, dt);
+    const funnelVal = spFunnel.update(vis.funnel, dt);
+    const puckerVal = spPucker.update(vis.pucker, dt);
+    const wideVal = spWide.update(vis.wide, dt);
+    const closedVal = spClosed.update(vis.closed, dt);
+
+    if (bones.jaw) {
+      poseBone('jaw', jawVal * 0.32, 0, 0, 0.35);
+    }
+
+    if (morphEntries.length) {
+      // Natural blinking
       blinkTimer -= dt;
-      if (blinkTimer <= 0) blinkTimer = 2.4 + Math.random() * 2.8;
+      if (blinkTimer <= 0) blinkTimer = 2.3 + Math.random() * 2.9;
       const blinkVal = blinkTimer < 0.13 ? Math.sin((blinkTimer / 0.13) * Math.PI) : 0;
       setMorph(['eyeBlinkLeft', 'eyesClosed'], blinkVal);
       setMorph(['eyeBlinkRight', 'eyesClosed'], blinkVal);
 
-      const smileBase = mode === 'closeup' ? (waveTimer > 0 ? 0.60 : 0.38) : 0.20;
-      setMorph(['mouthSmileLeft', 'mouthSmile'], smileBase);
-      setMorph(['mouthSmileRight', 'mouthSmile'], smileBase);
-      setMorph(['cheekSquintLeft'], smileBase * 0.45);
-      setMorph(['cheekSquintRight'], smileBase * 0.45);
-
-      speechPulse = Math.max(0, speechPulse - dt * 5.0);
-      if (isSpeaking) {
-        const jawVal = Math.min(0.80, 0.16 + Math.abs(Math.sin(t * 13.0) * Math.cos(t * 6.4)) * 0.54 + speechPulse * 0.22);
-        const funnelVal = Math.max(0, Math.sin(t * 9.2) * 0.34);
-        const puckerVal = Math.max(0, Math.cos(t * 7.8) * 0.25);
-        setMorph(['jawOpen', 'viseme_aa', 'mouthOpen'], jawVal);
-        setMorph(['mouthFunnel', 'viseme_O'], funnelVal);
-        setMorph(['mouthPucker', 'viseme_U'], puckerVal);
-        setMorph(['browInnerUp'], 0.20 + Math.sin(t * 3.4) * 0.10);
+      // Subtle eye-contact gaze correction if blendshapes exist
+      if (mode === 'closeup') {
+        setMorph(['eyeLookDownLeft'], Math.max(0, 0.12 + saccadeY));
+        setMorph(['eyeLookDownRight'], Math.max(0, 0.12 + saccadeY));
       } else {
-        setMorph(['jawOpen', 'viseme_aa', 'mouthOpen'], 0);
-        setMorph(['mouthFunnel', 'viseme_O'], 0);
-        setMorph(['mouthPucker', 'viseme_U'], 0);
-        setMorph(['browInnerUp'], waveTimer > 0 ? 0.26 : 0.04);
+        setMorph(['eyeLookDownLeft', 'eyeLookDownRight'], 0);
       }
+
+      // Tone-matched smile & eyebrows
+      let smileTarget = 0.22;
+      let browTarget = 0.04;
+      if (mode === 'closeup') {
+        if (waveTimer > 0 || currentTone === 'friendly') { smileTarget = 0.50; browTarget = 0.22; }
+        else if (currentTone === 'question') { smileTarget = 0.32; browTarget = 0.36; }
+        else if (currentTone === 'understanding') { smileTarget = 0.42; browTarget = 0.18; }
+        else { smileTarget = 0.30; browTarget = isSpeaking ? 0.16 + Math.sin(t * 3.1) * 0.08 : 0.06; }
+      }
+      // Relax smile slightly while opening mouth on O/U sounds for realism
+      const liveSmile = Math.max(0.08, smileTarget * (1 - funnelVal * 0.55) + wideVal * 0.22);
+      setMorph(['mouthSmileLeft', 'mouthSmile'], liveSmile);
+      setMorph(['mouthSmileRight', 'mouthSmile'], liveSmile);
+      setMorph(['cheekSquintLeft'], liveSmile * 0.42);
+      setMorph(['cheekSquintRight'], liveSmile * 0.42);
+      setMorph(['browInnerUp'], browTarget);
+      setMorph(['browOuterUpLeft'], currentTone === 'question' && isSpeaking ? 0.28 : browTarget * 0.5);
+      setMorph(['browOuterUpRight'], currentTone === 'question' && isSpeaking ? 0.28 : browTarget * 0.5);
+
+      // Phoneme visemes
+      setMorph(['jawOpen', 'mouthOpen', 'viseme_aa'], jawVal);
+      setMorph(['mouthFunnel', 'viseme_O'], funnelVal);
+      setMorph(['mouthPucker', 'viseme_U'], puckerVal);
+      setMorph(['mouthClose', 'viseme_PP'], closedVal);
+      setMorph(['viseme_E', 'viseme_I'], wideVal * 0.65);
     }
 
     if (mode !== 'closeup') {
-      projVec.copy(avatarRoot.position).add(new THREE.Vector3(0, 1.0, 0)).project(camera);
+      projVec.copy(avatarRoot.position).add(new THREE.Vector3(0, 0.95, 0)).project(camera);
       const sx = (projVec.x * 0.5 + 0.5) * window.innerWidth;
       const sy = (-projVec.y * 0.5 + 0.5) * window.innerHeight;
       hitbox.style.left = `${sx}px`;
