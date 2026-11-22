@@ -1,97 +1,87 @@
-(function () {
+(async function () {
   const AGENT_NAME = 'Maya';
   const STORAGE_NAME_KEY = 'aligniq_user_name';
   const STORAGE_INTRO_KEY = 'aligniq_maya_introduced';
 
-  let state = 'patrol'; // 'patrol' | 'closeup' | 'walkthrough'
+  // Load Three.js dynamically (no build step or HTML changes needed)
+  let THREE, GLTFLoader;
+  try {
+    THREE = await import('https://esm.sh/three@0.160.0');
+    const loaderMod = await import('https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js');
+    GLTFLoader = loaderMod.GLTFLoader;
+  } catch (err) {
+    console.error('Three.js failed to load:', err);
+    return;
+  }
+
+  let mode = 'patrol'; // 'patrol' | 'closeup' | 'walkthrough'
   let userName = localStorage.getItem(STORAGE_NAME_KEY) || '';
   let hasIntroduced = localStorage.getItem(STORAGE_INTRO_KEY) === '1';
   let waitingForName = false;
   let lastTapTime = 0;
-  let patrolTimer = null;
-  let patrolStep = 0;
   let chatHistory = [];
   let recognition = null;
   let isListening = false;
+  let isSpeaking = false;
+  let speechPulse = 0;
+  let highlightedEl = null;
 
-  // --- 1. INJECT STYLES ---
+  // --- 1. STYLES ---
   const style = document.createElement('style');
   style.textContent = `
-    #app { transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s ease; transform-origin: center center; }
-    body.maya-swoop-in #app { transform: scale(1.16) translateY(-18px); filter: blur(4px) brightness(0.45); pointer-events: none; }
+    #app { transition: filter 0.6s ease; }
+    body.maya-3d-focus #app { filter: blur(5px) brightness(0.38); pointer-events: none; }
 
-    /* BIRD'S-EYE PATROL SPRITE */
-    #maya-walker {
-      position: fixed; z-index: 85; width: 46px; height: 46px;
-      cursor: pointer; user-select: none; touch-action: manipulation;
-      transition: left 1.1s cubic-bezier(0.34, 1.2, 0.64, 1), top 1.1s cubic-bezier(0.34, 1.2, 0.64, 1), transform 0.45s ease, opacity 0.3s ease;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.55));
+    #maya-3d-canvas {
+      position: fixed; inset: 0; width: 100vw; height: 100vh;
+      z-index: 86; pointer-events: none;
     }
-    #maya-walker.hidden { opacity: 0; pointer-events: none; transform: scale(0.4); }
-    #maya-walker .walker-inner { width: 100%; height: 100%; animation: mayaWalkBob 0.55s infinite alternate ease-in-out; }
-    #maya-walker.checking .walker-inner { animation: mayaCheckClip 0.9s infinite ease-in-out; }
-    #maya-walker .tap-hint {
-      position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%);
-      background: rgba(15, 23, 38, 0.92); color: #34d399; border: 1px solid rgba(16,185,129,0.45);
-      font-size: 8.5px; font-weight: 800; padding: 1px 5px; border-radius: 6px; white-space: nowrap;
-      opacity: 0; transition: opacity 0.3s ease; pointer-events: none;
-    }
-    #maya-walker:hover .tap-hint, #maya-walker.show-hint .tap-hint { opacity: 1; }
-    @keyframes mayaWalkBob { 0% { transform: translateY(0px) rotate(-3deg); } 100% { transform: translateY(-2.5px) rotate(3deg); } }
-    @keyframes mayaCheckClip { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
 
-    /* POINTER RING FOR VISUAL WALKTHROUGHS */
+    #maya-hitbox {
+      position: fixed; z-index: 88; width: 64px; height: 64px;
+      transform: translate(-50%, -50%); border-radius: 50%;
+      cursor: pointer; touch-action: manipulation; background: transparent;
+    }
+    #maya-hitbox.hidden { pointer-events: none; display: none; }
+    #maya-hitbox .tap-hint {
+      position: absolute; bottom: -14px; left: 50%; transform: translateX(-50%);
+      background: rgba(15, 23, 38, 0.94); color: #34d399; border: 1px solid rgba(16,185,129,0.5);
+      font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 6px; white-space: nowrap;
+      opacity: 0; transition: opacity 0.25s ease; pointer-events: none;
+    }
+    #maya-hitbox:hover .tap-hint, #maya-hitbox.show-hint .tap-hint { opacity: 1; }
+
     .maya-highlight-ring {
       position: relative !important;
-      box-shadow: 0 0 0 3px #10b981, 0 0 22px rgba(16, 185, 129, 0.85) !important;
+      box-shadow: 0 0 0 3px #10b981, 0 0 24px rgba(16, 185, 129, 0.9) !important;
       border-radius: 10px !important;
       z-index: 82 !important;
       transition: box-shadow 0.3s ease;
     }
 
-    /* DRAMATIC CLOSE-UP STAGE */
-    #maya-stage {
-      position: fixed; inset: 0; z-index: 90;
-      display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
-      background: radial-gradient(circle at 50% 35%, rgba(16, 185, 129, 0.16), rgba(4, 7, 13, 0.88) 72%);
-      opacity: 0; pointer-events: none; transform: scale(0.86) translateY(30px);
-      transition: opacity 0.55s ease, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
-      padding: calc(16px + env(safe-area-inset-top, 0px)) 14px calc(16px + env(safe-area-inset-bottom, 0px));
+    #maya-stage-ui {
+      position: fixed; inset: 0; z-index: 90; pointer-events: none;
+      display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+      opacity: 0; transform: translateY(18px);
+      transition: opacity 0.45s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      padding: calc(14px + env(safe-area-inset-top, 0px)) 14px calc(16px + env(safe-area-inset-bottom, 0px));
     }
-    #maya-stage.open { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); }
+    #maya-stage-ui.open { opacity: 1; transform: translateY(0); }
+    #maya-stage-ui.open .maya-top-bar, #maya-stage-ui.open .maya-chat-card { pointer-events: auto; }
 
-    .maya-portrait-wrap {
-      width: 100%; max-width: 440px; flex: 1; min-height: 180px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative;
-    }
-    .maya-portrait-svg {
-      width: 210px; height: 240px;
-      filter: drop-shadow(0 16px 32px rgba(0,0,0,0.6));
-      animation: mayaBreathe 3.2s infinite ease-in-out;
-    }
-    .maya-portrait-svg.speaking { animation: mayaSpeakBob 0.35s infinite alternate ease-in-out; }
-    @keyframes mayaBreathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-    @keyframes mayaSpeakBob { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-3px) scale(1.015); } }
-
-    .maya-top-controls {
-      position: absolute; top: 4px; right: 4px; display: flex; gap: 6px;
-    }
+    .maya-top-bar { width: 100%; max-width: 440px; display: flex; justify-content: flex-end; gap: 6px; }
     .maya-pill-btn {
-      background: rgba(15, 23, 38, 0.9); color: #f1f5f9; border: 1px solid #2b3f63;
+      background: rgba(15, 23, 38, 0.92); color: #f1f5f9; border: 1px solid #2b3f63;
       border-radius: 999px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer;
     }
-    .maya-pill-btn.accent { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #34d399; }
+    .maya-pill-btn.accent { background: rgba(16, 185, 129, 0.22); border-color: #10b981; color: #34d399; }
 
-    /* CHAT PANEL (CLOSE-UP + MINI DOCK FOR WALKTHROUGH) */
     .maya-chat-card {
-      width: 100%; max-width: 440px; background: rgba(15, 23, 38, 0.96);
-      border: 1px solid #2b3f63; border-radius: 18px; padding: 12px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.55); display: flex; flex-direction: column; gap: 8px;
+      width: 100%; max-width: 440px; background: rgba(15, 23, 38, 0.94);
+      backdrop-filter: blur(10px); border: 1px solid #2b3f63; border-radius: 18px; padding: 12px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 8px;
     }
-    .maya-chat-log {
-      max-height: 175px; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; padding-right: 2px;
-    }
+    .maya-chat-log { max-height: 155px; overflow-y: auto; display: flex; flex-direction: column; gap: 7px; padding-right: 2px; }
     .maya-msg { max-width: 88%; padding: 8px 11px; border-radius: 12px; font-size: 12px; line-height: 1.4; }
     .maya-msg.bot { align-self: flex-start; background: #131d31; border: 1px solid #1e2d47; color: #f1f5f9; }
     .maya-msg.user { align-self: flex-end; background: #10b981; color: #04130d; font-weight: 700; }
@@ -120,7 +110,6 @@
     }
     .maya-mic-btn.listening { background: #ef4444; border-color: #f87171; animation: pulse 1s infinite; }
 
-    /* FLOATING WALKTHROUGH CAPTION BAR */
     #maya-walk-dock {
       position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
       transform: translateX(-50%); width: calc(100% - 24px); max-width: 450px;
@@ -134,110 +123,21 @@
   `;
   document.head.appendChild(style);
 
-  // --- 2. SVG ARTWORK (BIRD'S-EYE WALKER & CLOSE-UP PORTRAIT) ---
-  const BIRDS_EYE_SVG = `
-    <div class="walker-inner">
-      <svg viewBox="0 0 64 64" width="46" height="46" fill="none">
-        <!-- Shoulders / Professional Blazer (Bird's Eye) -->
-        <ellipse cx="32" cy="34" rx="17" ry="11" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
-        <!-- White Blouse V-Collar -->
-        <path d="M26 26 L32 34 L38 26" fill="#f8fafc"/>
-        <!-- Clipboard Held in Right Hand -->
-        <rect x="40" y="13" width="12" height="16" rx="2" fill="#b45309" stroke="#f59e0b" stroke-width="1"/>
-        <rect x="42" y="16" width="8" height="11" rx="1" fill="#f8fafc"/>
-        <line x1="43.5" y1="19" x2="48.5" y2="19" stroke="#10b981" stroke-width="1.3"/>
-        <line x1="43.5" y1="22" x2="48.5" y2="22" stroke="#64748b" stroke-width="1"/>
-        <line x1="43.5" y1="25" x2="47" y2="25" stroke="#10b981" stroke-width="1.3"/>
-        <!-- Brown Skin Hands -->
-        <circle cx="41" cy="24" r="3.2" fill="#8d5524"/>
-        <circle cx="20" cy="28" r="3.2" fill="#8d5524"/>
-        <!-- Head (Top-Down) -->
-        <circle cx="32" cy="31" r="10.5" fill="#8d5524"/>
-        <!-- Natural Afro Hair + High Pulled-Back Bun -->
-        <path d="M22 30 C21 20, 43 20, 42 30 C42 38, 22 38, 22 30 Z" fill="#1c1410"/>
-        <circle cx="32" cy="39" r="7" fill="#1c1410" stroke="#3b2820" stroke-width="1"/>
-        <ellipse cx="32" cy="35" rx="6.5" ry="2" fill="#10b981"/>
-        <!-- Glasses Frame Peeking Front -->
-        <rect x="24.5" y="21" width="6.5" height="3.2" rx="1.2" fill="rgba(56,189,248,0.35)" stroke="#f59e0b" stroke-width="1.1"/>
-        <rect x="33" y="21" width="6.5" height="3.2" rx="1.2" fill="rgba(56,189,248,0.35)" stroke="#f59e0b" stroke-width="1.1"/>
-      </svg>
-    </div>
-    <span class="tap-hint">2× Tap Maya</span>
-  `;
+  // --- 2. DOM ELEMENTS ---
+  const canvas = document.createElement('canvas');
+  canvas.id = 'maya-3d-canvas';
+  document.body.appendChild(canvas);
 
-  const PORTRAIT_SVG = `
-    <svg id="maya-portrait-svg" class="maya-portrait-svg" viewBox="0 0 220 250" fill="none">
-      <!-- Natural Afro Bun -->
-      <circle cx="110" cy="36" r="28" fill="#1c1410"/>
-      <circle cx="98" cy="26" r="10" fill="#261b16"/>
-      <circle cx="122" cy="28" r="11" fill="#261b16"/>
-      <!-- Emerald Hair Tie -->
-      <path d="M88 55 Q110 47 132 55" stroke="#10b981" stroke-width="5" stroke-linecap="round"/>
-      <!-- Main Hairline -->
-      <ellipse cx="110" cy="82" rx="44" ry="38" fill="#1c1410"/>
-      <!-- Neck -->
-      <rect x="97" y="122" width="26" height="26" rx="8" fill="#7c471c"/>
-      <!-- Face (Warm Brown Skin) -->
-      <ellipse cx="110" cy="95" rx="35" ry="40" fill="#8d5524"/>
-      <!-- Soft Cheek Highlights -->
-      <ellipse cx="88" cy="105" rx="6" ry="3.5" fill="#a86534" opacity="0.5"/>
-      <ellipse cx="132" cy="105" rx="6" ry="3.5" fill="#a86534" opacity="0.5"/>
-      <!-- Gold Hoop Earrings -->
-      <circle cx="74" cy="104" r="5" stroke="#f59e0b" stroke-width="2" fill="none"/>
-      <circle cx="146" cy="104" r="5" stroke="#f59e0b" stroke-width="2" fill="none"/>
-      <!-- Eyebrows -->
-      <path d="M85 83 Q95 79 103 83" stroke="#1c1410" stroke-width="2.5" stroke-linecap="round"/>
-      <path d="M117 83 Q125 79 135 83" stroke="#1c1410" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- Eyes -->
-      <ellipse cx="95" cy="93" rx="5.5" ry="4" fill="#ffffff"/>
-      <circle cx="95" cy="93" r="2.6" fill="#1c1410"/>
-      <circle cx="96" cy="92" r="0.9" fill="#ffffff"/>
-      <ellipse cx="125" cy="93" rx="5.5" ry="4" fill="#ffffff"/>
-      <circle cx="125" cy="93" r="2.6" fill="#1c1410"/>
-      <circle cx="126" cy="92" r="0.9" fill="#ffffff"/>
-      <!-- Stylish Gold-Rimmed Glasses -->
-      <rect x="81" y="85" width="26" height="17" rx="6" fill="rgba(56,189,248,0.12)" stroke="#f59e0b" stroke-width="2.2"/>
-      <rect x="113" y="85" width="26" height="17" rx="6" fill="rgba(56,189,248,0.12)" stroke="#f59e0b" stroke-width="2.2"/>
-      <line x1="107" y1="93" x2="113" y2="93" stroke="#f59e0b" stroke-width="2.2"/>
-      <!-- Nose & Warm Smile -->
-      <path d="M108 103 Q110 107 113 103" stroke="#633614" stroke-width="2" stroke-linecap="round"/>
-      <path d="M98 114 Q110 124 122 114" stroke="#3b1912" stroke-width="2.6" stroke-linecap="round" fill="none"/>
-      <path d="M101 115 Q110 120 119 115" fill="#ffffff"/>
-      <!-- Professional Tailored Blazer & Crisp Blouse -->
-      <path d="M52 242 C54 176, 72 146, 97 144 L110 176 L123 144 C148 146, 166 176, 168 242 Z" fill="#0f172a" stroke="#38bdf8" stroke-width="1.8"/>
-      <path d="M97 144 L110 184 L123 144 Z" fill="#f8fafc"/>
-      <!-- Blazer Lapels -->
-      <path d="M97 144 L86 168 L110 184" fill="#1e293b"/>
-      <path d="M123 144 L134 168 L110 184" fill="#1e293b"/>
-      <!-- Gold Necklace -->
-      <path d="M100 148 Q110 158 120 148" stroke="#f59e0b" stroke-width="1.8" fill="none"/>
-      <!-- Clipboard Held Professionally -->
-      <rect x="134" y="176" width="52" height="64" rx="6" fill="#b45309" stroke="#f59e0b" stroke-width="2"/>
-      <rect x="148" y="171" width="24" height="9" rx="3" fill="#94a3b8"/>
-      <rect x="140" y="185" width="40" height="48" rx="3" fill="#f8fafc"/>
-      <line x1="146" y1="196" x2="174" y2="196" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="146" y1="206" x2="170" y2="206" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
-      <line x1="146" y1="216" x2="174" y2="216" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="146" y1="225" x2="165" y2="225" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
-      <!-- Hand Holding Clipboard -->
-      <ellipse cx="136" cy="212" rx="10" ry="8" fill="#8d5524"/>
-    </svg>
-  `;
+  const hitbox = document.createElement('div');
+  hitbox.id = 'maya-hitbox';
+  hitbox.innerHTML = `<span class="tap-hint">2× Tap Maya</span>`;
+  document.body.appendChild(hitbox);
 
-  // --- 3. CREATE DOM ELEMENTS ---
-  const walker = document.createElement('div');
-  walker.id = 'maya-walker';
-  walker.innerHTML = BIRDS_EYE_SVG;
-  document.body.appendChild(walker);
-
-  const stage = document.createElement('div');
-  stage.id = 'maya-stage';
-  stage.innerHTML = `
-    <div class="maya-portrait-wrap">
-      <div class="maya-top-controls">
-        <button class="maya-pill-btn accent" id="maya-done-btn">Back to Inventory</button>
-      </div>
-      ${PORTRAIT_SVG}
+  const stageUI = document.createElement('div');
+  stageUI.id = 'maya-stage-ui';
+  stageUI.innerHTML = `
+    <div class="maya-top-bar">
+      <button class="maya-pill-btn accent" id="maya-done-btn">Back to Inventory</button>
     </div>
     <div class="maya-chat-card">
       <div class="maya-quick-row">
@@ -255,7 +155,7 @@
       </div>
     </div>
   `;
-  document.body.appendChild(stage);
+  document.body.appendChild(stageUI);
 
   const walkDock = document.createElement('div');
   walkDock.id = 'maya-walk-dock';
@@ -268,45 +168,316 @@
   `;
   document.body.appendChild(walkDock);
 
-  // --- 4. BIRD'S-EYE BORDER PATROL ---
-  function getAppBounds() {
+  // --- 3. THREE.JS SCENE & 3-POINT STUDIO LIGHTING ---
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  const scene = new THREE.Scene();
+  const OVERHEAD_Y = 12.5;
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, OVERHEAD_Y, 0.05);
+  const camTarget = new THREE.Vector3(0, 0, 0);
+  const desiredCamPos = new THREE.Vector3(0, OVERHEAD_Y, 0.05);
+  const desiredCamTarget = new THREE.Vector3(0, 0, 0);
+
+  // Soft studio lighting
+  scene.add(new THREE.HemisphereLight(0xf8fafc, 0x1e293b, 1.35));
+  const keyLight = new THREE.DirectionalLight(0xfff7ed, 1.45);
+  keyLight.position.set(4, 10, 6);
+  scene.add(keyLight);
+  const rimLight = new THREE.DirectionalLight(0x34d399, 0.75);
+  rimLight.position.set(-5, 6, -4);
+  scene.add(rimLight);
+
+  // --- 4. BUILD ARTICULATED 3D MAYA RIG ---
+  function buildProceduralMaya() {
+    const root = new THREE.Group();
+    const skinMat = new THREE.MeshStandardMaterial({ color: 0x8d5524, roughness: 0.45, metalness: 0.05 });
+    const hairMat = new THREE.MeshStandardMaterial({ color: 0x1b120e, roughness: 0.92 });
+    const blazerMat = new THREE.MeshStandardMaterial({ color: 0x162447, roughness: 0.58 });
+    const blouseMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.45 });
+    const goldMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.25, metalness: 0.85 });
+    const emeraldMat = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.35 });
+    const shoeMat = new THREE.MeshStandardMaterial({ color: 0x3f2e26, roughness: 0.4 });
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.65 });
+    const lipMat = new THREE.MeshStandardMaterial({ color: 0x6b2d26, roughness: 0.35 });
+
+    // Soft ground shadow disc
+    const shadowDisc = new THREE.Mesh(
+      new THREE.CircleGeometry(0.36, 24),
+      new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.32 })
+    );
+    shadowDisc.rotation.x = -Math.PI / 2;
+    shadowDisc.position.y = 0.01;
+    root.add(shadowDisc);
+
+    const hips = new THREE.Group();
+    hips.position.y = 0.88;
+    root.add(hips);
+
+    // Pelvis / Skirt-Trouser base
+    const pelvis = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.17, 0.18, 16), blazerMat);
+    hips.add(pelvis);
+
+    // Torso
+    const torso = new THREE.Group();
+    torso.position.y = 0.08;
+    hips.add(torso);
+
+    const chest = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.14, 0.44, 18), blazerMat);
+    chest.position.y = 0.24;
+    chest.scale.set(1.18, 1, 0.72);
+    torso.add(chest);
+
+    // Crisp white blouse V-front
+    const blouse = new THREE.Mesh(new THREE.ConeGeometry(0.105, 0.28, 12), blouseMat);
+    blouse.rotation.x = Math.PI;
+    blouse.position.set(0, 0.31, 0.095);
+    blouse.scale.set(1, 1, 0.35);
+    torso.add(blouse);
+
+    // Neck & Gold Necklace
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 0.12, 12), skinMat);
+    neck.position.y = 0.49;
+    torso.add(neck);
+
+    const necklace = new THREE.Mesh(new THREE.TorusGeometry(0.068, 0.008, 8, 20), goldMat);
+    necklace.rotation.x = Math.PI / 2 + 0.25;
+    necklace.position.set(0, 0.45, 0.02);
+    torso.add(necklace);
+
+    // Head Group
+    const head = new THREE.Group();
+    head.position.y = 0.65;
+    torso.add(head);
+
+    const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.165, 24, 24), skinMat);
+    cranium.scale.set(0.94, 1.08, 0.96);
+    head.add(cranium);
+
+    // Natural Afro Hairline + High Pulled-Back Bun
+    const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.172, 20, 20, 0, Math.PI * 2, 0, Math.PI * 0.62), hairMat);
+    hairCap.position.set(0, 0.02, -0.015);
+    hairCap.rotation.x = -0.22;
+    head.add(hairCap);
+
+    const bunGroup = new THREE.Group();
+    bunGroup.position.set(0, 0.21, -0.05);
+    const bunMain = new THREE.Mesh(new THREE.SphereGeometry(0.125, 18, 18), hairMat);
+    bunGroup.add(bunMain);
+    [[0.06, 0.05, 0.04], [-0.06, 0.04, 0.03], [0, 0.08, -0.02], [0.05, -0.02, -0.05], [-0.05, 0.02, -0.05]].forEach(([x, y, z]) => {
+      const puff = new THREE.Mesh(new THREE.SphereGeometry(0.068, 12, 12), hairMat);
+      puff.position.set(x, y, z);
+      bunGroup.add(puff);
+    });
+    head.add(bunGroup);
+
+    const hairTie = new THREE.Mesh(new THREE.TorusGeometry(0.088, 0.014, 8, 20), emeraldMat);
+    hairTie.rotation.x = Math.PI / 2 - 0.15;
+    hairTie.position.set(0, 0.145, -0.035);
+    head.add(hairTie);
+
+    // Gold Hoop Earrings
+    [-1, 1].forEach(side => {
+      const hoop = new THREE.Mesh(new THREE.TorusGeometry(0.024, 0.004, 8, 16), goldMat);
+      hoop.rotation.y = Math.PI / 2;
+      hoop.position.set(side * 0.16, -0.03, 0);
+      head.add(hoop);
+    });
+
+    // Eyes + Blinking Eyelids
+    const whiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2 });
+    const pupilMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1 });
+    const eyelids = [];
+    [-1, 1].forEach(side => {
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.024, 12, 12), whiteMat);
+      eye.position.set(side * 0.055, 0.02, 0.14);
+      head.add(eye);
+      const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.013, 10, 10), pupilMat);
+      pupil.position.set(side * 0.055, 0.02, 0.158);
+      head.add(pupil);
+      const lid = new THREE.Mesh(new THREE.SphereGeometry(0.026, 12, 12), skinMat);
+      lid.position.set(side * 0.055, 0.038, 0.142);
+      lid.scale.set(1.05, 0.15, 1.05);
+      head.add(lid);
+      eyelids.push(lid);
+
+      // Eyebrow
+      const brow = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.009, 0.01), hairMat);
+      brow.position.set(side * 0.055, 0.06, 0.146);
+      brow.rotation.z = side * -0.08;
+      head.add(brow);
+    });
+
+    // Thin Gold-Rimmed Glasses
+    const lensMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.16, roughness: 0.1, metalness: 0.2 });
+    [-1, 1].forEach(side => {
+      const frame = new THREE.Mesh(new THREE.TorusGeometry(0.044, 0.0045, 8, 20), goldMat);
+      frame.position.set(side * 0.056, 0.02, 0.166);
+      head.add(frame);
+      const lens = new THREE.Mesh(new THREE.CircleGeometry(0.042, 18), lensMat);
+      lens.position.set(side * 0.056, 0.02, 0.165);
+      head.add(lens);
+    });
+    const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.032, 0.005, 0.005), goldMat);
+    bridge.position.set(0, 0.028, 0.166);
+    head.add(bridge);
+
+    // Nose & Animated Mouth (Lip-Sync Target)
+    const nose = new THREE.Mesh(new THREE.SphereGeometry(0.018, 10, 10), skinMat);
+    nose.position.set(0, -0.018, 0.16);
+    nose.scale.set(0.9, 1.1, 0.8);
+    head.add(nose);
+
+    const mouth = new THREE.Mesh(new THREE.SphereGeometry(0.032, 14, 10), lipMat);
+    mouth.position.set(0, -0.072, 0.148);
+    mouth.scale.set(1.25, 0.28, 0.5);
+    head.add(mouth);
+
+    // Arms + Clipboard (Left) + Pen (Right)
+    function buildArm(side) {
+      const shoulder = new THREE.Group();
+      shoulder.position.set(side * 0.23, 0.41, 0);
+      torso.add(shoulder);
+
+      const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.044, 0.28, 12), blazerMat);
+      upper.position.y = -0.14;
+      shoulder.add(upper);
+
+      const elbow = new THREE.Group();
+      elbow.position.y = -0.28;
+      shoulder.add(elbow);
+
+      const lower = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.034, 0.24, 12), blazerMat);
+      lower.position.y = -0.12;
+      elbow.add(lower);
+
+      const hand = new THREE.Mesh(new THREE.SphereGeometry(0.04, 12, 12), skinMat);
+      hand.position.y = -0.25;
+      elbow.add(hand);
+
+      return { shoulder, elbow, hand };
+    }
+
+    const leftArm = buildArm(-1);
+    const rightArm = buildArm(1);
+
+    // Wooden Clipboard in Left Hand
+    const clipboard = new THREE.Group();
+    clipboard.position.set(0.04, -0.24, 0.08);
+    clipboard.rotation.set(-0.85, 0.3, 0.15);
+    const board = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.29, 0.016), woodMat);
+    clipboard.add(board);
+    const paper = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.24, 0.018), blouseMat);
+    paper.position.z = 0.003;
+    clipboard.add(paper);
+    const clip = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.03, 0.025), goldMat);
+    clip.position.set(0, 0.125, 0.008);
+    clipboard.add(clip);
+    leftArm.elbow.add(clipboard);
+
+    // Gold Pen in Right Hand
+    const pen = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.005, 0.16, 8), goldMat);
+    pen.rotation.x = Math.PI / 2;
+    pen.position.set(0, -0.25, 0.06);
+    rightArm.elbow.add(pen);
+
+    // Legs
+    function buildLeg(side) {
+      const hip = new THREE.Group();
+      hip.position.set(side * 0.09, -0.06, 0);
+      hips.add(hip);
+
+      const thigh = new THREE.Mesh(new THREE.CylinderGeometry(0.068, 0.052, 0.42, 12), blazerMat);
+      thigh.position.y = -0.21;
+      hip.add(thigh);
+
+      const knee = new THREE.Group();
+      knee.position.y = -0.42;
+      hip.add(knee);
+
+      const shin = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.036, 0.38, 12), blazerMat);
+      shin.position.y = -0.19;
+      knee.add(shin);
+
+      const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.055, 0.16), shoeMat);
+      shoe.position.set(0, -0.39, 0.035);
+      knee.add(shoe);
+
+      return { hip, knee };
+    }
+
+    const leftLeg = buildLeg(-1);
+    const rightLeg = buildLeg(1);
+
+    return { root, hips, torso, head, eyelids, mouth, leftArm, rightArm, leftLeg, rightLeg };
+  }
+
+  const rig = buildProceduralMaya();
+  scene.add(rig.root);
+
+  // Optional upgrade: if user uploads a rigged ./maya.glb later, swap it in cleanly
+  let customGlb = null, customMixer = null, customMorphMeshes = [];
+  try {
+    const loader = new GLTFLoader();
+    loader.load('./maya.glb', (gltf) => {
+      customGlb = gltf.scene;
+      const box = new THREE.Box3().setFromObject(customGlb);
+      const h = box.getSize(new THREE.Vector3()).y || 1.7;
+      customGlb.scale.setScalar(1.75 / h);
+      customGlb.traverse(o => {
+        if (o.isMesh && o.morphTargetDictionary) customMorphMeshes.push(o);
+      });
+      if (gltf.animations && gltf.animations.length) {
+        customMixer = new THREE.AnimationMixer(customGlb);
+        customMixer.clipAction(gltf.animations[0]).play();
+      }
+      rig.root.clear();
+      rig.root.add(customGlb);
+    }, undefined, () => {});
+  } catch {}
+
+  // --- 5. COORDINATE HELPERS (2D SCREEN PIXELS <-> 3D WORLD) ---
+  function screenToWorld(px, py) {
+    const vFov = (camera.fov * Math.PI) / 180;
+    const visH = 2 * OVERHEAD_Y * Math.tan(vFov / 2);
+    const visW = visH * camera.aspect;
+    const nx = (px / window.innerWidth) * 2 - 1;
+    const ny = (py / window.innerHeight) * 2 - 1;
+    return new THREE.Vector3(nx * (visW / 2), 0, ny * (visH / 2));
+  }
+
+  function getBorderWaypoints() {
     const appEl = document.getElementById('app');
-    const r = appEl ? appEl.getBoundingClientRect() : { left: 0, right: window.innerWidth, width: window.innerWidth };
-    return { left: Math.max(4, r.left + 4), right: Math.min(window.innerWidth - 50, r.right - 50), top: 72, bottom: window.innerHeight - 64 };
-  }
-
-  function movePatrol() {
-    if (state !== 'patrol') return;
-    const b = getAppBounds();
-    const waypoints = [
-      { x: b.right, y: b.top + 40, rot: 180, check: false },
-      { x: b.right, y: b.bottom - 140, rot: 180, check: true },
-      { x: b.right, y: b.bottom, rot: 270, check: false },
-      { x: b.left, y: b.bottom, rot: 0, check: true },
-      { x: b.left, y: b.top + 120, rot: 0, check: false },
-      { x: b.left, y: b.top + 20, rot: 90, check: true }
+    const r = appEl ? appEl.getBoundingClientRect() : { left: 0, right: window.innerWidth };
+    const leftX = Math.max(26, r.left + 26);
+    const rightX = Math.min(window.innerWidth - 26, r.right - 26);
+    const topY = 92;
+    const botY = window.innerHeight - 54;
+    return [
+      { pos: screenToWorld(rightX, topY + 30), pause: false },
+      { pos: screenToWorld(rightX, botY - 120), pause: true },
+      { pos: screenToWorld(rightX, botY), pause: false },
+      { pos: screenToWorld(leftX, botY), pause: true },
+      { pos: screenToWorld(leftX, topY + 120), pause: false },
+      { pos: screenToWorld(leftX, topY + 20), pause: true }
     ];
-    const wp = waypoints[patrolStep % waypoints.length];
-    walker.style.left = `${wp.x}px`;
-    walker.style.top = `${wp.y}px`;
-    walker.style.transform = `rotate(${wp.rot}deg)`;
-    walker.classList.toggle('checking', wp.check);
-    patrolStep++;
   }
 
-  function startPatrol() {
-    state = 'patrol';
-    clearHighlight();
-    walkDock.classList.remove('open');
-    stage.classList.remove('open');
-    document.body.classList.remove('maya-swoop-in');
-    walker.classList.remove('hidden');
-    movePatrol();
-    if (patrolTimer) clearInterval(patrolTimer);
-    patrolTimer = setInterval(movePatrol, 3400);
-  }
+  // Movement state
+  let waypoints = getBorderWaypoints();
+  let wpIdx = 0;
+  let targetPos = waypoints[0].pos.clone();
+  rig.root.position.copy(waypoints[0].pos);
+  let pauseTimer = 0;
+  let isWalking = false;
+  let isPointing = false;
+  let walkCycle = 0;
+  let blinkTimer = 2.8;
 
-  // --- 5. VOICE (SPEECH SYNTHESIS + RECOGNITION) ---
+  // --- 6. VOICE (SPEECH SYNTHESIS + MICROPHONE) ---
   function speak(text) {
     if (!('speechSynthesis' in window)) return;
     try {
@@ -317,9 +488,10 @@
       if (pref) u.voice = pref;
       u.rate = 1.03;
       u.pitch = 1.08;
-      const svg = document.getElementById('maya-portrait-svg');
-      u.onstart = () => svg && svg.classList.add('speaking');
-      u.onend = () => svg && svg.classList.remove('speaking');
+      u.onstart = () => { isSpeaking = true; };
+      u.onboundary = () => { speechPulse = 1.0; };
+      u.onend = () => { isSpeaking = false; speechPulse = 0; };
+      u.onerror = () => { isSpeaking = false; speechPulse = 0; };
       window.speechSynthesis.speak(u);
     } catch {}
   }
@@ -331,10 +503,7 @@
       return;
     }
     const micBtn = document.getElementById('maya-mic');
-    if (isListening && recognition) {
-      recognition.stop();
-      return;
-    }
+    if (isListening && recognition) { recognition.stop(); return; }
     recognition = new SpeechRec();
     recognition.lang = 'en-US';
     recognition.interimResults = false;
@@ -347,56 +516,63 @@
     recognition.start();
   }
 
-  // --- 6. CHAT & DRAMATIC SWOOP-IN ---
-  function addMessage(role, text, shouldSpeak = false) {
-    chatHistory.push({ role, text });
-    const log = document.getElementById('maya-chat-log');
-    if (log) {
-      log.innerHTML = chatHistory.map(m => `<div class="maya-msg ${m.role}">${m.text}</div>`).join('');
-      log.scrollTop = log.scrollHeight;
-    }
-    if (shouldSpeak && role === 'bot') speak(text);
+  // --- 7. CAMERA MODES & WALKTHROUGHS ---
+  function clearHighlight() {
+    if (highlightedEl) { highlightedEl.classList.remove('maya-highlight-ring'); highlightedEl = null; }
+  }
+
+  function startPatrol() {
+    mode = 'patrol';
+    isPointing = false;
+    clearHighlight();
+    walkDock.classList.remove('open');
+    stageUI.classList.remove('open');
+    document.body.classList.remove('maya-3d-focus');
+    hitbox.classList.remove('hidden');
+    desiredCamPos.set(0, OVERHEAD_Y, 0.05);
+    desiredCamTarget.set(0, 0, 0);
+    waypoints = getBorderWaypoints();
+    targetPos.copy(waypoints[wpIdx % waypoints.length].pos);
   }
 
   function openCloseup() {
-    state = 'closeup';
-    if (patrolTimer) clearInterval(patrolTimer);
+    mode = 'closeup';
+    isPointing = false;
     clearHighlight();
     walkDock.classList.remove('open');
-    walker.classList.add('hidden');
-    document.body.classList.add('maya-swoop-in');
-    stage.classList.add('open');
+    hitbox.classList.add('hidden');
+    document.body.classList.add('maya-3d-focus');
+    stageUI.classList.add('open');
+
+    // Swoop 3D camera dramatically down to waist-up portrait framing above chat box
+    const mx = rig.root.position.x, mz = rig.root.position.z;
+    desiredCamPos.set(mx, 1.48, mz + 2.65);
+    desiredCamTarget.set(mx, 0.92, mz);
 
     if (!hasIntroduced) {
       hasIntroduced = true;
       localStorage.setItem(STORAGE_INTRO_KEY, '1');
       waitingForName = !userName;
       const intro = userName
-        ? `Hi ${userName}! I'm ${AGENT_NAME}, your AlignIQ assistant. I keep an eye on your dashboard inventory and can walk you right to any feature. How can I help you today?`
-        : `Hi! I'm ${AGENT_NAME}, your personal AlignIQ assistant. I patrol your dashboard doing inventory, and I can walk you right through any feature. What's your name?`;
+        ? `Hi ${userName}! I'm ${AGENT_NAME}, your 3D AlignIQ assistant. I patrol your dashboard doing inventory and can walk right over to any feature. How can I help you today?`
+        : `Hi! I'm ${AGENT_NAME}, your personal AlignIQ assistant. I patrol your dashboard doing inventory and can walk you through any feature. What's your name?`;
       addMessage('bot', intro, true);
     } else if (chatHistory.length === 0) {
-      const greet = userName
-        ? `Hey ${userName}! Good to see you. How can I help you today?`
-        : `Hey there! How can I help you with AlignIQ today?`;
-      addMessage('bot', greet, true);
+      addMessage('bot', userName ? `Hey ${userName}! Good to see you. How can I help you today?` : `Hey there! How can I help you with AlignIQ today?`, true);
     } else {
-      const greet = userName ? `I'm right here, ${userName}. What do you need?` : `I'm right here. How can I help?`;
-      addMessage('bot', greet, true);
+      addMessage('bot', userName ? `I'm right here, ${userName}. What do you need?` : `I'm right here. How can I help?`, true);
     }
   }
 
-  // --- 7. VISUAL WALKTHROUGH (SWOOP OUT, WALK TO FEATURE, TAP & EXPLAIN) ---
-  let highlightedEl = null;
-  function clearHighlight() {
-    if (highlightedEl) { highlightedEl.classList.remove('maya-highlight-ring'); highlightedEl = null; }
-  }
-
   function runVisualWalkthrough(selector, replyText, actionFn) {
-    state = 'walkthrough';
-    stage.classList.remove('open');
-    document.body.classList.remove('maya-swoop-in');
-    walker.classList.remove('hidden');
+    mode = 'walkthrough';
+    stageUI.classList.remove('open');
+    document.body.classList.remove('maya-3d-focus');
+    hitbox.classList.remove('hidden');
+
+    // Swoop camera back out to bird's-eye dashboard view
+    desiredCamPos.set(0, OVERHEAD_Y, 0.05);
+    desiredCamTarget.set(0, 0, 0);
 
     addMessage('bot', replyText, true);
     document.getElementById('maya-walk-text').textContent = `${AGENT_NAME}: ${replyText}`;
@@ -410,16 +586,26 @@
         highlightedEl = target;
         target.classList.add('maya-highlight-ring');
         const r = target.getBoundingClientRect();
-        const wx = Math.max(6, Math.min(window.innerWidth - 52, r.right - 22));
-        const wy = Math.max(54, Math.min(window.innerHeight - 130, r.top - 10));
-        walker.style.left = `${wx}px`;
-        walker.style.top = `${wy}px`;
-        walker.style.transform = 'rotate(0deg) scale(1.15)';
+        const px = Math.max(30, Math.min(window.innerWidth - 30, r.right - 10));
+        const py = Math.max(70, Math.min(window.innerHeight - 140, r.bottom + 10));
+        targetPos.copy(screenToWorld(px, py));
+        isPointing = true;
       }
       if (typeof actionFn === 'function') {
-        setTimeout(() => { try { actionFn(); } catch {} }, 850);
+        setTimeout(() => { try { actionFn(); } catch {} }, 1100);
       }
     }, 550);
+  }
+
+  // --- 8. CHAT LOGIC ---
+  function addMessage(role, text, shouldSpeak = false) {
+    chatHistory.push({ role, text });
+    const log = document.getElementById('maya-chat-log');
+    if (log) {
+      log.innerHTML = chatHistory.map(m => `<div class="maya-msg ${m.role}">${m.text}</div>`).join('');
+      log.scrollTop = log.scrollHeight;
+    }
+    if (shouldSpeak && role === 'bot') speak(text);
   }
 
   function handleUserInput(rawText) {
@@ -433,81 +619,217 @@
         userName = cleanName;
         localStorage.setItem(STORAGE_NAME_KEY, userName);
         waitingForName = false;
-        addMessage('bot', `Nice to meet you, ${userName}! You can ask me about CONF percentages, +EV, weight cuts, or tell me to show you any feature on the screen.`, true);
+        addMessage('bot', `Nice to meet you, ${userName}! Ask me about CONF percentages, +EV, weight cuts, or tell me to show you any feature on the screen.`, true);
         return;
       }
     }
 
     const q = text.toLowerCase();
     if (/done|bye|thank|back to inventory|resume|close/.test(q)) {
-      const bye = userName ? `You got it, ${userName}! I'll head back to my inventory patrol. Double-tap me anytime.` : `You got it! Heading back to my inventory patrol. Double-tap me anytime.`;
-      addMessage('bot', bye, true);
+      addMessage('bot', userName ? `You got it, ${userName}! Heading back to my inventory patrol. Double-tap me anytime.` : `You got it! Heading back to my inventory patrol.`, true);
       setTimeout(startPatrol, 1600);
       return;
     }
-
     if (/agent|weight|api key|credit|slider/.test(q)) {
-      runVisualWalkthrough('button[onclick*="toggleTuner"]', 'Let me walk you over to the AI Agent panel. Here you can see your 60-day verified win rate, adjust pillar weights, and save your private Odds API key.', () => {
+      runVisualWalkthrough('button[onclick*="toggleTuner"]', 'Follow me to the AI Agent panel. Here you can view your 60-day verified record, adjust pillar weights, and save your private Odds API key.', () => {
         const panel = document.getElementById('tuner-panel');
         if (panel && !panel.classList.contains('open') && typeof toggleTuner === 'function') toggleTuner();
       });
       return;
     }
-
     if (/theme|light|dark|setting/.test(q)) {
-      runVisualWalkthrough('button[onclick*="openSettingsModal"]', 'Right here is your Settings menu! I am opening it now so you can switch between Dark Mode and Light Mode anytime.', () => {
+      runVisualWalkthrough('button[onclick*="openSettingsModal"]', 'Walking over to your Settings menu now so you can switch between Dark Mode and Light Mode.', () => {
         if (typeof openSettingsModal === 'function') openSettingsModal('theme');
       });
       return;
     }
-
     if (/parlay|slip|calc|arb|ev/.test(q)) {
-      runVisualWalkthrough('button[onclick*="openToolsModal"]', 'Follow me to the Calculator and Parlay Slip button. I will open it so you can check your saved legs, split arbitrage bets, or calculate +EV.', () => {
+      runVisualWalkthrough('button[onclick*="openToolsModal"]', 'Right here is your Parlay Slip and Pro Calculator. Opening it so you can check saved legs, arbitrage splits, and +EV.', () => {
         if (typeof openToolsModal === 'function') openToolsModal('slip');
       });
       return;
     }
-
     if (/scan|custom|walkout/.test(q)) {
-      runVisualWalkthrough('button[onclick*="openScanModal"]', 'Here is the +Scan button. I am opening it now so you can run a custom 4-cipher Gematria scan on any fight or matchup.', () => {
+      runVisualWalkthrough('button[onclick*="openScanModal"]', 'Here is the +Scan button. Opening it so you can run a custom 4-cipher Gematria scan.', () => {
         if (typeof openScanModal === 'function') openScanModal();
       });
       return;
     }
-
     if (/odds|body|weak|fight|cut|health|game|decode|show/.test(q)) {
-      runVisualWalkthrough('.game-card', 'Let me walk over to the top game card and open it for you. Inside, you can check Best Odds, Player Props, the Body Weak-Point Map, and verified sources.', () => {
+      runVisualWalkthrough('.game-card', 'Walking over to the top game card and opening it so you can inspect Best Odds, Player Props, the Body Weak-Point Map, and verified sources.', () => {
         const firstCard = document.querySelector('.game-card');
         if (firstCard) firstCard.click();
       });
       return;
     }
-
     if (/date|math|numerology/.test(q)) {
-      runVisualWalkthrough('.date-math-bar', 'Here is your Date Math strip. I am tapping into it to show today’s full numerology breakdown.', () => {
+      runVisualWalkthrough('.date-math-bar', 'Here is your Date Math strip. Tapping into it to show today’s numerology breakdown.', () => {
         if (typeof openDateMathModal === 'function') openDateMathModal();
       });
       return;
     }
 
-    // Fallback to AlignIQ's built-in knowledge helper if available
     const ans = typeof getHelpAnswer === 'function'
       ? getHelpAnswer(text)
       : 'Ask me to show you the AI Agent, Settings, Parlay Slip, +Scan, or any Game Decode and I will walk right over to it!';
     addMessage('bot', ans, true);
   }
 
-  // --- 8. EVENT LISTENERS ---
-  walker.addEventListener('dblclick', (e) => { e.stopPropagation(); openCloseup(); });
-  walker.addEventListener('touchend', (e) => {
+  // --- 9. 60FPS ANIMATION LOOP (SKELETAL WALKING, SWOOP, LIP-SYNC, BLINK) ---
+  const clock = new THREE.Clock();
+  const projVec = new THREE.Vector3();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const dt = Math.min(clock.getDelta(), 0.05);
+    const t = clock.elapsedTime;
+
+    // 1) Smooth cinematic 3D camera swoop
+    camera.position.lerp(desiredCamPos, Math.min(1, dt * 4.5));
+    camTarget.lerp(desiredCamTarget, Math.min(1, dt * 5.0));
+    camera.lookAt(camTarget);
+
+    // 2) Navigation & Orientation
+    isWalking = false;
+    if (mode === 'patrol' || mode === 'walkthrough') {
+      const dx = targetPos.x - rig.root.position.x;
+      const dz = targetPos.z - rig.root.position.z;
+      const dist = Math.hypot(dx, dz);
+
+      if (dist > 0.08) {
+        isWalking = true;
+        const speed = mode === 'walkthrough' ? 3.8 : 1.55;
+        const step = Math.min(dist, speed * dt);
+        rig.root.position.x += (dx / dist) * step;
+        rig.root.position.z += (dz / dist) * step;
+
+        const targetAngle = Math.atan2(dx, dz);
+        let diff = targetAngle - rig.root.rotation.y;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        rig.root.rotation.y += diff * Math.min(1, dt * 8);
+      } else if (mode === 'patrol') {
+        if (pauseTimer <= 0) {
+          pauseTimer = waypoints[wpIdx % waypoints.length].pause ? 2.2 : 0.2;
+        } else {
+          pauseTimer -= dt;
+          if (pauseTimer <= 0) {
+            wpIdx = (wpIdx + 1) % waypoints.length;
+            targetPos.copy(waypoints[wpIdx].pos);
+          }
+        }
+      }
+    } else if (mode === 'closeup') {
+      // Smoothly turn Maya to face the camera directly
+      let diff = 0 - rig.root.rotation.y;
+      while (diff > Math.PI) diff -= Math.PI * 2;
+      while (diff < -Math.PI) diff += Math.PI * 2;
+      rig.root.rotation.y += diff * Math.min(1, dt * 7);
+    }
+
+    // 3) Skeletal Animation (Procedural Rig)
+    if (!customGlb) {
+      if (isWalking) {
+        walkCycle += dt * 8.5;
+        const swing = Math.sin(walkCycle);
+        rig.leftLeg.hip.rotation.x = swing * 0.55;
+        rig.rightLeg.hip.rotation.x = -swing * 0.55;
+        rig.leftLeg.knee.rotation.x = Math.max(0, -swing * 0.5);
+        rig.rightLeg.knee.rotation.x = Math.max(0, swing * 0.5);
+        rig.hips.position.y = 0.88 + Math.abs(Math.cos(walkCycle)) * 0.04;
+        rig.torso.rotation.y = swing * 0.08;
+        // Left arm cradles clipboard, right arm swings naturally
+        rig.leftArm.shoulder.rotation.x = -0.55;
+        rig.leftArm.elbow.rotation.x = -0.85;
+        rig.rightArm.shoulder.rotation.x = -swing * 0.35;
+        rig.rightArm.elbow.rotation.x = -0.35;
+        rig.head.rotation.x = 0.22; // glancing down at inventory path
+      } else {
+        // Idle / Clipboard Check / Closeup / Pointing
+        rig.leftLeg.hip.rotation.x *= 0.85;
+        rig.rightLeg.hip.rotation.x *= 0.85;
+        rig.leftLeg.knee.rotation.x *= 0.85;
+        rig.rightLeg.knee.rotation.x *= 0.85;
+        rig.hips.position.y = 0.88 + Math.sin(t * 2.2) * 0.012;
+        rig.torso.rotation.y *= 0.85;
+
+        // Left arm holds clipboard
+        rig.leftArm.shoulder.rotation.x = -0.5;
+        rig.leftArm.elbow.rotation.x = -0.95;
+
+        if (mode === 'walkthrough' && isPointing) {
+          // Raise right arm to point at the highlighted UI feature
+          rig.rightArm.shoulder.rotation.x = -1.35 + Math.sin(t * 5) * 0.08;
+          rig.rightArm.elbow.rotation.x = -0.2;
+          rig.head.rotation.x = 0.1;
+        } else if (mode === 'patrol') {
+          // Writing inventory notes on clipboard
+          rig.rightArm.shoulder.rotation.x = -0.65;
+          rig.rightArm.shoulder.rotation.z = -0.35 + Math.sin(t * 9) * 0.08;
+          rig.rightArm.elbow.rotation.x = -0.85;
+          rig.head.rotation.x = 0.38;
+        } else {
+          // Close-up conversational posture + natural gesturing when speaking
+          rig.rightArm.shoulder.rotation.z = 0.08;
+          rig.rightArm.shoulder.rotation.x = isSpeaking ? (-0.42 + Math.sin(t * 4.5) * 0.14) : -0.25;
+          rig.rightArm.elbow.rotation.x = isSpeaking ? (-0.85 + Math.cos(t * 5) * 0.12) : -0.65;
+          rig.head.rotation.x = isSpeaking ? (Math.sin(t * 4) * 0.06) : (Math.sin(t * 1.4) * 0.03);
+          rig.head.rotation.y = isSpeaking ? (Math.sin(t * 2.3) * 0.09) : (Math.sin(t * 0.9) * 0.04);
+        }
+      }
+
+      // Natural Eye Blinking
+      blinkTimer -= dt;
+      if (blinkTimer <= 0) blinkTimer = 2.6 + Math.random() * 2.8;
+      const blinkScale = blinkTimer < 0.12 ? 1.05 : 0.14;
+      rig.eyelids.forEach(lid => { lid.scale.y = blinkScale; });
+
+      // Real-Time Lip-Sync
+      speechPulse = Math.max(0, speechPulse - dt * 4.5);
+      const mouthOpen = isSpeaking
+        ? 0.35 + Math.abs(Math.sin(t * 14) * Math.cos(t * 7.3)) * 0.85 + speechPulse * 0.35
+        : 0.25;
+      rig.mouth.scale.y = mouthOpen;
+    } else {
+      if (customMixer) customMixer.update(dt);
+      const openVal = isSpeaking ? Math.min(1, 0.25 + Math.abs(Math.sin(t * 14)) * 0.75) : 0;
+      customMorphMeshes.forEach(m => {
+        const idx = m.morphTargetDictionary.mouthOpen ?? m.morphTargetDictionary.viseme_aa ?? m.morphTargetDictionary.jawOpen;
+        if (idx !== undefined) m.morphTargetInfluences[idx] = openVal;
+      });
+    }
+
+    // 4) Sync 2D Double-Tap Hitbox to Maya's 3D Screen Position
+    if (mode !== 'closeup') {
+      projVec.copy(rig.root.position).add(new THREE.Vector3(0, 0.9, 0)).project(camera);
+      const sx = (projVec.x * 0.5 + 0.5) * window.innerWidth;
+      const sy = (-projVec.y * 0.5 + 0.5) * window.innerHeight;
+      hitbox.style.left = `${sx}px`;
+      hitbox.style.top = `${sy}px`;
+    }
+
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  // --- 10. EVENTS & RESIZE ---
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    waypoints = getBorderWaypoints();
+  });
+
+  hitbox.addEventListener('dblclick', (e) => { e.stopPropagation(); openCloseup(); });
+  hitbox.addEventListener('touchend', (e) => {
     const now = Date.now();
     if (now - lastTapTime < 340) {
       e.preventDefault();
       e.stopPropagation();
       openCloseup();
     } else {
-      walker.classList.add('show-hint');
-      setTimeout(() => walker.classList.remove('show-hint'), 1800);
+      hitbox.classList.add('show-hint');
+      setTimeout(() => hitbox.classList.remove('show-hint'), 1800);
     }
     lastTapTime = now;
   });
@@ -522,15 +844,9 @@
     inp.value = '';
   });
   document.getElementById('maya-input').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      handleUserInput(e.target.value);
-      e.target.value = '';
-    }
+    if (e.key === 'Enter') { handleUserInput(e.target.value); e.target.value = ''; }
   });
-  stage.querySelectorAll('.maya-qchip').forEach(btn => {
+  stageUI.querySelectorAll('.maya-qchip').forEach(btn => {
     btn.addEventListener('click', () => handleUserInput(btn.getAttribute('data-q')));
   });
-
-  // Start Maya's border inventory patrol once the page loads
-  setTimeout(startPatrol, 900);
 })();
