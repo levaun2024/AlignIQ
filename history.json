@@ -1,2978 +1,5453 @@
-[
-  {
-    "id": "401909305",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 58,
-      "ros": 73
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 42,
-      "ros": 35
-    }
-  },
-  {
-    "id": "401909306",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 38
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 70
-    }
-  },
-  {
-    "id": "401909307",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 63
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 45
-    }
-  },
-  {
-    "id": "401909308",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 42,
-      "h2h": 50,
-      "ros": 78
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 30
-    }
-  },
-  {
-    "id": "401909309",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 68
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 40
-    }
-  },
-  {
-    "id": "401909310",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 67
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 41
-    }
-  },
-  {
-    "id": "401909311",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 43,
-      "ros": 40
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 57,
-      "ros": 68
-    }
-  },
-  {
-    "id": "401909312",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 48
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 60
-    }
-  },
-  {
-    "id": "401909313",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 89
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 19
-    }
-  },
-  {
-    "id": "401858529",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 35
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 73
-    }
-  },
-  {
-    "id": "401856869",
-    "league": "NCAAF",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 63,
-      "ros": 54
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 37,
-      "ros": 54
-    }
-  },
-  {
-    "id": "401858303",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 42,
-      "h2h": 48,
-      "ros": 61
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 47
-    }
-  },
-  {
-    "id": "401866468",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 74
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 34
-    }
-  },
-  {
-    "id": "401864545",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 65,
-      "ros": 87
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 21
-    }
-  },
-  {
-    "id": "401864542",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 57
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 51
-    }
-  },
-  {
-    "id": "401920427",
-    "league": "NCAAB",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 90
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 18
-    }
-  },
-  {
-    "id": "401913529",
-    "league": "NCAAB",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 84
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 24
-    }
-  },
-  {
-    "id": "401906852",
-    "league": "NCAAB",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 83
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 25
-    }
-  },
-  {
-    "id": "401921757",
-    "league": "NCAAB",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 70
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 36,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401921723",
-    "league": "NCAAB",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 64,
-      "ros": 83
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 25
-    }
-  },
-  {
-    "id": "401925740",
-    "league": "NCAAB",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 83
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 25
-    }
-  },
-  {
-    "id": "401918467",
-    "league": "NCAAW",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 46
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 62
-    }
-  },
-  {
-    "id": "401923012",
-    "league": "NCAAW",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 69
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 39
-    }
-  },
-  {
-    "id": "401918660",
-    "league": "NCAAW",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401915982",
-    "league": "NCAAW",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401907052",
-    "league": "NCAAW",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 83
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 25
-    }
-  },
-  {
-    "id": "401910019",
-    "league": "NBA",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 55,
-      "ros": 73
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 45,
-      "ros": 35
-    }
-  },
-  {
-    "id": "401910020",
-    "league": "NBA",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 29
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 79
-    }
-  },
-  {
-    "id": "401910021",
-    "league": "NBA",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 63
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 45
-    }
-  },
-  {
-    "id": "401910022",
-    "league": "NBA",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 88,
-      "h2h": 62,
-      "ros": 78
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 30
-    }
-  },
-  {
-    "id": "401873066",
-    "league": "NFL",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 69
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 39
-    }
-  },
-  {
-    "id": "401892742",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 52
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 56
-    }
-  },
-  {
-    "id": "401892743",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 57,
-      "ros": 66
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 43,
-      "ros": 42
-    }
-  },
-  {
-    "id": "401892745",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 51
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 57
-    }
-  },
-  {
-    "id": "401892746",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 61
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 47
-    }
-  },
-  {
-    "id": "401892747",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 66
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 42
-    }
-  },
-  {
-    "id": "401892749",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 42,
-      "h2h": 49,
-      "ros": 56
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 52
-    }
-  },
-  {
-    "id": "401892744",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 50
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 58
-    }
-  },
-  {
-    "id": "401892748",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 60
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 48
-    }
-  },
-  {
-    "id": "401892750",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 45,
-      "ros": 45
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 55,
-      "ros": 63
-    }
-  },
-  {
-    "id": "401892751",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 61
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 47
-    }
-  },
-  {
-    "id": "401892752",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 55,
-      "ros": 59
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 45,
-      "ros": 49
-    }
-  },
-  {
-    "id": "401892753",
-    "league": "NHL",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 62,
-      "h2h": 46,
-      "ros": 52
-    },
-    "away": {
-      "gem": 62,
-      "h2h": 54,
-      "ros": 56
-    }
-  },
-  {
-    "id": "401862830",
-    "league": "NCAAF",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 59
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 49
-    }
-  },
-  {
-    "id": "401920517",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 64
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 44
-    }
-  },
-  {
-    "id": "401906867",
-    "league": "NCAAB",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 72
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 36
-    }
-  },
-  {
-    "id": "401920518",
-    "league": "NCAAB",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 56
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 52
-    }
-  },
-  {
-    "id": "401926773",
-    "league": "NCAAB",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401918950",
-    "league": "NCAAB",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 79
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 36,
-      "ros": 29
-    }
-  },
-  {
-    "id": "401911746",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401921426",
-    "league": "NCAAW",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 47
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 61
-    }
-  },
-  {
-    "id": "401912969",
-    "league": "NCAAW",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 79
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 29
-    }
-  },
-  {
-    "id": "401918898",
-    "league": "NCAAW",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401922832",
-    "league": "NCAAW",
-    "date": "2026-11-20",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 83
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 36,
-      "ros": 25
-    }
-  },
-  {
-    "id": "401906092",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 32
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 76
-    }
-  },
-  {
-    "id": "401933535",
-    "league": "MLS",
-    "date": "2026-11-20",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 52
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 56
-    }
-  },
-  {
-    "id": "401910007",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 44
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 64
-    }
-  },
-  {
-    "id": "401910008",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 43,
-      "ros": 40
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 57,
-      "ros": 68
-    }
-  },
-  {
-    "id": "401910009",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 87
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 21
-    }
-  },
-  {
-    "id": "401910010",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 37,
-      "ros": 51
-    },
-    "away": {
-      "gem": 62,
-      "h2h": 63,
-      "ros": 57
-    }
-  },
-  {
-    "id": "401910011",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 52
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 56
-    }
-  },
-  {
-    "id": "401910012",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 60
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 48
-    }
-  },
-  {
-    "id": "401910013",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 43,
-      "ros": 37
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 57,
-      "ros": 71
-    }
-  },
-  {
-    "id": "401910014",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 58
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 50
-    }
-  },
-  {
-    "id": "401910016",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 50
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 58
-    }
-  },
-  {
-    "id": "401910015",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 43
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 65
-    }
-  },
-  {
-    "id": "401910017",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 42,
-      "h2h": 59,
-      "ros": 86
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 22
-    }
-  },
-  {
-    "id": "401910018",
-    "league": "NBA",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 43,
-      "ros": 35
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 57,
-      "ros": 73
-    }
-  },
-  {
-    "id": "401892739",
-    "league": "NHL",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 45,
-      "ros": 50
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 55,
-      "ros": 58
-    }
-  },
-  {
-    "id": "401892740",
-    "league": "NHL",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 62
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 46
-    }
-  },
-  {
-    "id": "401892741",
-    "league": "NHL",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 43
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 65
-    }
-  },
-  {
-    "id": "401866467",
-    "league": "NCAAF",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 69
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 39
-    }
-  },
-  {
-    "id": "401866469",
-    "league": "NCAAF",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 65,
-      "ros": 69
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 39
-    }
-  },
-  {
-    "id": "401920514",
-    "league": "NCAAB",
-    "date": "2026-11-18",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 50
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 58
-    }
-  },
-  {
-    "id": "401909742",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 41
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 67
-    }
-  },
-  {
-    "id": "401920158",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 75
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 33
-    }
-  },
-  {
-    "id": "401921134",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 75
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 33
-    }
-  },
-  {
-    "id": "401920515",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 57
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 51
-    }
-  },
-  {
-    "id": "401920682",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 42,
-      "h2h": 62,
-      "ros": 72
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 36
-    }
-  },
-  {
-    "id": "401921742",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 76
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 32
-    }
-  },
-  {
-    "id": "401926064",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 87
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 21
-    }
-  },
-  {
-    "id": "401917982",
-    "league": "NCAAB",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 88
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 20
-    }
-  },
-  {
-    "id": "401916196",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 95
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 12
-    }
-  },
-  {
-    "id": "401918843",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 32
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 76
-    }
-  },
-  {
-    "id": "401918831",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 64,
-      "ros": 74
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 34
-    }
-  },
-  {
-    "id": "401923184",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 88
-    },
-    "away": {
-      "gem": 62,
-      "h2h": 36,
-      "ros": 20
-    }
-  },
-  {
-    "id": "401918003",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 80
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 28
-    }
-  },
-  {
-    "id": "401906966",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 65
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 43
-    }
-  },
-  {
-    "id": "401918917",
-    "league": "NCAAW",
-    "date": "2026-11-18",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 69
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 38,
-      "ros": 39
-    }
-  },
-  {
-    "id": "401924633",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 65,
-      "ros": 49
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 36,
-      "ros": 59
-    }
-  },
-  {
-    "id": "401927063",
-    "league": "NCAAW",
-    "date": "2026-11-18",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 27
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 64,
-      "ros": 81
-    }
-  },
-  {
-    "id": "401907051",
-    "league": "NCAAW",
-    "date": "2026-11-19",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 44
-    },
-    "away": {
-      "gem": 62,
-      "h2h": 36,
-      "ros": 64
-    }
-  },
-  {
-    "id": "401910023",
-    "league": "NBA",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 76,
-      "h2h": 64,
-      "ros": 87
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 21
-    }
-  },
-  {
-    "id": "401910024",
-    "league": "NBA",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 54
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 54
-    }
-  },
-  {
-    "id": "401910025",
-    "league": "NBA",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 64,
-      "ros": 60
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 48
-    }
-  },
-  {
-    "id": "401910026",
-    "league": "NBA",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 46
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 62
-    }
-  },
-  {
-    "id": "401910027",
-    "league": "NBA",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 60,
-      "ros": 83
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 40,
-      "ros": 25
-    }
-  },
-  {
-    "id": "401910028",
-    "league": "NBA",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 42,
-      "ros": 28
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 58,
-      "ros": 80
-    }
-  },
-  {
-    "id": "401892754",
-    "league": "NHL",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 58
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 50
-    }
-  },
-  {
-    "id": "401892755",
-    "league": "NHL",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 57,
-      "ros": 60
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 43,
-      "ros": 48
-    }
-  },
-  {
-    "id": "401892756",
-    "league": "NHL",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 63
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 45
-    }
-  },
-  {
-    "id": "401892757",
-    "league": "NHL",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 58,
-      "ros": 65
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 42,
-      "ros": 43
-    }
-  },
-  {
-    "id": "401892758",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 62
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 46
-    }
-  },
-  {
-    "id": "401892759",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 52
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 56
-    }
-  },
-  {
-    "id": "401892760",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 62
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 46
-    }
-  },
-  {
-    "id": "401892761",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 65
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 43
-    }
-  },
-  {
-    "id": "401892762",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 45,
-      "ros": 46
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 55,
-      "ros": 62
-    }
-  },
-  {
-    "id": "401892763",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 55
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 53
-    }
-  },
-  {
-    "id": "401892764",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 63
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 54,
-      "ros": 45
-    }
-  },
-  {
-    "id": "401892765",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 55
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 53
-    }
-  },
-  {
-    "id": "401892766",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 34
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 74
-    }
-  },
-  {
-    "id": "401892767",
-    "league": "NHL",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 55
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 53
-    }
-  },
-  {
-    "id": "401856753",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 42,
-      "h2h": 42,
-      "ros": 43
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 58,
-      "ros": 65
-    }
-  },
-  {
-    "id": "401856872",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 62,
-      "h2h": 42,
-      "ros": 39
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 58,
-      "ros": 69
-    }
-  },
-  {
-    "id": "401856746",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 55,
-      "ros": 55
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 45,
-      "ros": 53
-    }
-  },
-  {
-    "id": "401858528",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 31
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 77
-    }
-  },
-  {
-    "id": "401856755",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 73
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 35
-    }
-  },
-  {
-    "id": "401858307",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 64,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401858302",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 75
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 33
-    }
-  },
-  {
-    "id": "401858535",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 42,
-      "h2h": 47,
-      "ros": 45
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 63
-    }
-  },
-  {
-    "id": "401856754",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 67
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 41
-    }
-  },
-  {
-    "id": "401856866",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 44
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 64
-    }
-  },
-  {
-    "id": "401858310",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 37,
-      "ros": 27
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 63,
-      "ros": 81
-    }
-  },
-  {
-    "id": "401856871",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 41
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 67
-    }
-  },
-  {
-    "id": "401858531",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 49
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 44,
-      "ros": 59
-    }
-  },
-  {
-    "id": "401858527",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 46
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 62
-    }
-  },
-  {
-    "id": "401856751",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 50
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 58
-    }
-  },
-  {
-    "id": "401860925",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 77
-    },
-    "away": {
-      "gem": 42,
-      "h2h": 39,
-      "ros": 31
-    }
-  },
-  {
-    "id": "401858534",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 62,
-      "h2h": 58,
-      "ros": 67
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 42,
-      "ros": 41
-    }
-  },
-  {
-    "id": "401856865",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 37
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 71
-    }
-  },
-  {
-    "id": "401856868",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 42,
-      "h2h": 49,
-      "ros": 45
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 63
-    }
-  },
-  {
-    "id": "401856752",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 66
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 42
-    }
-  },
-  {
-    "id": "401858306",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 60,
-      "ros": 74
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 40,
-      "ros": 34
-    }
-  },
-  {
-    "id": "401856748",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 58,
-      "ros": 65
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 42,
-      "ros": 43
-    }
-  },
-  {
-    "id": "401856749",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 60,
-      "ros": 59
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 40,
-      "ros": 49
-    }
-  },
-  {
-    "id": "401856867",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 54
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 54
-    }
-  },
-  {
-    "id": "401858309",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 47
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 61
-    }
-  },
-  {
-    "id": "401858530",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 45
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 63
-    }
-  },
-  {
-    "id": "401858533",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 48,
-      "ros": 45
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 52,
-      "ros": 63
-    }
-  },
-  {
-    "id": "401862831",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 57
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 51
-    }
-  },
-  {
-    "id": "401862834",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 42,
-      "h2h": 55,
-      "ros": 34
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 45,
-      "ros": 74
-    }
-  },
-  {
-    "id": "401862835",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 42
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 66
-    }
-  },
-  {
-    "id": "401858305",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 55,
-      "ros": 52
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 45,
-      "ros": 56
-    }
-  },
-  {
-    "id": "401856750",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 31
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 77
-    }
-  },
-  {
-    "id": "401871080",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 65,
-      "ros": 79
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 29
-    }
-  },
-  {
-    "id": "401862832",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 79
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 29
-    }
-  },
-  {
-    "id": "401871079",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401871081",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 33
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 75
-    }
-  },
-  {
-    "id": "401862833",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 51
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 57
-    }
-  },
-  {
-    "id": "401869929",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401869946",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 67
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 41
-    }
-  },
-  {
-    "id": "401871077",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 40
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 68
-    }
-  },
-  {
-    "id": "401871078",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 66
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 42
-    }
-  },
-  {
-    "id": "401856747",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 60
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 48
-    }
-  },
-  {
-    "id": "401858304",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 42,
-      "h2h": 54,
-      "ros": 62
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 46
-    }
-  },
-  {
-    "id": "401858532",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 77
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 31
-    }
-  },
-  {
-    "id": "401861968",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 68
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 40
-    }
-  },
-  {
-    "id": "401864543",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 88
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 20
-    }
-  },
-  {
-    "id": "401869953",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 38
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 70
-    }
-  },
-  {
-    "id": "401869958",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 60
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 48
-    }
-  },
-  {
-    "id": "401871101",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 42,
-      "h2h": 50,
-      "ros": 47
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 61
-    }
-  },
-  {
-    "id": "401860920",
-    "league": "NCAAF",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 65,
-      "ros": 75
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 33
-    }
-  },
-  {
-    "id": "401864544",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 44,
-      "ros": 49
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 56,
-      "ros": 59
-    }
-  },
-  {
-    "id": "401869938",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 65,
-      "ros": 79
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 29
-    }
-  },
-  {
-    "id": "401858308",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 40
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 68
-    }
-  },
-  {
-    "id": "401860918",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 64,
-      "ros": 68
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 40
-    }
-  },
-  {
-    "id": "401862836",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 42,
-      "h2h": 53,
-      "ros": 48
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 60
-    }
-  },
-  {
-    "id": "401856870",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 54
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 54
-    }
-  },
-  {
-    "id": "401860919",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 58
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 50
-    }
-  },
-  {
-    "id": "401864541",
-    "league": "NCAAF",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 53,
-      "ros": 55
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 47,
-      "ros": 53
-    }
-  },
-  {
-    "id": "401925756",
-    "league": "NCAAB",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 90
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 18
-    }
-  },
-  {
-    "id": "401909567",
-    "league": "NCAAB",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 64,
-      "ros": 70
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 38
-    }
-  },
-  {
-    "id": "401921776",
-    "league": "NCAAB",
-    "date": "2026-11-22",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 49
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 59
-    }
-  },
-  {
-    "id": "401921811",
-    "league": "NCAAB",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 64,
-      "ros": 77
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 31
-    }
-  },
-  {
-    "id": "401913038",
-    "league": "NCAAW",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 29
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 79
-    }
-  },
-  {
-    "id": "401906081",
-    "league": "NCAAW",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 40
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 68
-    }
-  },
-  {
-    "id": "401915910",
-    "league": "NCAAW",
-    "date": "2026-11-22",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 38,
-      "ros": 35
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 62,
-      "ros": 73
-    }
-  },
-  {
-    "id": "401918918",
-    "league": "NCAAW",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 68,
-      "ros": 80
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 36,
-      "ros": 28
-    }
-  },
-  {
-    "id": "401906093",
-    "league": "NCAAW",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 59,
-      "ros": 40
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 41,
-      "ros": 68
-    }
-  },
-  {
-    "id": "401879238",
-    "league": "EPL",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 51,
-      "ros": 57
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 49,
-      "ros": 51
-    }
-  },
-  {
-    "id": "401879236",
-    "league": "EPL",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 61,
-      "ros": 66
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 39,
-      "ros": 42
-    }
-  },
-  {
-    "id": "401879235",
-    "league": "EPL",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 57
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 51
-    }
-  },
-  {
-    "id": "401878754",
-    "league": "EPL",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 46,
-      "ros": 48
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 54,
-      "ros": 60
-    }
-  },
-  {
-    "id": "401933733",
-    "league": "MLS",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 64
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 44
-    }
-  },
-  {
-    "id": "401933732",
-    "league": "MLS",
-    "date": "2026-11-21",
-    "actual_winner": "home",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 59
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 49
-    }
-  },
-  {
-    "id": "401933739",
-    "league": "MLS",
-    "date": "2026-11-21",
-    "actual_winner": "away",
-    "home": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 63
-    },
-    "away": {
-      "gem": 0,
-      "h2h": 50,
-      "ros": 45
+{
+  "dates": {
+    "2026-11-21": {
+      "games": [
+        {
+          "id": "401909305",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 58,
+            "ros": 73
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 42,
+            "ros": 35
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909306",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 38
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 70
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909307",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 63
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 45
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909308",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 42,
+            "h2h": 50,
+            "ros": 78
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 30
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909309",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 68
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 40
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909310",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 67
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 41
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909311",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 43,
+            "ros": 40
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 57,
+            "ros": 68
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909312",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 60
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909313",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 89
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 19
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858529",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 35
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 73
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858303",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 42,
+            "h2h": 48,
+            "ros": 61
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 47
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401866468",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 74
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 34
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401864545",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 65,
+            "ros": 87
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 21
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401864542",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 57
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 51
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401920427",
+          "league": "NCAAB",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 90
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 18
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401913529",
+          "league": "NCAAB",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 84
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 24
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401906852",
+          "league": "NCAAB",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 83
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 25
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401921757",
+          "league": "NCAAB",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 70
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 36,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401925740",
+          "league": "NCAAB",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 83
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 25
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918467",
+          "league": "NCAAW",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 46
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 62
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401923012",
+          "league": "NCAAW",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 69
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 39
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401915982",
+          "league": "NCAAW",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401907052",
+          "league": "NCAAW",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 83
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 25
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910023",
+          "league": "NBA",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 76,
+            "h2h": 64,
+            "ros": 87
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 21
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892754",
+          "league": "NHL",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 58
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 50
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892755",
+          "league": "NHL",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 57,
+            "ros": 60
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 43,
+            "ros": 48
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892756",
+          "league": "NHL",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 63
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 45
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892757",
+          "league": "NHL",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 58,
+            "ros": 65
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 42,
+            "ros": 43
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856746",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 55,
+            "ros": 55
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 45,
+            "ros": 53
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858528",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 31
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 77
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856755",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 73
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 35
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858535",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 42,
+            "h2h": 47,
+            "ros": 45
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 63
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856754",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 67
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 41
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856866",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 44
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 64
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858310",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 37,
+            "ros": 27
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 63,
+            "ros": 81
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856871",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 41
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 67
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858531",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 49
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 44,
+            "ros": 59
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858527",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 46
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 62
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858534",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 62,
+            "h2h": 58,
+            "ros": 67
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 42,
+            "ros": 41
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856868",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 42,
+            "h2h": 49,
+            "ros": 45
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 63
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856752",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 66
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 42
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856748",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 58,
+            "ros": 65
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 42,
+            "ros": 43
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856749",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 60,
+            "ros": 59
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 40,
+            "ros": 49
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856867",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 54
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 54
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858309",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 47
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 61
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858530",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 45
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 63
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858533",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 45
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 63
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401862831",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 57
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 51
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401862834",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 42,
+            "h2h": 55,
+            "ros": 34
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 45,
+            "ros": 74
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401862835",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 42
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 66
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858305",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 55,
+            "ros": 52
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 45,
+            "ros": 56
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856750",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 31
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 77
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401871080",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 65,
+            "ros": 79
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 29
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401862832",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 79
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 29
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401871079",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401871081",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 33
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 75
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401862833",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 51
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 57
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401869929",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401869946",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 67
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 41
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401871077",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 40
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 68
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401871078",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 66
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 42
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856747",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 60
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 48
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858304",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 42,
+            "h2h": 54,
+            "ros": 62
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 46
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858532",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 77
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 31
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401861968",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 68
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 40
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401864543",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 88
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 20
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401869953",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 38
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 70
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401869958",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 60
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 48
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401871101",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 42,
+            "h2h": 50,
+            "ros": 47
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 61
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401860920",
+          "league": "NCAAF",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 65,
+            "ros": 75
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 33
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401925756",
+          "league": "NCAAB",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 90
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 18
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401921811",
+          "league": "NCAAB",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 64,
+            "ros": 77
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 31
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401913038",
+          "league": "NCAAW",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 29
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 79
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918918",
+          "league": "NCAAW",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 80
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 28
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401906093",
+          "league": "NCAAW",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 40
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 68
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401879238",
+          "league": "EPL",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 57
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 51
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401879236",
+          "league": "EPL",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 66
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 42
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401879235",
+          "league": "EPL",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 57
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 51
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401878754",
+          "league": "EPL",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 48
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 60
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401933733",
+          "league": "MLS",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 64
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 44
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401933732",
+          "league": "MLS",
+          "date": "2026-11-21",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 59
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 49
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401933739",
+          "league": "MLS",
+          "date": "2026-11-21",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 63
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 45
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        }
+      ],
+      "algo_version": "2026-11",
+      "weights_used": {
+        "gem": 42,
+        "h2h": 21,
+        "ros": 37
+      },
+      "locked": true
+    },
+    "2026-11-20": {
+      "games": [
+        {
+          "id": "401856869",
+          "league": "NCAAF",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 63,
+            "ros": 54
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 37,
+            "ros": 54
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401921723",
+          "league": "NCAAB",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 64,
+            "ros": 83
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 25
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918660",
+          "league": "NCAAW",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910019",
+          "league": "NBA",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 55,
+            "ros": 73
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 45,
+            "ros": 35
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910020",
+          "league": "NBA",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 29
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 79
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910021",
+          "league": "NBA",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 63
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 45
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910022",
+          "league": "NBA",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 88,
+            "h2h": 62,
+            "ros": 78
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 30
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401873066",
+          "league": "NFL",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 69
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 39
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892742",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 52
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 56
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892743",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 57,
+            "ros": 66
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 43,
+            "ros": 42
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892745",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 51
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 57
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892746",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 61
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 47
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892747",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 66
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 42
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892749",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 42,
+            "h2h": 49,
+            "ros": 56
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 52
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892744",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 50
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 58
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892748",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 60
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 48
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892750",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 45,
+            "ros": 45
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 55,
+            "ros": 63
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892751",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 61
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 47
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892752",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 55,
+            "ros": 59
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 45,
+            "ros": 49
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892753",
+          "league": "NHL",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 62,
+            "h2h": 46,
+            "ros": 52
+          },
+          "away": {
+            "gem": 62,
+            "h2h": 54,
+            "ros": 56
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401862830",
+          "league": "NCAAF",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 59
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 49
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401906867",
+          "league": "NCAAB",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 72
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 36
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401920518",
+          "league": "NCAAB",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 56
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401926773",
+          "league": "NCAAB",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918950",
+          "league": "NCAAB",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 79
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 36,
+            "ros": 29
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401921426",
+          "league": "NCAAW",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 47
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 61
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401912969",
+          "league": "NCAAW",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 79
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 29
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918898",
+          "league": "NCAAW",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401922832",
+          "league": "NCAAW",
+          "date": "2026-11-20",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 83
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 36,
+            "ros": 25
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401933535",
+          "league": "MLS",
+          "date": "2026-11-20",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 56
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        }
+      ],
+      "algo_version": "2026-11",
+      "weights_used": {
+        "gem": 42,
+        "h2h": 21,
+        "ros": 37
+      },
+      "locked": true
+    },
+    "2026-11-19": {
+      "games": [
+        {
+          "id": "401920517",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 64
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 44
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401911746",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401906092",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 32
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 76
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910007",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 44
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 64
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910008",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 43,
+            "ros": 40
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 57,
+            "ros": 68
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910009",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 87
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 21
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910010",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 37,
+            "ros": 51
+          },
+          "away": {
+            "gem": 62,
+            "h2h": 63,
+            "ros": 57
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910011",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 52
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 56
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910012",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 60
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 48
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910013",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 43,
+            "ros": 37
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 57,
+            "ros": 71
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910014",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 58
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 50
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910016",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 50
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 58
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910015",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 43
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 65
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910017",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 42,
+            "h2h": 59,
+            "ros": 86
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 22
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910018",
+          "league": "NBA",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 43,
+            "ros": 35
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 57,
+            "ros": 73
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892739",
+          "league": "NHL",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 45,
+            "ros": 50
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 55,
+            "ros": 58
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892740",
+          "league": "NHL",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 62
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 46
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892741",
+          "league": "NHL",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 43
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 65
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401866467",
+          "league": "NCAAF",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 69
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 39
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401866469",
+          "league": "NCAAF",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 65,
+            "ros": 69
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 39
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909742",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 41
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 67
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401920158",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 75
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 33
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401921134",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 75
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 33
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401920515",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 57
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 51
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401920682",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 42,
+            "h2h": 62,
+            "ros": 72
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 36
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401921742",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 76
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 32
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401926064",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 87
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 21
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401917982",
+          "league": "NCAAB",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 88
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 20
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401916196",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 95
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 12
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918843",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 32
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 76
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918831",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 64,
+            "ros": 74
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 34
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401923184",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 88
+          },
+          "away": {
+            "gem": 62,
+            "h2h": 36,
+            "ros": 20
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918003",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 80
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 28
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401906966",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 65
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 43
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401924633",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 65,
+            "ros": 49
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 36,
+            "ros": 59
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401907051",
+          "league": "NCAAW",
+          "date": "2026-11-19",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 44
+          },
+          "away": {
+            "gem": 62,
+            "h2h": 36,
+            "ros": 64
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        }
+      ],
+      "algo_version": "2026-11",
+      "weights_used": {
+        "gem": 42,
+        "h2h": 21,
+        "ros": 37
+      },
+      "locked": true
+    },
+    "2026-11-18": {
+      "games": [
+        {
+          "id": "401920514",
+          "league": "NCAAB",
+          "date": "2026-11-18",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 50
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 58
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401918917",
+          "league": "NCAAW",
+          "date": "2026-11-18",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 69
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 38,
+            "ros": 39
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401927063",
+          "league": "NCAAW",
+          "date": "2026-11-18",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 27
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 64,
+            "ros": 81
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        }
+      ],
+      "algo_version": "2026-11",
+      "weights_used": {
+        "gem": 42,
+        "h2h": 21,
+        "ros": 37
+      },
+      "locked": true
+    },
+    "2026-11-22": {
+      "games": [
+        {
+          "id": "401910024",
+          "league": "NBA",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 54
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 54
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910025",
+          "league": "NBA",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 64,
+            "ros": 60
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 48
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910026",
+          "league": "NBA",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 46
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 62
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910027",
+          "league": "NBA",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 60,
+            "ros": 83
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 40,
+            "ros": 25
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401910028",
+          "league": "NBA",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 42,
+            "ros": 28
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 58,
+            "ros": 80
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892758",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 62
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 46
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892759",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 52
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 56
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892760",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 62
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 46
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892761",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 65
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 43
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892762",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 45,
+            "ros": 46
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 55,
+            "ros": 62
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892763",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 55
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 53
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892764",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 63
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 54,
+            "ros": 45
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892765",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 52,
+            "ros": 55
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 48,
+            "ros": 53
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892766",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 39,
+            "ros": 34
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 74
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401892767",
+          "league": "NHL",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 55
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 53
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856753",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 42,
+            "h2h": 42,
+            "ros": 43
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 58,
+            "ros": 65
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856872",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 62,
+            "h2h": 42,
+            "ros": 39
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 58,
+            "ros": 69
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858307",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 64,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858302",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 75
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 33
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856751",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 54,
+            "ros": 50
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 46,
+            "ros": 58
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401860925",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 61,
+            "ros": 77
+          },
+          "away": {
+            "gem": 42,
+            "h2h": 39,
+            "ros": 31
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856865",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 49,
+            "ros": 37
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 51,
+            "ros": 71
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858306",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 60,
+            "ros": 74
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 40,
+            "ros": 34
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401864544",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 44,
+            "ros": 49
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 56,
+            "ros": 59
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401869938",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 65,
+            "ros": 79
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 29
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401858308",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 40
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 50,
+            "ros": 68
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401860918",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 64,
+            "ros": 68
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 40
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401862836",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 42,
+            "h2h": 53,
+            "ros": 48
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 60
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401856870",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 54
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 54
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401860919",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 58
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 50
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401864541",
+          "league": "NCAAF",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 53,
+            "ros": 55
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 47,
+            "ros": 53
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401909567",
+          "league": "NCAAB",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 64,
+            "ros": 70
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 38
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401921776",
+          "league": "NCAAB",
+          "date": "2026-11-22",
+          "actual_winner": "home",
+          "home": {
+            "gem": 0,
+            "h2h": 68,
+            "ros": 49
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 36,
+            "ros": 59
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401906081",
+          "league": "NCAAW",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 41,
+            "ros": 40
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 59,
+            "ros": 68
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        },
+        {
+          "id": "401915910",
+          "league": "NCAAW",
+          "date": "2026-11-22",
+          "actual_winner": "away",
+          "home": {
+            "gem": 0,
+            "h2h": 38,
+            "ros": 35
+          },
+          "away": {
+            "gem": 0,
+            "h2h": 62,
+            "ros": 73
+          },
+          "algo_version": "2026-11",
+          "weights_used": {
+            "gem": 42,
+            "h2h": 21,
+            "ros": 37
+          },
+          "factors": {
+            "gematria_score": 0,
+            "gematria_hits": 0,
+            "odds_edge": 0,
+            "form_health_score": 0,
+            "references": []
+          }
+        }
+      ],
+      "algo_version": "2026-11",
+      "weights_used": {
+        "gem": 42,
+        "h2h": 21,
+        "ros": 37
+      },
+      "locked": true
     }
   }
-]
+}
