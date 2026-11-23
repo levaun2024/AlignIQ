@@ -1,9 +1,18 @@
-name: AlignIQ Daily Agent
+name: AlignIQ Monthly Agent & Audit Engine
 
 on:
   schedule:
-    - cron: '0 10 * * *'
+    # Runs daily at 08:00 UTC:
+    # - Grades completed games & freezes historical dates (never overwrites old %)
+    # - Generates biweekly reports on the 1st & 15th
+    # - Rebalances live algorithm weights ONLY on the 1st of each month
+    - cron: '0 8 * * *'
   workflow_dispatch:
+    inputs:
+      force_rebalance:
+        description: 'Force monthly weight rebalance now (true/false)'
+        required: false
+        default: 'false'
 
 permissions:
   contents: write
@@ -12,7 +21,8 @@ jobs:
   run-agent:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -20,12 +30,14 @@ jobs:
           python-version: '3.11'
 
       - name: Run AlignIQ Agent
+        env:
+          FORCE_REBALANCE: ${{ github.event.inputs.force_rebalance || 'false' }}
         run: python agent.py
 
-      - name: Commit updated history, report, and fighters
+      - name: Commit updated audit history & reports
         run: |
           git config user.name "AlignIQ Agent"
-          git config user.email "agent@aligniq.app"
-          git add history.json agent_report.json fighters.json
-          git diff --staged --quiet || git commit -m "Auto-update AlignIQ stats, weights & fighters"
+          git config user.email "agent@aligniq.local"
+          git add history.json agent_report.json
+          git diff --staged --quiet || git commit -m "chore(agent): update audit history & analytics report"
           git push
