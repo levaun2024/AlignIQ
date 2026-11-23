@@ -33,6 +33,62 @@ def normalize_weights(w):
     return {"gem": max(5, gem), "h2h": max(5, h2h), "ros": max(5, ros)}
 
 
+def safe_float(val, default=50.0):
+    try:
+        return float(str(val).replace("%", "").strip())
+    except Exception:
+        return default
+
+
+def normalize_history(raw, fallback_date):
+    """
+    Safely converts legacy list-based or flat date-map history.json
+    into {"dates": {"YYYY-MM-DD": {"games": [...]}}} without losing data.
+    """
+    if isinstance(raw, dict) and isinstance(raw.get("dates"), dict):
+        dates = {}
+        for d_key, val in raw["dates"].items():
+            if isinstance(val, list):
+                dates[str(d_key)[:10]] = {"games": val}
+            elif isinstance(val, dict):
+                val.setdefault("games", [])
+                dates[str(d_key)[:10]] = val
+        return {"dates": dates}
+
+    dates = {}
+
+    if isinstance(raw, list):
+        for item in raw:
+            if not isinstance(item, dict):
+                continue
+            d_raw = item.get("date") or item.get("game_date") or item.get("day") or fallback_date
+            d_str = str(d_raw)[:10]
+            if isinstance(item.get("games"), list):
+                entry = dates.setdefault(d_str, {"games": []})
+                entry["games"].extend(item["games"])
+                if "algo_version" in item:
+                    entry["algo_version"] = item["algo_version"]
+                if "weights_used" in item:
+                    entry["weights_used"] = item["weights_used"]
+                if "locked" in item:
+                    entry["locked"] = item["locked"]
+            else:
+                dates.setdefault(d_str, {"games": []})["games"].append(item)
+        return {"dates": dates}
+
+    if isinstance(raw, dict):
+        for k, v in raw.items():
+            d_str = str(k)[:10]
+            if isinstance(v, list):
+                dates[d_str] = {"games": v}
+            elif isinstance(v, dict):
+                v.setdefault("games", [])
+                dates[d_str] = v
+        return {"dates": dates}
+
+    return {"dates": {}}
+
+
 def ensure_frozen_snapshots(history, active_version, active_weights):
     """
     Locks every date's algorithm snapshot the first time it is archived.
@@ -40,11 +96,16 @@ def ensure_frozen_snapshots(history, active_version, active_weights):
     """
     dates = history.setdefault("dates", {})
     for date_str, entry in dates.items():
+        if isinstance(entry, list):
+            entry = {"games": entry}
+            dates[date_str] = entry
         if not entry.get("locked"):
             entry["algo_version"] = entry.get("algo_version", active_version)
             entry["weights_used"] = entry.get("weights_used", dict(active_weights))
             entry["locked"] = True
         for g in entry.get("games", []):
+            if not isinstance(g, dict):
+                continue
             g.setdefault("algo_version", entry["algo_version"])
             g.setdefault("weights_used", entry["weights_used"])
             g.setdefault("factors", {
@@ -61,19 +122,21 @@ def extract_graded_games(history):
     graded = []
     for date_str, entry in sorted(history.get("dates", {}).items()):
         for g in entry.get("games", []):
-            res = str(g.get("result", "")).upper()
+            if not isinstance(g, dict):
+                continue
+            res = str(g.get("result") or g.get("outcome") or g.get("grade") or "").upper().strip()
             if res in ("W", "L", "WIN", "LOSS"):
                 graded.append({
                     "date": date_str,
                     "league": g.get("league", "OTHER"),
                     "matchup": g.get("matchup", f"{g.get('away','Away')} @ {g.get('home','Home')}"),
                     "pick": g.get("pick", ""),
-                    "confidence": float(g.get("confidence", 50)),
+                    "confidence": safe_float(g.get("confidence", 50)),
                     "win": res in ("W", "WIN"),
                     "final_score": g.get("final_score", ""),
                     "algo_version": g.get("algo_version", entry.get("algo_version", "v1")),
                     "weights_used": g.get("weights_used", entry.get("weights_used", DEFAULT_WEIGHTS)),
-                    "factors": g.get("factors", {})
+                    "factors": g.get("factors", {}) if isinstance(g.get("factors"), dict) else {}
                 })
     return graded
 
@@ -99,13 +162,13 @@ def analyze_factors(games):
         f = g["factors"]
         win = 1 if g["win"] else 0
 
-        if f.get("gematria_hits", 0) >= 2 or f.get("gematria_score", 0) >= 60:
+        if safe_float(f.get("gematria_hits", 0), 0) >= 2 or safe_float(f.get("gematria_score", 0), 0) >= 60:
             buckets["gematria"]["n"] += 1
             buckets["gematria"]["w"] += win
-        if f.get("odds_edge", 0) > 0:
+        if safe_float(f.get("odds_edge", 0), 0) > 0:
             buckets["odds"]["n"] += 1
             buckets["odds"]["w"] += win
-        if f.get("form_health_score", 0) >= 60:
+        if safe_float(f.get("form_health_score", 0), 0) >= 60:
             buckets["form_health"]["n"] += 1
             buckets["form_health"]["w"] += win
         if g["confidence"] >= 70:
@@ -245,7 +308,7 @@ def main():
     month_tag = now.strftime("%Y-%m")
     force_rebalance = os.getenv("FORCE_REBALANCE", "false").lower() == "true"
 
-    report = load_json(REPORT_FILE, {
+    default_report = {
         "algo_version": month_tag,
         "rebalance_cadence": "monthly",
         "target_win_rate": TARGET_WIN_RATE,
@@ -253,12 +316,16 @@ def main():
         "last_rebalance_month": "",
         "weight_history": [],
         "biweekly_reports": []
-    })
+    }
+    report = load_json(REPORT_FILE, default_report)
+    if not isinstance(report, dict):
+        report = default_report
 
-    active_weights = report.get("weights", dict(DEFAULT_WEIGHTS))
+    active_weights = report.get("weights") if isinstance(report.get("weights"), dict) else dict(DEFAULT_WEIGHTS)
     active_version = report.get("algo_version", month_tag)
 
-    history = load_json(HISTORY_FILE, {"dates": {}})
+    raw_history = load_json(HISTORY_FILE, {"dates": {}})
+    history = normalize_history(raw_history, today_str)
     history = ensure_frozen_snapshots(history, active_version, active_weights)
 
     all_graded = extract_graded_games(history)
@@ -316,6 +383,7 @@ def main():
         "updated_at": now.isoformat(),
         "rebalance_cadence": "monthly",
         "target_win_rate": TARGET_WIN_RATE,
+        "weights": active_weights,
         "summary_60d": stats_60,
         "summary_14d": stats_14,
         "whats_working": working,
