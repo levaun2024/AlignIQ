@@ -1,48 +1,23 @@
 import json
 import os
-import re
-import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone, timedelta
+from collections import defaultdict
 
-LEAGUES = [
-    ("NBA", "basketball/nba"),
-    ("NFL", "football/nfl"),
-    ("NHL", "hockey/nhl"),
-    ("MLB", "baseball/mlb"),
-    ("NCAAF", "football/college-football"),
-    ("NCAAB", "basketball/mens-college-basketball"),
-    ("NCAAW", "basketball/womens-college-basketball"),
-    ("WNBA", "basketball/wnba"),
-    ("UFC", "mma/ufc"),
-    ("EPL", "soccer/eng.1"),
-    ("MLS", "soccer/usa.1"),
-    ("UCL", "soccer/uefa.champions"),
-]
-
-FIGHT_LEAGUES = {"UFC", "BOXING", "BKFC"}
 HISTORY_FILE = "history.json"
 REPORT_FILE = "agent_report.json"
-FIGHTERS_FILE = "fighters.json"
+TARGET_WIN_RATE = 95.0
+
 DEFAULT_WEIGHTS = {"gem": 42, "h2h": 21, "ros": 37}
 
 
-def fetch_json(url, timeout=12):
-    try:
-        req = urllib.request.Request(url, headers={"User-Agent": "AlignIQ-Agent/2.4"})
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return json.loads(resp.read().decode("utf-8"))
-    except Exception:
-        return None
-
-
 def load_json(path, default):
-    if os.path.exists(path):
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return default
+    if not os.path.exists(path):
+        return default
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return default
 
 
 def save_json(path, data):
@@ -50,573 +25,308 @@ def save_json(path, data):
         json.dump(data, f, indent=2)
 
 
-# --- ODDS, FORM, FIGHT IQ & WEIGHT-CUT HELPERS ---
-def american_to_implied(odds):
-    if not odds:
-        return 0.5
-    return (100.0 / (odds + 100.0)) if odds > 0 else (abs(odds) / (abs(odds) + 100.0))
+def normalize_weights(w):
+    total = max(1, w["gem"] + w["h2h"] + w["ros"])
+    gem = round((w["gem"] / total) * 100)
+    h2h = round((w["h2h"] / total) * 100)
+    ros = 100 - gem - h2h
+    return {"gem": max(5, gem), "h2h": max(5, h2h), "ros": max(5, ros)}
 
 
-def parse_float_num(val):
-    m = re.search(r"(\d+(?:\.\d+)?)", str(val or ""))
-    return float(m.group(1)) if m else None
+def ensure_frozen_snapshots(history, active_version, active_weights):
+    """
+    Locks every date's algorithm snapshot the first time it is archived.
+    NEVER overwrites existing locked confidence %, predictions, or weights on old dates.
+    """
+    dates = history.setdefault("dates", {})
+    for date_str, entry in dates.items():
+        if not entry.get("locked"):
+            entry["algo_version"] = entry.get("algo_version", active_version)
+            entry["weights_used"] = entry.get("weights_used", dict(active_weights))
+            entry["locked"] = True
+        for g in entry.get("games", []):
+            g.setdefault("algo_version", entry["algo_version"])
+            g.setdefault("weights_used", entry["weights_used"])
+            g.setdefault("factors", {
+                "gematria_score": 0,
+                "gematria_hits": 0,
+                "odds_edge": 0,
+                "form_health_score": 0,
+                "references": []
+            })
+    return history
 
 
-def norm_fighter_key(name):
-    return re.sub(r"[^a-z0-9]", "", (name or "").lower())
-
-
-def compute_fight_edge(home_name, away_name, fighters_db):
-    f_h = fighters_db.get(norm_fighter_key(home_name))
-    f_a = fighters_db.get(norm_fighter_key(away_name))
-    if not f_h or not f_a:
-        return 0
-    def_diff = ((f_h.get("str_def") or 55) - (f_a.get("str_def") or 55)) * 0.6
-    sapm_diff = ((f_a.get("sapm") or 3.2) - (f_h.get("sapm") or 3.2)) * 4.0
-    r_h = parse_float_num(f_h.get("reach"))
-    r_a = parse_float_num(f_a.get("reach"))
-    reach_diff = max(-6.0, min(6.0, (r_h - r_a) * 1.2)) if (r_h and r_a) else 0.0
-    return max(-22, min(22, round(def_diff + sapm_diff + reach_diff)))
-
-
-def compute_weight_cut_penalty(fighter_name, fighters_db):
-    f_obj = fighters_db.get(norm_fighter_key(fighter_name))
-    wc = (f_obj or {}).get("weight_cut") or {}
-    min_l = wc.get("min_lbs")
-    max_l = wc.get("max_lbs")
-    cur_l = wc.get("current_lbs")
-    if not min_l or not max_l or not cur_l:
-        return 0
-    span = max(0.0, float(max_l) - float(min_l))
-    cut_ratio = max(0.0, min(1.0, (float(max_l) - float(cur_l)) / span)) if span > 0 else 0.25
-    missed = int(wc.get("missed_count") or 0)
-    return min(16, round(cut_ratio * 10) + missed * 5)
-
-
-def get_team_form(lg_path, team_id, before_date_str, schedule_cache):
-    if not lg_path or not team_id:
-        return None
-    cache_key = f"{lg_path}_{team_id}"
-    if cache_key not in schedule_cache:
-        data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/{lg_path}/teams/{team_id}/schedule")
-        parsed = []
-        if isinstance(data, dict):
-            for ev in data.get("events") or []:
-                if not isinstance(ev, dict):
-                    continue
-                comps_list = ev.get("competitions") or []
-                comp = comps_list[0] if (comps_list and isinstance(comps_list[0], dict)) else None
-                if not comp or not (comp.get("status") or {}).get("type", {}).get("completed"):
-                    continue
-                ev_date = (ev.get("date") or "")[:10]
-                comps = [c for c in (comp.get("competitors") or []) if isinstance(c, dict)]
-                me = next((c for c in comps if str(c.get("id")) == str(team_id)), None)
-                opp = next((c for c in comps if str(c.get("id")) != str(team_id)), None)
-                if not me or not opp:
-                    continue
-                try:
-                    my_s = float(me.get("score", {}).get("value") if isinstance(me.get("score"), dict) else me.get("score", 0))
-                    opp_s = float(opp.get("score", {}).get("value") if isinstance(opp.get("score"), dict) else opp.get("score", 0))
-                except Exception:
-                    continue
-                parsed.append({
-                    "date": ev_date,
-                    "won": bool(me.get("winner")) or (my_s > opp_s),
-                    "margin": my_s - opp_s,
+def extract_graded_games(history):
+    graded = []
+    for date_str, entry in sorted(history.get("dates", {}).items()):
+        for g in entry.get("games", []):
+            res = str(g.get("result", "")).upper()
+            if res in ("W", "L", "WIN", "LOSS"):
+                graded.append({
+                    "date": date_str,
+                    "league": g.get("league", "OTHER"),
+                    "matchup": g.get("matchup", f"{g.get('away','Away')} @ {g.get('home','Home')}"),
+                    "pick": g.get("pick", ""),
+                    "confidence": float(g.get("confidence", 50)),
+                    "win": res in ("W", "WIN"),
+                    "final_score": g.get("final_score", ""),
+                    "algo_version": g.get("algo_version", entry.get("algo_version", "v1")),
+                    "weights_used": g.get("weights_used", entry.get("weights_used", DEFAULT_WEIGHTS)),
+                    "factors": g.get("factors", {})
                 })
-        schedule_cache[cache_key] = parsed
-
-    prior = [g for g in schedule_cache[cache_key] if g["date"] and g["date"] < before_date_str]
-    if not prior:
-        return None
-    l10 = prior[-10:]
-    l5 = prior[-5:]
-    l10_pct = sum(1 for g in l10 if g["won"]) / len(l10)
-    l5_pct = sum(1 for g in l5 if g["won"]) / len(l5)
-    avg_margin = sum(g["margin"] for g in l5) / len(l5)
-    return {"pct": l5_pct * 0.6 + l10_pct * 0.4, "avg_margin": avg_margin}
+    return graded
 
 
-# --- GEMATRIA & SCORING ENGINE ---
-def reduce_digit(n):
-    while n > 9:
-        n = sum(int(d) for d in str(n))
-    return n
+def analyze_factors(games):
+    """Measures how each determining factor correlates with real Win/Loss outcomes."""
+    buckets = {
+        "gematria": {"label": "Gematria Convergence (2+ Hits)", "w": 0, "n": 0},
+        "odds": {"label": "Fair Odds / +EV Edge", "w": 0, "n": 0},
+        "form_health": {"label": "L5/L10 Form, Health & Weight Cut", "w": 0, "n": 0},
+        "high_conf": {"label": "70%+ High Confidence Picks", "w": 0, "n": 0},
+    }
+    by_league = defaultdict(lambda: {"w": 0, "n": 0})
+    calibration = {
+        "50-59%": {"w": 0, "n": 0},
+        "60-69%": {"w": 0, "n": 0},
+        "70-79%": {"w": 0, "n": 0},
+        "80%+": {"w": 0, "n": 0},
+    }
+    daily_trend = defaultdict(lambda: {"w": 0, "n": 0})
 
+    for g in games:
+        f = g["factors"]
+        win = 1 if g["win"] else 0
 
-def calc_ciphers(text):
-    clean = re.sub(r"[^A-Z]", "", (text or "").upper())
-    ord_v = red_v = rev_v = rred_v = 0
-    for ch in clean:
-        v = ord(ch) - 64
-        rv = 27 - v
-        ord_v += v
-        red_v += reduce_digit(v)
-        rev_v += rv
-        rred_v += reduce_digit(rv)
-    return (ord_v, red_v, rev_v, rred_v)
+        if f.get("gematria_hits", 0) >= 2 or f.get("gematria_score", 0) >= 60:
+            buckets["gematria"]["n"] += 1
+            buckets["gematria"]["w"] += win
+        if f.get("odds_edge", 0) > 0:
+            buckets["odds"]["n"] += 1
+            buckets["odds"]["w"] += win
+        if f.get("form_health_score", 0) >= 60:
+            buckets["form_health"]["n"] += 1
+            buckets["form_health"]["w"] += win
+        if g["confidence"] >= 70:
+            buckets["high_conf"]["n"] += 1
+            buckets["high_conf"]["w"] += win
 
+        by_league[g["league"]]["n"] += 1
+        by_league[g["league"]]["w"] += win
 
-def get_date_nums(d):
-    m, day, y = d.month, d.day, d.year
-    y_top, y_bot = y // 100, y % 100
-    full = m + day + y_top + y_bot
-    short = m + day + y_bot
-    digits = sum(int(c) for c in f"{m}{day}{y}")
-    mixed = m + day + sum(int(c) for c in str(y))
-    doy = d.timetuple().tm_yday
-    is_leap = (y % 4 == 0 and y % 100 != 0) or (y % 400 == 0)
-    left = (366 if is_leap else 365) - doy
-    return {full, short, digits, mixed, doy, left}
+        c = g["confidence"]
+        if c >= 80:
+            cal_key = "80%+"
+        elif c >= 70:
+            cal_key = "70-79%"
+        elif c >= 60:
+            cal_key = "60-69%"
+        else:
+            cal_key = "50-59%"
+        calibration[cal_key]["n"] += 1
+        calibration[cal_key]["w"] += win
 
+        daily_trend[g["date"]]["n"] += 1
+        daily_trend[g["date"]]["w"] += win
 
-def parse_record(rec_str):
-    m = re.search(r"(\d+)\s*-\s*(\d+)", str(rec_str or ""))
-    return (int(m.group(1)), int(m.group(2))) if m else None
+    total_n = len(games)
+    total_w = sum(1 for g in games if g["win"])
+    overall_rate = round((total_w / total_n) * 100, 1) if total_n else 0.0
 
-
-def record_targets(w, l):
-    t = set()
-    concat = int(f"{w}{l}")
-    no_zero = int(f"{w}{l}".replace("0", "") or 0)
-    if concat > 0:
-        t.add(concat)
-    if no_zero > 0:
-        t.add(no_zero)
-    if w > 0:
-        t.add(w)
-    if l > 0:
-        t.add(l)
-    return t
-
-
-def progressive_score(hits):
-    tiers = [0, 0, 42, 62, 76, 88, 95, 100]
-    return tiers[min(hits, len(tiers) - 1)]
-
-
-def score_game_pillars(ev, league_key, lg_path, date_nums, fighters_db, schedule_cache):
-    if not isinstance(ev, dict):
-        return None
-    comps_list = ev.get("competitions") or []
-    comp = comps_list[0] if (comps_list and isinstance(comps_list[0], dict)) else None
-    if not comp:
-        return None
-    competitors = [c for c in (comp.get("competitors") or []) if isinstance(c, dict)]
-    if len(competitors) < 2:
-        return None
-    if not (comp.get("status") or {}).get("type", {}).get("completed"):
-        return None
-
-    home = next((c for c in competitors if c.get("homeAway") == "home"), competitors[0])
-    away = next((c for c in competitors if c.get("homeAway") == "away"), competitors[1])
-
-    try:
-        hs = int(float(home.get("score", 0)))
-        as_ = int(float(away.get("score", 0)))
-    except Exception:
-        return None
-    if hs == as_:
-        return None
-
-    actual_winner = "home" if hs > as_ else "away"
-    ev_date = (ev.get("date") or "")[:10]
-
-    def team_info(c):
-        t = c.get("team") if isinstance(c.get("team"), dict) else {}
-        a = c.get("athlete") if isinstance(c.get("athlete"), dict) else {}
-        recs = [r for r in (c.get("records") or []) if isinstance(r, dict)]
-        tot = next((r.get("summary") for r in recs if r.get("type") == "total"), recs[0].get("summary") if recs else "")
-        home_r = next((r.get("summary") for r in recs if r.get("type") == "home"), "")
-        road_r = next((r.get("summary") for r in recs if r.get("type") == "road"), "")
-        return {
-            "id": str(t.get("id") or c.get("id") or ""),
-            "name": t.get("displayName") or a.get("displayName") or "",
-            "short": t.get("shortDisplayName") or a.get("shortName") or t.get("name") or "",
-            "loc": t.get("location") or "",
-            "mascot": t.get("name") or a.get("displayName") or "",
-            "rec": parse_record(tot),
-            "home_rec": parse_record(home_r),
-            "road_rec": parse_record(road_r),
+    factor_metrics = {}
+    for k, v in buckets.items():
+        rate = round((v["w"] / v["n"]) * 100, 1) if v["n"] else overall_rate
+        factor_metrics[k] = {
+            "label": v["label"],
+            "wins": v["w"],
+            "total": v["n"],
+            "win_rate": rate,
+            "lift_vs_avg": round(rate - overall_rate, 1)
         }
 
-    hi, ai = team_info(home), team_info(away)
-    venue_obj = comp.get("venue") if isinstance(comp.get("venue"), dict) else {}
-    venue = venue_obj.get("fullName") or ""
-    entities = [x for x in {hi["name"], hi["loc"], hi["mascot"], ai["name"], ai["loc"], ai["mascot"], venue} if x]
+    league_metrics = {
+        lg: {
+            "wins": v["w"],
+            "losses": v["n"] - v["w"],
+            "total": v["n"],
+            "win_rate": round((v["w"] / v["n"]) * 100, 1) if v["n"] else 0.0
+        }
+        for lg, v in sorted(by_league.items())
+    }
 
-    h_rec = hi["rec"]
-    a_rec = ai["rec"]
-    if h_rec:
-        h_rec = (max(0, h_rec[0] - (1 if actual_winner == "home" else 0)), max(0, h_rec[1] - (1 if actual_winner == "away" else 0)))
-    if a_rec:
-        a_rec = (max(0, a_rec[0] - (1 if actual_winner == "away" else 0)), max(0, a_rec[1] - (1 if actual_winner == "home" else 0)))
+    cal_metrics = {
+        k: {
+            "wins": v["w"],
+            "total": v["n"],
+            "actual_rate": round((v["w"] / v["n"]) * 100, 1) if v["n"] else 0.0
+        }
+        for k, v in calibration.items()
+    }
 
-    hw_t = record_targets(h_rec[0] + 1, h_rec[1]) if h_rec else set()
-    hl_t = record_targets(h_rec[0], h_rec[1] + 1) if h_rec else set()
-    aw_t = record_targets(a_rec[0] + 1, a_rec[1]) if a_rec else set()
-    al_t = record_targets(a_rec[0], a_rec[1] + 1) if a_rec else set()
-
-    def count_hits(win_t, opp_loss_t, short_nm):
-        hits = 0
-        for ent in entities:
-            for val in calc_ciphers(ent):
-                if val > 0 and (val in win_t or val in opp_loss_t):
-                    hits += 1
-        for val in calc_ciphers(short_nm):
-            if val in date_nums:
-                hits += 1
-        return hits
-
-    home_gem = progressive_score(count_hits(hw_t, al_t, hi["short"]))
-    away_gem = progressive_score(count_hits(aw_t, hl_t, ai["short"]))
-
-    # Scaled No-Vig Fair Odds (safely handles null odds entries)
-    odds_list = comp.get("odds") or []
-    odds = odds_list[0] if (odds_list and isinstance(odds_list[0], dict)) else {}
-    h_odds = odds.get("homeTeamOdds") if isinstance(odds.get("homeTeamOdds"), dict) else {}
-    a_odds = odds.get("awayTeamOdds") if isinstance(odds.get("awayTeamOdds"), dict) else {}
-    h_ml = h_odds.get("moneyLine")
-    a_ml = a_odds.get("moneyLine")
-
-    fair_home_prob = 0.5
-    if isinstance(h_ml, (int, float)) and isinstance(a_ml, (int, float)):
-        ih, ia = american_to_implied(h_ml), american_to_implied(a_ml)
-        if ih + ia > 0:
-            fair_home_prob = ih / (ih + ia)
-    elif h_odds.get("favorite"):
-        fair_home_prob = 0.58
-    elif a_odds.get("favorite"):
-        fair_home_prob = 0.42
-    fair_away_prob = 1.0 - fair_home_prob
-
-    h_pct = (h_rec[0] / (h_rec[0] + h_rec[1])) if (h_rec and (h_rec[0] + h_rec[1]) > 0) else 0.5
-    a_pct = (a_rec[0] / (a_rec[0] + a_rec[1])) if (a_rec and (a_rec[0] + a_rec[1]) > 0) else 0.5
-
-    h_sp = hi["home_rec"]
-    a_sp = ai["road_rec"]
-    h_sp_pct = (h_sp[0] / (h_sp[0] + h_sp[1])) if (h_sp and (h_sp[0] + h_sp[1]) > 0) else h_pct
-    a_sp_pct = (a_sp[0] / (a_sp[0] + a_sp[1])) if (a_sp and (a_sp[0] + a_sp[1]) > 0) else a_pct
-
-    is_fight = league_key in FIGHT_LEAGUES
-    split_home = min(95, max(15, 50 + (h_sp_pct - a_sp_pct) * 45))
-    split_away = min(95, max(15, 50 + (a_sp_pct - h_sp_pct) * 45))
-    odds_home = min(95, max(12, round(fair_home_prob * 100)))
-    odds_away = min(95, max(12, round(fair_away_prob * 100)))
-
-    home_h2h = odds_home if is_fight else min(95, max(12, round(odds_home * 0.60 + split_home * 0.40)))
-    away_h2h = odds_away if is_fight else min(95, max(12, round(odds_away * 0.60 + split_away * 0.40)))
-
-    # L5 / L10 Recent Form
-    home_form = None if is_fight else get_team_form(lg_path, hi["id"], ev_date, schedule_cache)
-    away_form = None if is_fight else get_team_form(lg_path, ai["id"], ev_date, schedule_cache)
-    blended_h = (h_pct * 0.50 + home_form["pct"] * 0.50) if home_form else h_pct
-    blended_a = (a_pct * 0.50 + away_form["pct"] * 0.50) if away_form else a_pct
-    margin_boost = max(-8, min(8, round((home_form["avg_margin"] - away_form["avg_margin"]) * 0.5))) if (home_form and away_form) else 0
-
-    # UFC Fight IQ Edge + Auto-Gauged Weight Cut Penalty
-    fight_edge = compute_fight_edge(hi["name"], ai["name"], fighters_db) if is_fight else 0
-    home_cut_pen = compute_weight_cut_penalty(hi["name"], fighters_db) if is_fight else 0
-    away_cut_pen = compute_weight_cut_penalty(ai["name"], fighters_db) if is_fight else 0
-
-    home_ros = min(95, max(12, round(56 + (blended_h - blended_a) * 32 + margin_boost + fight_edge - home_cut_pen + away_cut_pen)))
-    away_ros = min(95, max(12, round(52 + (blended_a - blended_h) * 32 - margin_boost - fight_edge - away_cut_pen + home_cut_pen)))
+    trend_series = [
+        {
+            "date": d,
+            "wins": v["w"],
+            "total": v["n"],
+            "win_rate": round((v["w"] / v["n"]) * 100, 1) if v["n"] else 0.0
+        }
+        for d, v in sorted(daily_trend.items())[-30:]
+    ]
 
     return {
-        "id": str(ev.get("id")),
-        "league": league_key,
-        "date": ev_date,
-        "actual_winner": actual_winner,
-        "home": {"gem": home_gem, "h2h": home_h2h, "ros": home_ros},
-        "away": {"gem": away_gem, "h2h": away_h2h, "ros": away_ros},
+        "wins": total_w,
+        "losses": total_n - total_w,
+        "total": total_n,
+        "win_rate": overall_rate,
+        "gap_to_target": round(max(0.0, TARGET_WIN_RATE - overall_rate), 1),
+        "factors": factor_metrics,
+        "leagues": league_metrics,
+        "calibration": cal_metrics,
+        "daily_trend": trend_series
     }
 
 
-def eval_weights(games, w):
-    wins = 0
-    total = 0
-    for g in games:
-        if not isinstance(g.get("home"), dict) or not isinstance(g.get("away"), dict):
+def build_suggestions(stats, current_weights):
+    working, not_working, suggestions = [], [], []
+    for k in ("gematria", "odds", "form_health"):
+        m = stats["factors"][k]
+        if m["total"] == 0:
             continue
-        total += 1
-        hs = g["home"].get("gem", 0) * w["gem"] + g["home"].get("h2h", 0) * w["h2h"] + g["home"].get("ros", 0) * w["ros"]
-        as_ = g["away"].get("gem", 0) * w["gem"] + g["away"].get("h2h", 0) * w["h2h"] + g["away"].get("ros", 0) * w["ros"]
-        pick = "home" if hs >= as_ else "away"
-        if pick == g.get("actual_winner"):
-            wins += 1
-    return wins, total
+        if m["lift_vs_avg"] >= 2.0:
+            working.append(f"{m['label']} is outperforming at {m['win_rate']}% (+{m['lift_vs_avg']}% lift over baseline).")
+            suggestions.append(f"Increase weight on {m['label']} on next monthly rebalance.")
+        elif m["lift_vs_avg"] <= -2.0:
+            not_working.append(f"{m['label']} is lagging at {m['win_rate']}% ({m['lift_vs_avg']}% vs baseline).")
+            suggestions.append(f"Trim weight on {m['label']} and require stricter signal confirmation.")
+
+    for lg, lm in stats["leagues"].items():
+        if lm["total"] >= 5 and lm["win_rate"] >= 70.0:
+            working.append(f"{lg} is strong at {lm['win_rate']}% ({lm['wins']}-{lm['losses']}).")
+        elif lm["total"] >= 5 and lm["win_rate"] < 52.0:
+            not_working.append(f"{lg} is underperforming at {lm['win_rate']}% ({lm['wins']}-{lm['losses']}).")
+            suggestions.append(f"Tighten confidence threshold for {lg} picks until league variance stabilizes.")
+
+    if not working:
+        working.append("Baseline multi-pillar balance is holding steady; gathering more graded samples.")
+    if not not_working:
+        not_working.append("No major pillar breakdowns detected in the current sample.")
+    if stats["win_rate"] < TARGET_WIN_RATE:
+        suggestions.append(
+            f"Current win rate is {stats['win_rate']}% ({stats['gap_to_target']}% below {TARGET_WIN_RATE}% target). "
+            f"Prioritize 2+ pillar convergence and filter out sub-60% edge spots."
+        )
+    return working, not_working, suggestions
 
 
-def optimize_weights(games, current_w, max_step=10):
-    if len(games) < 15:
-        return current_w, None
-    best_w = dict(current_w)
-    best_wins, _ = eval_weights(games, current_w)
+def compute_monthly_weights(current_weights, stats):
+    """Shifts weights conservatively (max ±6% per pillar per month) based on factor lift."""
+    if stats["total"] < 10:
+        return dict(current_weights), "Insufficient graded games (<10) for monthly rebalance."
 
-    for gem in range(10, 71, 5):
-        for h2h in range(10, 71, 5):
-            ros = 100 - gem - h2h
-            if ros < 10 or ros > 70:
-                continue
-            cand = {"gem": gem, "h2h": h2h, "ros": ros}
-            w_cnt, _ = eval_weights(games, cand)
-            if w_cnt > best_wins:
-                best_wins = w_cnt
-                best_w = cand
+    new_w = dict(current_weights)
+    deltas = []
+    map_keys = [("gem", "gematria"), ("h2h", "odds"), ("ros", "form_health")]
+    for w_key, f_key in map_keys:
+        lift = stats["factors"][f_key]["lift_vs_avg"]
+        shift = max(-6, min(6, round(lift * 0.45)))
+        new_w[w_key] = max(10, min(70, new_w[w_key] + shift))
+        if shift != 0:
+            deltas.append(f"{w_key.upper()} {'+' if shift > 0 else ''}{shift}%")
 
-    stepped = {}
-    for k in ("gem", "h2h", "ros"):
-        diff = best_w[k] - current_w[k]
-        stepped[k] = current_w[k] + max(-max_step, min(max_step, diff))
-    s = sum(stepped.values())
-    if s != 100:
-        stepped["ros"] += 100 - s
-    return stepped, best_w
-
-
-# --- UFC FIGHTER STRIKING, WEIGHT-CUT HISTORY & SOURCE SYNC ---
-WEIGHT_CLASS_LBS = {
-    "strawweight": 115,
-    "flyweight": 125,
-    "bantamweight": 135,
-    "featherweight": 145,
-    "lightweight": 155,
-    "welterweight": 170,
-    "middleweight": 185,
-    "light heavyweight": 205,
-    "heavyweight": 265,
-}
-
-
-def extract_weight_lbs_from_text(text):
-    t = (text or "").lower()
-    for wc_name, lbs in WEIGHT_CLASS_LBS.items():
-        if wc_name in t:
-            return float(lbs)
-    m = re.search(r"(\d{3}(?:\.\d+)?)\s*(?:lbs?|pounds?)", t)
-    if m:
-        val = float(m.group(1))
-        if 105 <= val <= 285:
-            return val
-    return None
-
-
-def sync_ufc_fighters():
-    fighters = load_json(FIGHTERS_FILE, {})
-    today = datetime.now(timezone.utc).date()
-    athlete_ids = {}
-
-    for offset in range(-3, 15):
-        d_str = (today + timedelta(days=offset)).strftime("%Y%m%d")
-        data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/mma/ufc/scoreboard?dates={d_str}")
-        if not isinstance(data, dict):
-            continue
-        for ev in data.get("events") or []:
-            if not isinstance(ev, dict):
-                continue
-            for comp in ev.get("competitions") or []:
-                if not isinstance(comp, dict):
-                    continue
-                bout_wc = (comp.get("type") or {}).get("text") or ""
-                for c in comp.get("competitors") or []:
-                    if not isinstance(c, dict):
-                        continue
-                    ath = c.get("athlete") if isinstance(c.get("athlete"), dict) else {}
-                    aid = str(ath.get("id") or c.get("id") or "")
-                    name = ath.get("displayName") or ath.get("fullName") or ""
-                    if aid and name:
-                        athlete_ids[aid] = {"name": name, "bout_wc": bout_wc}
-
-    for aid, meta in athlete_ids.items():
-        name = meta["name"]
-        fkey = norm_fighter_key(name)
-        prev = fighters.get(fkey) or {}
-        profile = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}")
-        stats_data = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}/stats")
-        gamelog = fetch_json(f"https://site.web.api.espn.com/apis/common/v3/sports/mma/athletes/{aid}/gamelog")
-
-        ath_obj = (profile or {}).get("athlete") if isinstance(profile, dict) else {}
-        if not isinstance(ath_obj, dict):
-            ath_obj = {}
-        stance = (ath_obj.get("stance") or {}).get("text") if isinstance(ath_obj.get("stance"), dict) else None
-        stance = stance or prev.get("stance") or "Orthodox"
-        reach = ath_obj.get("displayReach") or prev.get("reach") or "—"
-
-        espn_profile_url = f"https://www.espn.com/mma/fighter/_/id/{aid}"
-        espn_stats_url = f"https://www.espn.com/mma/fighter/stats/_/id/{aid}"
-        for lnk in ath_obj.get("links") or []:
-            if not isinstance(lnk, dict):
-                continue
-            href = lnk.get("href") or ""
-            if "espn.com/mma/fighter" in href and "/stats/" not in href:
-                espn_profile_url = href
-                break
-
-        stat_map = {}
-        for cat in ((stats_data or {}).get("categories") or []) if isinstance(stats_data, dict) else []:
-            if not isinstance(cat, dict):
-                continue
-            for k, v in zip(cat.get("names") or [], cat.get("totals") or []):
-                stat_map[str(k).lower()] = v
-
-        def to_float(val, default):
-            try:
-                return float(str(val).replace("%", "").strip())
-            except Exception:
-                return default
-
-        str_def = round(to_float(stat_map.get("sigstrdef") or stat_map.get("strdef"), prev.get("str_def", 55)))
-        sapm = round(to_float(stat_map.get("sigstrabsorbedpermin") or stat_map.get("sapm"), prev.get("sapm", 3.2)), 2)
-
-        head_p = round(to_float(stat_map.get("sigstrheadpct") or stat_map.get("headpct"), prev.get("head_pct", 64)))
-        body_p = round(to_float(stat_map.get("sigstrbodypct") or stat_map.get("bodypct"), prev.get("body_pct", 20)))
-        leg_p = round(to_float(stat_map.get("sigstrlegpct") or stat_map.get("legpct"), prev.get("leg_pct", 16)))
-        total_p = head_p + body_p + leg_p
-        if total_p > 0 and total_p != 100:
-            head_p = round((head_p / total_p) * 100)
-            body_p = round((body_p / total_p) * 100)
-            leg_p = max(0, 100 - head_p - body_p)
-
-        observed_weights = []
-        prev_wc = prev.get("weight_cut") if isinstance(prev.get("weight_cut"), dict) else {}
-        missed_count = int(prev_wc.get("missed_count") or 0)
-
-        listed_w = parse_float_num(ath_obj.get("weight") or ath_obj.get("displayWeight"))
-        if listed_w and 105 <= listed_w <= 285:
-            observed_weights.append(listed_w)
-
-        wc_obj = ath_obj.get("weightClass") if isinstance(ath_obj.get("weightClass"), dict) else {}
-        bout_w = extract_weight_lbs_from_text(meta.get("bout_wc") or wc_obj.get("text"))
-        if bout_w:
-            observed_weights.append(bout_w)
-
-        for k in ("min_lbs", "max_lbs", "current_lbs"):
-            if prev_wc.get(k):
-                observed_weights.append(float(prev_wc[k]))
-
-        events_map = (gamelog or {}).get("events") if isinstance(gamelog, dict) else {}
-        if isinstance(events_map, dict):
-            for _, ev_obj in events_map.items():
-                txt = json.dumps(ev_obj)
-                w_found = extract_weight_lbs_from_text(txt)
-                if w_found:
-                    observed_weights.append(w_found)
-                if "catchweight" in txt.lower() or "missed weight" in txt.lower():
-                    missed_count = max(missed_count, 1)
-
-        current_lbs = bout_w or listed_w or prev_wc.get("current_lbs")
-        if current_lbs:
-            observed_weights.append(current_lbs)
-
-        weight_cut = None
-        if observed_weights and current_lbs:
-            min_lbs = round(min(observed_weights), 1)
-            max_lbs = round(max(observed_weights), 1)
-            if max_lbs - min_lbs < 2.0 and current_lbs < 240:
-                max_lbs = round(current_lbs + 15.0, 1)
-            weight_cut = {
-                "min_lbs": min_lbs,
-                "max_lbs": max_lbs,
-                "current_lbs": round(current_lbs, 1),
-                "missed_count": missed_count,
-                "source_url": espn_profile_url,
-            }
-
-        fighters[fkey] = {
-            "name": name,
-            "stance": stance,
-            "reach": reach,
-            "str_def": str_def,
-            "sapm": sapm,
-            "head_pct": head_p,
-            "body_pct": body_p,
-            "leg_pct": leg_p,
-            "weight_cut": weight_cut,
-            "sources": [espn_profile_url, espn_stats_url],
-            "updated": today.isoformat(),
-        }
-
-    save_json(FIGHTERS_FILE, fighters)
-    print(f"Synced {len(athlete_ids)} active UFC fighters ({len(fighters)} total in {FIGHTERS_FILE}).")
-    return fighters
+    normalized = normalize_weights(new_w)
+    note = "Monthly factor-attribution adjustment: " + (", ".join(deltas) if deltas else "Weights held steady.")
+    return normalized, note
 
 
 def main():
     now = datetime.now(timezone.utc)
-    today = now.date()
+    today_str = now.strftime("%Y-%m-%d")
+    month_tag = now.strftime("%Y-%m")
+    force_rebalance = os.getenv("FORCE_REBALANCE", "false").lower() == "true"
 
-    fighters_db = sync_ufc_fighters()
+    report = load_json(REPORT_FILE, {
+        "algo_version": month_tag,
+        "rebalance_cadence": "monthly",
+        "target_win_rate": TARGET_WIN_RATE,
+        "weights": dict(DEFAULT_WEIGHTS),
+        "last_rebalance_month": "",
+        "weight_history": [],
+        "biweekly_reports": []
+    })
 
-    history = load_json(HISTORY_FILE, [])
-    history = [
-        g for g in history
-        if isinstance(g, dict) and isinstance(g.get("home"), dict) and isinstance(g.get("away"), dict)
-    ]
-    report = load_json(REPORT_FILE, {})
-    existing_ids = {g["id"] for g in history}
-    schedule_cache = {}
+    active_weights = report.get("weights", dict(DEFAULT_WEIGHTS))
+    active_version = report.get("algo_version", month_tag)
 
-    new_games = []
-    for offset in range(1, 4):
-        d = today - timedelta(days=offset)
-        d_str = d.strftime("%Y%m%d")
-        d_nums = get_date_nums(d)
-        for lg_key, lg_path in LEAGUES:
-            data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/{lg_path}/scoreboard?dates={d_str}")
-            if not isinstance(data, dict):
-                continue
-            for ev in data.get("events") or []:
-                if not isinstance(ev, dict):
-                    continue
-                gid = str(ev.get("id"))
-                if gid in existing_ids:
-                    continue
-                scored = score_game_pillars(ev, lg_key, lg_path, d_nums, fighters_db, schedule_cache)
-                if scored:
-                    new_games.append(scored)
-                    existing_ids.add(gid)
+    history = load_json(HISTORY_FILE, {"dates": {}})
+    history = ensure_frozen_snapshots(history, active_version, active_weights)
 
-    history.extend(new_games)
-    cutoff = (today - timedelta(days=60)).isoformat()
-    history = [g for g in history if g.get("date", "") >= cutoff]
+    all_graded = extract_graded_games(history)
+    cutoff_60 = (now - timedelta(days=60)).strftime("%Y-%m-%d")
+    cutoff_14 = (now - timedelta(days=14)).strftime("%Y-%m-%d")
+
+    recent_60 = [g for g in all_graded if g["date"] >= cutoff_60]
+    recent_14 = [g for g in all_graded if g["date"] >= cutoff_14]
+
+    stats_60 = analyze_factors(recent_60)
+    stats_14 = analyze_factors(recent_14)
+    working, not_working, suggestions = build_suggestions(stats_60, active_weights)
+
+    # 1. MONTHLY REBALANCE GATE (Runs only on the 1st of the month or manual force)
+    rebalance_note = "Next scheduled weight adjustment: 1st of next month."
+    if (now.day == 1 and report.get("last_rebalance_month") != month_tag) or force_rebalance:
+        prev_weights = dict(active_weights)
+        new_weights, rebalance_note = compute_monthly_weights(active_weights, stats_60)
+        active_weights = new_weights
+        active_version = month_tag
+        report["algo_version"] = active_version
+        report["weights"] = active_weights
+        report["last_rebalance_month"] = month_tag
+        report.setdefault("weight_history", []).append({
+            "date": today_str,
+            "algo_version": active_version,
+            "previous": prev_weights,
+            "updated": active_weights,
+            "win_rate_at_rebalance": stats_60["win_rate"],
+            "note": rebalance_note
+        })
+        report["weight_history"] = report["weight_history"][-24:]
+
+    # 2. BIWEEKLY EXECUTIVE SUMMARY REPORT (Generated on 1st & 15th, or if none exists yet)
+    biweekly_list = report.setdefault("biweekly_reports", [])
+    already_logged = any(r.get("period_end") == today_str for r in biweekly_list)
+    if (now.day in (1, 15) or not biweekly_list) and not already_logged:
+        bw_working, bw_not_working, bw_suggestions = build_suggestions(stats_14 if recent_14 else stats_60, active_weights)
+        biweekly_list.insert(0, {
+            "period_start": cutoff_14,
+            "period_end": today_str,
+            "algo_version": active_version,
+            "weights_active": active_weights,
+            "games_graded": stats_14["total"],
+            "record": f"{stats_14['wins']}-{stats_14['losses']}",
+            "win_rate": stats_14["win_rate"],
+            "what_changed": rebalance_note,
+            "whats_working": bw_working,
+            "whats_not_working": bw_not_working,
+            "suggestions": bw_suggestions
+        })
+        report["biweekly_reports"] = biweekly_list[:26]
+
+    report.update({
+        "updated_at": now.isoformat(),
+        "rebalance_cadence": "monthly",
+        "target_win_rate": TARGET_WIN_RATE,
+        "summary_60d": stats_60,
+        "summary_14d": stats_14,
+        "whats_working": working,
+        "whats_not_working": not_working,
+        "suggestions": suggestions,
+        "last_rebalance_note": rebalance_note
+    })
+
     save_json(HISTORY_FILE, history)
-
-    active_w = report.get("active_weights") or dict(DEFAULT_WEIGHTS)
-    league_w = report.get("league_weights") or {}
-    is_monday = today.weekday() == 0
-    reason = report.get("adjustment_reason") or "Monitoring 60-day rolling window. Next auto-retune runs Monday."
-
-    if is_monday or not league_w:
-        new_global, _ = optimize_weights(history, active_w, max_step=10)
-        if new_global != active_w:
-            reason = f"Retuned global weights from {active_w['gem']}/{active_w['h2h']}/{active_w['ros']} to {new_global['gem']}/{new_global['h2h']}/{new_global['ros']} (capped at ±10%) to maximize 60-day win rate."
-        else:
-            reason = f"Global weights ({active_w['gem']}/{active_w['h2h']}/{active_w['ros']}) held steady as highest-converting split."
-        active_w = new_global
-
-        by_league = {}
-        for g in history:
-            by_league.setdefault(g["league"], []).append(g)
-        for lg_key, lg_games in by_league.items():
-            if len(lg_games) >= 30:
-                cur_lw = league_w.get(lg_key) or dict(active_w)
-                opt_lw, _ = optimize_weights(lg_games, cur_lw, max_step=10)
-                league_w[lg_key] = opt_lw
-
-    wins, total = eval_weights(history, active_w)
-    win_rate = round((wins / total) * 100, 1) if total else 0.0
-
-    new_report = {
-        "last_updated": today.isoformat(),
-        "total_games_graded": total,
-        "overall_record": f"{wins}-{total - wins}",
-        "overall_win_rate": win_rate,
-        "active_weights": active_w,
-        "league_weights": league_w,
-        "adjustment_reason": reason,
-    }
-    save_json(REPORT_FILE, new_report)
-    print(f"Agent complete: {new_report['overall_record']} ({win_rate}%) across {total} games.")
+    save_json(REPORT_FILE, report)
+    print(f"AlignIQ Agent complete | Algo {active_version} | 60d: {stats_60['win_rate']}% ({stats_60['wins']}-{stats_60['losses']})")
 
 
 if __name__ == "__main__":
