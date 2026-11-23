@@ -11,11 +11,11 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="icon" type="image/png" href="icon.png" />
-  <link rel="stylesheet" href="styles.css?v=7" />
+  <link rel="stylesheet" href="styles.css?v=9" />
 </head>
 <body>
   <div id="app">
-    <!-- SIGN-IN SCREEN -->
+    <!-- SIGN-IN SCREEN (REAL FIREBASE AUTH + REMEMBER DEVICE) -->
     <section id="auth-screen">
       <div class="glow-orb glow-1"></div>
       <div class="glow-orb glow-2"></div>
@@ -32,19 +32,26 @@
         <div class="live-pill"><span class="pulse-dot"></span><span id="auth-date-badge">LIVE MULTI-SPORT ENGINE</span></div>
         <h1 class="auth-title">Align<span>IQ</span></h1>
         <p class="auth-sub">AI Agent, Scaled Fair Odds, Body Maps &amp; Verified Sources</p>
-        <div class="feature-row">
-          <div class="feature-box"><strong>Fair Odds</strong><span>+EV &amp; Arb</span></div>
-          <div class="feature-box"><strong>Body Maps</strong><span>Weak Points</span></div>
-          <div class="feature-box"><strong>Sources</strong><span>1-Tap Proof</span></div>
-        </div>
-        <button class="oauth-btn btn-google" onclick="signIn('Google')">
+
+        <button class="oauth-btn btn-google" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.6 2.8C6.1 7.2 8.8 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.2 14.8c-.2-.8-.4-1.8-.4-2.8s.2-2 .4-2.8L1.6 6.4C.6 8.1 0 10 0 12s.6 3.9 1.6 5.6l3.6-2.8z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.2 0-5.9-2.2-6.8-5.1l-3.6 2.8C3.5 19.8 7.4 23 12 23z"/></svg>
           Continue with Google
         </button>
-        <button class="oauth-btn btn-apple" onclick="signIn('Apple')">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
-          Continue with Apple
-        </button>
+
+        <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          <input id="auth-email" class="form-input" type="email" placeholder="Email address" />
+          <input id="auth-password" class="form-input" type="password" placeholder="Password (6+ chars)" />
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#cbd5e1;cursor:pointer;margin:2px 0;">
+            <input id="remember-device" type="checkbox" checked style="accent-color:#10b981;width:15px;height:15px;" />
+            Remember this device (stay logged in)
+          </label>
+          <div style="display:flex;gap:8px;">
+            <button class="primary-btn" style="flex:1;margin:0;" onclick="signInEmail(false)">Sign In</button>
+            <button class="icon-btn" style="flex:1;height:42px;" onclick="signInEmail(true)">Create Account</button>
+          </div>
+          <p id="auth-error" style="display:none;color:#f87171;font-size:11.5px;margin:2px 0 0;"></p>
+        </div>
+
         <p class="auth-note">For entertainment &amp; analytical modeling only. Auto-syncs live scores, odds &amp; AI weights.</p>
       </div>
     </section>
@@ -63,6 +70,8 @@
             <div class="brand-name">Align<span>IQ</span></div>
           </div>
           <div class="top-actions">
+            <button class="icon-btn owner-only" style="display:none;border-color:#10b981;" onclick="openAdminModal()" title="Owner Security & Access">🛡️</button>
+            <button class="icon-btn owner-only" style="display:none;border-color:#38bdf8;" onclick="openOwnerAnalyticsModal()" title="Owner Analytics & Biweekly Reports">📊</button>
             <button class="icon-btn" onclick="openToolsModal('calc')" title="Calculators">🧮</button>
             <button class="icon-btn" onclick="toggleTuner()">🤖 Agent</button>
             <button class="icon-btn accent" onclick="openScanModal()">+ Scan</button>
@@ -108,12 +117,12 @@
       <!-- AI AGENT & WEIGHT TUNER PANEL -->
       <div id="tuner-panel">
         <div class="tuner-header">
-          <h3>AI Agent &amp; Private Odds Key</h3>
+          <h3>AI Agent Weights</h3>
           <button class="icon-btn" style="height:26px;font-size:11px;" onclick="resetToAgentWeights()">Use AI Weights</button>
         </div>
         <div id="agent-status-box" class="agent-box">
           <strong>Connecting to AlignIQ Agent...</strong>
-          Loading verified 60-day record and per-league weights.
+          Loading verified 60-day record and monthly pillar weights.
         </div>
         <div class="slider-row">
           <div class="slider-label"><span>Gematria Convergence (2+ Refs)</span><strong id="w-gem-val">42%</strong></div>
@@ -127,16 +136,18 @@
           <div class="slider-label"><span>L5/L10 Form, Health &amp; Weight Cut</span><strong id="w-ros-val">37%</strong></div>
           <input type="range" id="w-ros" min="0" max="100" value="37" oninput="onWeightChange()" />
         </div>
-        <div class="form-group" style="margin-top:10px;margin-bottom:0;">
-          <label>Private Odds API Key (Device Only) <span id="credits-badge" style="color:var(--blue);font-weight:800;"></span></label>
-          <input id="odds-api-key" class="form-input" type="password" placeholder="Paste your private Odds API key" onchange="saveOddsKey(this.value)" />
+        <!-- OWNER-ONLY API CREDITS READOUT -->
+        <div class="form-group owner-only" style="display:none;margin-top:10px;margin-bottom:0;">
+          <label>Owner Odds Proxy Active <span id="credits-badge" style="color:var(--blue);font-weight:800;"></span></label>
+          <input id="odds-api-key" type="hidden" value="PROXY_ACTIVE" />
         </div>
       </div>
 
+      <!-- CLICKABLE GRADED PICKS BANNER -->
       <div id="accuracy-banner">
         <div class="acc-left">
           <strong id="acc-record">Graded Picks: 0–0</strong>
-          <span>Auto-graded against final scores on this slate</span>
+          <span>Tap to inspect frozen picks, algo snapshot &amp; references</span>
         </div>
         <div class="acc-rate" id="acc-pct">0%</div>
       </div>
@@ -145,13 +156,46 @@
         <div class="feed-header">
           <div>
             <div class="feed-title">Popular Games · Highest Confidence</div>
-            <div class="feed-sub" id="feed-sub">Auto-tuned by AlignIQ Agent · Live 30s sync</div>
+            <div class="feed-sub" id="feed-sub">Monthly AI-tuned model · Live 30s sync</div>
           </div>
           <div class="status-badge"><span class="pulse-dot"></span><span id="live-count-badge">Loading...</span></div>
         </div>
         <div id="games-feed"></div>
       </div>
     </section>
+
+    <!-- OWNER-ONLY SECURITY & ACCESS MODAL -->
+    <div class="modal-backdrop" id="admin-modal" onclick="closeModalOnBg(event, 'admin-modal')">
+      <div class="modal-sheet">
+        <div class="modal-head">
+          <h2>🛡️ Owner Security &amp; Access</h2>
+          <button class="close-btn" onclick="closeModal('admin-modal')">×</button>
+        </div>
+        <div id="admin-body"></div>
+      </div>
+    </div>
+
+    <!-- OWNER-ONLY ANALYTICS, CHARTS & BIWEEKLY REPORTS MODAL -->
+    <div class="modal-backdrop" id="owner-analytics-modal" onclick="closeModalOnBg(event, 'owner-analytics-modal')">
+      <div class="modal-sheet">
+        <div class="modal-head">
+          <h2>📊 Owner Intelligence &amp; Biweekly Reports</h2>
+          <button class="close-btn" onclick="closeModal('owner-analytics-modal')">×</button>
+        </div>
+        <div id="owner-analytics-body"></div>
+      </div>
+    </div>
+
+    <!-- GRADED PICKS & FROZEN ALGO AUDIT MODAL -->
+    <div class="modal-backdrop" id="graded-audit-modal" onclick="closeModalOnBg(event, 'graded-audit-modal')">
+      <div class="modal-sheet">
+        <div class="modal-head">
+          <h2>📋 Graded Picks &amp; Frozen Algo Audit</h2>
+          <button class="close-btn" onclick="closeModal('graded-audit-modal')">×</button>
+        </div>
+        <div id="graded-audit-body"></div>
+      </div>
+    </div>
 
     <!-- SETTINGS MODAL (THEME + HELP AI) -->
     <div class="modal-backdrop" id="settings-modal" onclick="closeModalOnBg(event, 'settings-modal')">
@@ -255,10 +299,12 @@
     </div>
   </div>
 
-  <script src="app.js?v=7"></script>
-  <script src="assistant.js?v=8"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="app.js?v=9"></script>
+  <script type="module" src="security.js?v=2"></script>
+  <script src="audit_analytics.js?v=1"></script>
   <script>
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js?v=5'); }
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js?v=6'); }
   </script>
 </body>
 </html>
