@@ -12,13 +12,13 @@ import {
   signOut as fbSignOut
 } from 'https://www.gstatic.com/firebasejs/13.3.0/firebase-auth.js';
 
-// === 1. FILL IN YOUR VALUES HERE ===
-const WORKER_URL = 'https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev';
+// === 1. CONFIGURATION ===
+const WORKER_URL = 'https://alighiq-gate.levaun2024.workers.dev';
 const FIREBASE_CONFIG = {
-  apiKey: 'PASTE_FIREBASE_API_KEY',
-  authDomain: 'PASTE_PROJECT.firebaseapp.com',
-  projectId: 'PASTE_PROJECT_ID',
-  appId: 'PASTE_APP_ID'
+  apiKey: 'AIzaSyC1FSP-PqyWeW7Lg2AAm5mNDd1egzFSR2Q',
+  authDomain: 'aligniq-13df6.firebaseapp.com',
+  projectId: 'aligniq-13df6',
+  appId: '1:407475266998:web:56cb0b82f9f12185f20d17'
 };
 
 const app = initializeApp(FIREBASE_CONFIG);
