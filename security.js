@@ -6,6 +6,8 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -24,9 +26,28 @@ const FIREBASE_CONFIG = {
 const app = initializeApp(FIREBASE_CONFIG);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-// Ensure persistent login is enabled by default on app boot
+// Set persistence at boot & whenever checkbox changes (never right before signInWithPopup)
 setPersistence(auth, browserLocalPersistence).catch(() => {});
+
+function wireRememberCheckbox() {
+  const box = document.getElementById('remember-device');
+  if (!box || box.dataset.wired) return;
+  box.dataset.wired = '1';
+  box.addEventListener('change', () => {
+    const remember = box.checked;
+    localStorage.setItem('aligniq_remember', remember ? '1' : '0');
+    setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence).catch(() => {});
+  });
+}
+wireRememberCheckbox();
+setTimeout(wireRememberCheckbox, 500);
+
+// Complete any iOS redirect sign-in on return
+getRedirectResult(auth).catch((err) => {
+  if (err && err.message) setAuthError(err.message.replace('Firebase: ', ''));
+});
 
 function getDeviceId() {
   let id = localStorage.getItem('aligniq_device_id');
@@ -35,13 +56,6 @@ function getDeviceId() {
     localStorage.setItem('aligniq_device_id', id);
   }
   return id;
-}
-
-async function applyRememberPreference() {
-  const box = document.getElementById('remember-device');
-  const remember = box ? box.checked : true;
-  localStorage.setItem('aligniq_remember', remember ? '1' : '0');
-  await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
 }
 
 let currentToken = '';
@@ -108,20 +122,29 @@ function setOwnerVisibility(show) {
   if (typeof window.syncOwnerAlgoLock === 'function') window.syncOwnerAlgoLock();
 }
 
-// === 5. AUTH HANDLERS WITH PERSISTENT LOGIN ===
+// === 5. AUTH HANDLERS (iOS SAFARI & PWA SAFE) ===
 function setAuthError(msg) {
   const el = document.getElementById('auth-error');
   if (el) { el.textContent = msg || ''; el.style.display = msg ? 'block' : 'none'; }
 }
 
-window.signInGoogle = async () => {
+window.signInGoogle = () => {
   setAuthError('');
-  try {
-    await applyRememberPreference();
-    await signInWithPopup(auth, googleProvider);
-  } catch (err) {
-    setAuthError(err.message.replace('Firebase: ', ''));
-  }
+  // Must call signInWithPopup synchronously on click so iOS Safari does not block it
+  signInWithPopup(auth, googleProvider).catch((err) => {
+    const code = err?.code || '';
+    if (
+      code === 'auth/popup-blocked' ||
+      code === 'auth/operation-not-supported-in-this-environment' ||
+      code === 'auth/cancelled-popup-request'
+    ) {
+      signInWithRedirect(auth, googleProvider).catch((e2) => {
+        setAuthError(e2.message.replace('Firebase: ', ''));
+      });
+    } else if (code !== 'auth/popup-closed-by-user') {
+      setAuthError(err.message.replace('Firebase: ', ''));
+    }
+  });
 };
 
 window.signInEmail = async (isSignUp = false) => {
@@ -133,7 +156,6 @@ window.signInEmail = async (isSignUp = false) => {
     return;
   }
   try {
-    await applyRememberPreference();
     if (isSignUp) await createUserWithEmailAndPassword(auth, email, pass);
     else await signInWithEmailAndPassword(auth, email, pass);
   } catch (err) {
@@ -164,7 +186,6 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  // Immediately show dashboard on valid restored session so app feels instant
   localStorage.setItem('aligniq_user', user.email || user.uid);
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('dashboard').style.display = 'flex';
@@ -190,7 +211,6 @@ onAuthStateChanged(auth, async (user) => {
     setOwnerVisibility(Boolean(data.isOwner));
     if (typeof window.loadSlate === 'function') window.loadSlate(true);
   } catch {
-    // Keep user logged in if worker has a brief network hiccup
     if (typeof window.loadSlate === 'function') window.loadSlate(true);
   }
 });
