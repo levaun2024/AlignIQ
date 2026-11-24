@@ -14,6 +14,7 @@ const LEAGUES = [
 ];
 
 const FIGHT_LEAGUES = new Set(['UFC', 'BOXING', 'BKFC']);
+const B2B_LEAGUES = new Set(['NBA', 'NHL']);
 const SPORTSBOOK_LINKS = {
   draftkings: { name: 'DraftKings', pkg: 'com.draftkings.sportsbook', ios: 'https://apps.apple.com/us/app/draftkings-sports-casino/id1375031369', web: 'https://sportsbook.draftkings.com' },
   fanduel: { name: 'FanDuel', pkg: 'com.fanduel.android.self', ios: 'https://apps.apple.com/us/app/fanduel-sportsbook-casino/id1413721906', web: 'https://sportsbook.fanduel.com' },
@@ -39,11 +40,26 @@ const SPORTSBOOK_LINKS = {
 const DEFAULT_ODDS_KEY = '';
 let oddsApiKey = localStorage.getItem('aligniq_odds_key') || DEFAULT_ODDS_KEY;
 
-// Phase 1: Market-anchored base weights (10% Gem / 60% H2H / 30% ROS)
-const PHASE1_DEFAULT_WEIGHTS = { gem: 10, h2h: 60, ros: 30 };
+// Phase 3: Default & League-Specific Weight Profiles
+const PHASE3_DEFAULT_WEIGHTS = { gem: 10, h2h: 60, ros: 30 };
+const PHASE3_LEAGUE_WEIGHTS = {
+  NBA: { gem: 10, h2h: 60, ros: 30 },
+  NFL: { gem: 10, h2h: 60, ros: 30 },
+  MLB: { gem: 10, h2h: 60, ros: 30 },
+  WNBA: { gem: 10, h2h: 60, ros: 30 },
+  UFC: { gem: 10, h2h: 60, ros: 30 },
+  NHL: { gem: 10, h2h: 55, ros: 35 },
+  EPL: { gem: 10, h2h: 55, ros: 35 },
+  MLS: { gem: 10, h2h: 55, ros: 35 },
+  UCL: { gem: 10, h2h: 55, ros: 35 },
+  NCAAF: { gem: 8, h2h: 68, ros: 24 },
+  NCAAB: { gem: 8, h2h: 68, ros: 24 },
+  NCAAW: { gem: 8, h2h: 68, ros: 24 }
+};
 
 let currentDate = new Date(), allGames = [], summaryCache = {}, scheduleCache = {}, leagueNewsCache = {}, oddsSportCache = {}, propsEventCache = {}, fightersDb = {}, prevConfMap = {};
-let activeSport = 'All', filterMode = 'all', agentReport = null, weights = { ...PHASE1_DEFAULT_WEIGHTS }, leagueWeights = {}, manualOverride = false;
+let yesterdayTeamsSet = new Set();
+let activeSport = 'All', filterMode = 'all', agentReport = null, weights = { ...PHASE3_DEFAULT_WEIGHTS }, leagueWeights = { ...PHASE3_LEAGUE_WEIGHTS }, manualOverride = false;
 let selectedGameId = null, currentTab = 'odds', currentToolsTab = 'slip', currentSettingsTab = 'theme', oddsViewSide = 'pick', livePollTimer = null, sourceRegistry = [];
 let savedIds = new Set(JSON.parse(localStorage.getItem('aligniq_saved') || '[]'));
 let customContextMap = JSON.parse(localStorage.getItem('aligniq_ctx') || '{}');
@@ -51,7 +67,7 @@ let fightIntelMap = JSON.parse(localStorage.getItem('aligniq_fight_intel') || '{
 let openOddsMap = JSON.parse(localStorage.getItem('aligniq_open_odds') || '{}');
 let helpChatLog = [{ role: 'bot', text: 'Hi! I’m the AlignIQ Help Assistant. Ask me anything about CONF %, +EV, Weight Cut Gauges, Body Maps, or your Odds API key.' }];
 
-// --- PHASE 1 NORMALIZATION & UNDERDOG GATE HELPERS ---
+// --- PHASE 3 NORMALIZATION HELPERS ---
 function clampVal(val, min = 0, max = 100) {
   return Math.max(min, Math.min(max, Number(val) || 0));
 }
@@ -92,7 +108,7 @@ function setTheme(t) { applyTheme(t); renderSettingsTab(); }
 
 function getHelpAnswer(q) {
   const s = (q || '').toLowerCase();
-  if (/conf|weight|score|calculat|formula|pillar/.test(s)) return 'CONF % combines 3 normalized pillars (default 10% Gematria / 60% Scaled Fair Odds / 30% Form & Health) plus the Underdog Agreement Gate, which only flips to an underdog in close markets when signals agree.';
+  if (/conf|weight|score|calculat|formula|pillar/.test(s)) return 'CONF % uses league-specific normalized weights, B2B rest fatigue (NBA/NHL), Home/Road splits, sharp line movement, and the Underdog Agreement Gate.';
   if (/\+ev|ev|value|arb|arbitrage/.test(s)) return '+EV% shows when a sportsbook is paying more than the No-Vig Fair Consensus probability. Arbitrage (⚡) appears when two books disagree enough that betting both sides guarantees a profit. Neither alters CONF %.';
   if (/weight cut|cut|gauge|ufc|fight|boxing|bkfc/.test(s)) return 'In Fight IQ, each fighter’s Weight Cut Gauge compares their current weight against their career lowest weight (Biggest Cut) and highest weight (Lowest Cut), automatically weighing cut stress and striking defense/reach into CONF %.';
   if (/body|weak|red|dot|map|injur/.test(s)) return 'Red pulsing dots on the Body Outline highlight fighter target/defense weak points or injured body zones on team sports. Tap any red dot to open ESPN reports, X/Twitter posts, Google News, and YouTube clips.';
@@ -246,7 +262,7 @@ async function loadAgentReport() {
       agentReport = await res.json();
       const reportW = agentReport.weights || agentReport.active_weights;
       if (reportW && typeof reportW.gem === 'number') weights = { ...reportW };
-      if (agentReport.league_weights) leagueWeights = { ...agentReport.league_weights };
+      if (agentReport.league_weights) leagueWeights = { ...PHASE3_LEAGUE_WEIGHTS, ...agentReport.league_weights };
       syncSlidersToWeights(); renderAgentStatusBox();
     }
   } catch {}
@@ -264,9 +280,10 @@ function renderAgentStatusBox() {
   const record = s60 ? `${s60.wins}-${s60.losses}` : (agentReport.overall_record || '0-0');
   const totalGraded = s60 ? s60.total : (agentReport.total_games_graded || 0);
   const dogStr = s60?.underdogs ? ` · Dogs: ${s60.underdogs.wins}-${s60.underdogs.losses} (${s60.underdogs.win_rate}%)` : '';
-  const note = agentReport.last_rebalance_note || agentReport.adjustment_reason || 'Phase 1 active (10/60/30 + Normalized H2H + Dog Gate).';
+  const roiStr = s60?.roi_pct != null ? ` · ${s60.roi_pct >= 0 ? '+' : ''}${s60.roi_pct}% ROI` : '';
+  const note = agentReport.last_rebalance_note || agentReport.adjustment_reason || 'Phase 3 active (League Profiles + Rest/Splits/Line Move + Dog Gate).';
   const updated = agentReport.updated_at ? new Date(agentReport.updated_at).toLocaleDateString() : (agentReport.last_updated || 'Today');
-  box.innerHTML = `<strong>AI Agent Verified: ${winRate}% (${record} · ${totalGraded} games${dogStr})</strong><div>${note}</div><div style="margin-top:4px;color:var(--text-dim);">Algo: ${agentReport.algo_version || 'phase1'} · Updated: ${updated}</div>`;
+  box.innerHTML = `<strong>AI Agent Verified: ${winRate}% (${record} · ${totalGraded} games${roiStr}${dogStr})</strong><div>${note}</div><div style="margin-top:4px;color:var(--text-dim);">Algo: ${agentReport.algo_version || 'phase3'} · Leagues: ${Object.keys(leagueWeights).length} · Updated: ${updated}</div>`;
   document.getElementById('feed-sub').textContent = `AI Verified ${winRate}% (${record}) · 30s live sync`;
 }
 
@@ -278,7 +295,7 @@ function americanToCents(o) { return Math.round(americanToImplied(o) * 100); }
 function decimalToAmerican(dec) { return (!dec || dec <= 1.01) ? -10000 : (dec >= 2 ? Math.round((dec - 1) * 100) : Math.round(-100 / (dec - 1))); }
 
 function analyzeOddsEvent(oddsEv, homeTeam, awayTeam) {
-  if (!oddsEv?.bookmakers?.length) return { homeRows: [], awayRows: [], fairHome: 0.5, fairAway: 0.5, fairPairs: 0, arb: null };
+  if (!oddsEv?.bookmakers?.length) return { homeRows: [], awayRows: [], fairHome: 0.5, fairAway: 0.5, fairPairs: 0, arb: null, opened: null, lineMoveHome: 0, lineMoveAway: 0 };
   const norm = s => (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const hFull = norm(homeTeam.name), aFull = norm(awayTeam.name), hShort = norm(homeTeam.mascot || homeTeam.short || homeTeam.name), aShort = norm(awayTeam.mascot || awayTeam.short || awayTeam.name);
   const homeRows = [], awayRows = []; let sumFairHome = 0, fairPairs = 0;
@@ -303,6 +320,12 @@ function analyzeOddsEvent(oddsEv, homeTeam, awayTeam) {
   if (!openOddsMap[openKey] && homeRows[0] && awayRows[0]) { openOddsMap[openKey] = { home: homeRows[0].price, away: awayRows[0].price }; localStorage.setItem('aligniq_open_odds', JSON.stringify(openOddsMap)); }
   const opened = openOddsMap[openKey] || null;
 
+  let lineMoveHome = 0, lineMoveAway = 0;
+  if (opened && homeRows[0] && awayRows[0]) {
+    lineMoveHome = Math.round((americanToImplied(homeRows[0].price) - americanToImplied(opened.home)) * 100);
+    lineMoveAway = Math.round((americanToImplied(awayRows[0].price) - americanToImplied(opened.away)) * 100);
+  }
+
   let arb = null;
   if (homeRows[0] && awayRows[0]) {
     const invSum = (1 / homeRows[0].dec) + (1 / awayRows[0].dec);
@@ -311,7 +334,7 @@ function analyzeOddsEvent(oddsEv, homeTeam, awayTeam) {
       arb = { roi, profit100: (stakeHome * homeRows[0].dec) - 100, homeBook: homeRows[0].title, homePrice: homeRows[0].price, stakeHome, awayBook: awayRows[0].title, awayPrice: awayRows[0].price, stakeAway };
     }
   }
-  return { homeRows, awayRows, fairHome, fairAway, fairPairs, arb, opened };
+  return { homeRows, awayRows, fairHome, fairAway, fairPairs, arb, opened, lineMoveHome, lineMoveAway };
 }
 
 // --- FORM, FIGHT IQ & INJURIES ---
@@ -381,7 +404,8 @@ function buildEntities(game, sumData, userCtx) {
 
 function evaluateGame(game, dm) {
   const sumData = summaryCache[game.id] || null, userCtx = customContextMap[game.id] || game.customCtx || null, fIntel = fightIntelMap[game.id] || null;
-  const entities = buildEntities(game, sumData, userCtx), activeW = manualOverride ? weights : (leagueWeights[game.league] || weights);
+  const entities = buildEntities(game, sumData, userCtx);
+  const activeW = manualOverride ? weights : (leagueWeights[game.league] || PHASE3_LEAGUE_WEIGHTS[game.league] || weights);
   const awayRec = parseRecord(game.away.record), homeRec = parseRecord(game.home.record);
 
   function scanOutcome(winT, oppLossT, winLbl, oppLossLbl, shortNm) {
@@ -419,17 +443,26 @@ function evaluateGame(game, dm) {
   const aPct = awayRec && (awayRec.w + awayRec.l) > 0 ? awayRec.w / (awayRec.w + awayRec.l) : 0.5;
   const hPct = homeRec && (homeRec.w + homeRec.l) > 0 ? homeRec.w / (homeRec.w + homeRec.l) : 0.5;
   const aSp = parseRecord(game.away.roadRecord), hSp = parseRecord(game.home.homeRecord);
-  const aSpPct = aSp && (aSp.w + aSp.l) > 0 ? aSp.w / (aSp.w + aSp.l) : aPct, hSpPct = hSp && (hSp.w + hSp.l) > 0 ? hSp.w / (hSp.w + hSp.l) : hPct;
+  const aSpPct = aSp && (aSp.w + aSp.l) > 0 ? aSp.w / (aSp.w + aSp.l) : aPct;
+  const hSpPct = hSp && (hSp.w + hSp.l) > 0 ? hSp.w / (hSp.w + hSp.l) : hPct;
 
   const isFight = FIGHT_LEAGUES.has(game.league);
   const oddsH = Math.min(95, Math.max(12, Math.round(fairHomeProb * 100))), oddsA = Math.min(95, Math.max(12, Math.round((1 - fairHomeProb) * 100)));
   const h2hHome = isFight ? oddsH : Math.min(95, Math.max(12, Math.round(oddsH * 0.60 + Math.min(95, Math.max(15, 50 + (hSpPct - aSpPct) * 45)) * 0.40)));
   const h2hAway = isFight ? oddsA : Math.min(95, Math.max(12, Math.round(oddsA * 0.60 + Math.min(95, Math.max(15, 50 + (aSpPct - hSpPct) * 45)) * 0.40)));
 
+  // Phase 3: 60% Home/Road Splits + 40% L5/L10 Form
   const homeForm = (!isFight && game.path && game.home.id) ? computeFormMetrics(scheduleCache[`${game.path}_${game.home.id}`]) : null;
   const awayForm = (!isFight && game.path && game.away.id) ? computeFormMetrics(scheduleCache[`${game.path}_${game.away.id}`]) : null;
-  const blendedH = homeForm ? (hPct * 0.5 + homeForm.pct * 0.5) : hPct, blendedA = awayForm ? (aPct * 0.5 + awayForm.pct * 0.5) : aPct;
+  const blendedH = homeForm ? (hSpPct * 0.60 + homeForm.pct * 0.40) : hSpPct;
+  const blendedA = awayForm ? (aSpPct * 0.60 + awayForm.pct * 0.40) : aSpPct;
   const marginBoost = (homeForm && awayForm) ? Math.max(-8, Math.min(8, Math.round((homeForm.avgMargin - awayForm.avgMargin) * 0.5))) : 0;
+
+  // Phase 3: Rest / Back-to-Back Fatigue (NBA & NHL)
+  const homeB2B = B2B_LEAGUES.has(game.league) && game.home.id && yesterdayTeamsSet.has(`${game.league}_${game.home.id}`);
+  const awayB2B = B2B_LEAGUES.has(game.league) && game.away.id && yesterdayTeamsSet.has(`${game.league}_${game.away.id}`);
+  const homeRestPen = (homeB2B && !awayB2B) ? 6 : 0;
+  const awayRestPen = (awayB2B && !homeB2B) ? 6 : 0;
 
   const fightIQ = isFight ? computeFightEdge(game.home.name, game.away.name) : { edge: 0, hasData: false };
   const homeCutGauge = isFight ? computeWeightCutGauge(findFighterStats(game.home.name), Number(fIntel?.homeCutPen || 0)) : null;
@@ -445,13 +478,15 @@ function evaluateGame(game, dm) {
   if (isFight) { homeInjPen += (homeCutGauge?.pen || 0) + Number(fIntel?.homeInjPen || 0); awayInjPen += (awayCutGauge?.pen || 0) + Number(fIntel?.awayInjPen || 0); }
   homeInjPen = Math.min(35, homeInjPen); awayInjPen = Math.min(35, awayInjPen);
 
-  const rosHomeBase = Math.min(95, Math.max(12, Math.round(56 + (blendedH - blendedA) * 32 + marginBoost + fightIQ.edge - homeInjPen + awayInjPen)));
-  const rosAwayBase = Math.min(95, Math.max(12, Math.round(52 + (blendedA - blendedH) * 32 - marginBoost - fightIQ.edge - awayInjPen + homeInjPen)));
+  const rosHomeBase = Math.min(95, Math.max(12, Math.round(56 + (blendedH - blendedA) * 32 + marginBoost + fightIQ.edge - homeInjPen + awayInjPen - homeRestPen + awayRestPen)));
+  const rosAwayBase = Math.min(95, Math.max(12, Math.round(52 + (blendedA - blendedH) * 32 - marginBoost - fightIQ.edge - awayInjPen + homeInjPen - awayRestPen + homeRestPen)));
 
-  // Phase 1: Normalized H2H + Soft-Scaled Gematria + Underdog Agreement Gate
+  // Phase 3: Normalized H2H + Sharp Line Movement + Soft-Scaled Gematria + Underdog Agreement Gate
+  const normH2HHome = clampVal(normalizeH2H(h2hHome) + (oa.lineMoveHome >= 3 ? 3 : 0), 0, 100);
+  const normH2HAway = clampVal(normalizeH2H(h2hAway) + (oa.lineMoveAway >= 3 ? 3 : 0), 0, 100);
   const totalW = (activeW.gem + activeW.h2h + activeW.ros) || 1;
-  const normHomeScore = (scaleGematria(homeGem) * activeW.gem + normalizeH2H(h2hHome) * activeW.h2h + rosHomeBase * activeW.ros) / totalW;
-  const normAwayScore = (scaleGematria(awayGem) * activeW.gem + normalizeH2H(h2hAway) * activeW.h2h + rosAwayBase * activeW.ros) / totalW;
+  const normHomeScore = (scaleGematria(homeGem) * activeW.gem + normH2HHome * activeW.h2h + rosHomeBase * activeW.ros) / totalW;
+  const normAwayScore = (scaleGematria(awayGem) * activeW.gem + normH2HAway * activeW.h2h + rosAwayBase * activeW.ros) / totalW;
 
   let pickSide = normHomeScore >= normAwayScore ? 'home' : 'away';
   const marketDog = h2hHome === h2hAway ? null : (h2hHome < h2hAway ? 'home' : 'away');
@@ -463,18 +498,21 @@ function evaluateGame(game, dm) {
     const favRos = pickSide === 'home' ? rosAwayBase : rosHomeBase;
     const dogGem = pickSide === 'home' ? homeGem : awayGem;
     const favGem = pickSide === 'home' ? awayGem : homeGem;
+    const dogMove = pickSide === 'home' ? oa.lineMoveHome : oa.lineMoveAway;
 
     const closeMarket = dogH2H >= 44;
     const bothAgree = (dogRos > favRos) && (dogGem > favGem);
     const strongFormEdge = (dogRos - favRos) >= 22;
+    const sharpMove = dogMove >= 3;
 
-    if (!(closeMarket && (bothAgree || strongFormEdge))) {
+    if (!(closeMarket && (bothAgree || strongFormEdge || sharpMove))) {
       pickSide = pickSide === 'home' ? 'away' : 'home';
       dogGateTriggered = true;
     }
   }
 
   const isUnderdogPick = Boolean(marketDog && pickSide === marketDog);
+  const pickLineMove = pickSide === 'home' ? oa.lineMoveHome : oa.lineMoveAway;
   const primaryHits = pickSide === 'home' ? homeHits : awayHits;
   const gemScore = pickSide === 'home' ? homeGem : awayGem, h2hScore = pickSide === 'home' ? h2hHome : h2hAway;
   const injuryPenalty = pickSide === 'home' ? homeInjPen : awayInjPen, oppInjuryBonus = pickSide === 'home' ? awayInjPen : homeInjPen;
@@ -495,7 +533,7 @@ function evaluateGame(game, dm) {
   let grade = null;
   if (game.state === 'post') { const aS = Number(game.away.score || 0), hS = Number(game.home.score || 0); if (aS !== hS) grade = (hS > aS ? 'home' : 'away') === pickSide ? 'WON' : 'LOST'; }
 
-  return { ...game, activeW, pickSide, pickedTeam, pickLabel: `${pickedTeam.short || pickedTeam.name} Win${nextRecStr}`, confidence: conf, hitsCount: primaryHits.length, primaryHits, gemScore, h2hScore, rosScore, isUnderdogPick, dogGateTriggered, injuryPenalty, oppInjuryBonus, fairProbPick: Math.round((pickSide === 'home' ? fairHomeProb : (1 - fairHomeProb)) * 100), hasScaledOdds, fightIQ, homeCutGauge, awayCutGauge, homeForm, awayForm, gradedInjuries, allLeaders, liveShift, liveEvents, grade, entitiesCount: entities.length };
+  return { ...game, activeW, pickSide, pickedTeam, pickLabel: `${pickedTeam.short || pickedTeam.name} Win${nextRecStr}`, confidence: conf, hitsCount: primaryHits.length, primaryHits, gemScore, h2hScore, rosScore, isUnderdogPick, dogGateTriggered, homeB2B, awayB2B, pickLineMove, injuryPenalty, oppInjuryBonus, fairProbPick: Math.round((pickSide === 'home' ? fairHomeProb : (1 - fairHomeProb)) * 100), hasScaledOdds, fightIQ, homeCutGauge, awayCutGauge, homeForm, awayForm, gradedInjuries, allLeaders, liveShift, liveEvents, grade, entitiesCount: entities.length };
 }
 
 // --- DEEP LINKING & FETCHERS ---
@@ -554,38 +592,62 @@ async function fetchTeamSchedule(path, teamId) {
   } catch { return null; }
 }
 
+async function fetchYesterdayB2B(dateObj) {
+  const prev = new Date(dateObj);
+  prev.setDate(prev.getDate() - 1);
+  const ymd = fmtYYYYMMDD(prev);
+  const b2bSet = new Set();
+  await Promise.all(LEAGUES.filter(l => B2B_LEAGUES.has(l.key)).map(async lg => {
+    try {
+      const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard?dates=${ymd}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      (data.events || []).forEach(ev => {
+        (ev.competitions?.[0]?.competitors || []).forEach(c => {
+          const tid = String(c.team?.id || c.id || '');
+          if (tid) b2bSet.add(`${lg.key}_${tid}`);
+        });
+      });
+    } catch {}
+  }));
+  yesterdayTeamsSet = b2bSet;
+}
+
 function fmtYYYYMMDD(d) { return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`; }
 function fmtISODate(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 function isSameDay(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
 
 async function loadSlate(silent = false) {
-  if (!silent) { document.getElementById('live-count-badge').textContent = 'Syncing...'; document.getElementById('games-feed').innerHTML = '<div class="empty-state">Scanning 14 sports, fair odds, star leaders, UFC &amp; Boxing...</div>'; }
+  if (!silent) { document.getElementById('live-count-badge').textContent = 'Syncing...'; document.getElementById('games-feed').innerHTML = '<div class="empty-state">Scanning 14 sports, fair odds, B2B rest, splits &amp; Fight IQ...</div>'; }
   updateDateUI(); const ymd = fmtYYYYMMDD(currentDate), dm = getDateMath(currentDate);
 
-  const espnResults = await Promise.all(LEAGUES.map(async lg => {
-    try {
-      const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard?dates=${ymd}`); if (!res.ok) return [];
-      const data = await res.json();
-      return (data.events || []).map(ev => {
-        const comp = ev.competitions?.[0]; if (!comp || !comp.competitors || comp.competitors.length < 2) return null;
-        const home = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0], away = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
-        const state = comp.status?.type?.state || 'pre', timeStr = comp.status?.type?.shortDetail || new Date(ev.date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-        const getRec = (o, t) => (o.records || []).find(r => r.type === t)?.summary || '', oddsObj = comp.odds?.[0];
-        const hShort = home.team?.shortDisplayName || home.athlete?.shortName || home.team?.name || 'Home', aShort = away.team?.shortDisplayName || away.athlete?.shortName || away.team?.name || 'Away';
-        return {
-          id: ev.id, league: lg.key, path: lg.path, oddsKey: lg.oddsKey, state, time: timeStr,
-          venue: comp.venue?.fullName || 'TBD Venue', venueCity: [comp.venue?.address?.city, comp.venue?.address?.state].filter(Boolean).join(', '),
-          broadcast: comp.broadcasts?.[0]?.names?.[0] || comp.geoBroadcasts?.[0]?.media?.shortName || '', eventNote: comp.notes?.[0]?.headline || '',
-          oddsText: oddsObj?.details || '', oddsFav: oddsObj?.homeTeamOdds?.favorite ? 'home' : (oddsObj?.awayTeamOdds?.favorite ? 'away' : null),
-          homeML: typeof oddsObj?.homeTeamOdds?.moneyLine === 'number' ? oddsObj.homeTeamOdds.moneyLine : null,
-          awayML: typeof oddsObj?.awayTeamOdds?.moneyLine === 'number' ? oddsObj.awayTeamOdds.moneyLine : null,
-          leaders: [...extractLeadersFromArr(home.leaders, hShort, 'home'), ...extractLeadersFromArr(away.leaders, aShort, 'away')],
-          home: { id: String(home.team?.id || home.id || ''), name: home.team?.displayName || home.athlete?.displayName || 'Home', short: hShort, location: home.team?.location || '', mascot: home.team?.name || home.athlete?.displayName || '', logo: home.team?.logo || '', score: home.score ?? '', record: getRec(home, 'total') || home.records?.[0]?.summary || '', homeRecord: getRec(home, 'home') },
-          away: { id: String(away.team?.id || away.id || ''), name: away.team?.displayName || away.athlete?.displayName || 'Away', short: aShort, location: away.team?.location || '', mascot: away.team?.name || away.athlete?.displayName || '', logo: away.team?.logo || '', score: away.score ?? '', record: getRec(away, 'total') || away.records?.[0]?.summary || '', roadRecord: getRec(away, 'road') }
-        };
-      }).filter(Boolean);
-    } catch { return []; }
-  }));
+  const [espnResults] = await Promise.all([
+    Promise.all(LEAGUES.map(async lg => {
+      try {
+        const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard?dates=${ymd}`); if (!res.ok) return [];
+        const data = await res.json();
+        return (data.events || []).map(ev => {
+          const comp = ev.competitions?.[0]; if (!comp || !comp.competitors || comp.competitors.length < 2) return null;
+          const home = comp.competitors.find(c => c.homeAway === 'home') || comp.competitors[0], away = comp.competitors.find(c => c.homeAway === 'away') || comp.competitors[1];
+          const state = comp.status?.type?.state || 'pre', timeStr = comp.status?.type?.shortDetail || new Date(ev.date).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+          const getRec = (o, t) => (o.records || []).find(r => r.type === t)?.summary || '', oddsObj = comp.odds?.[0];
+          const hShort = home.team?.shortDisplayName || home.athlete?.shortName || home.team?.name || 'Home', aShort = away.team?.shortDisplayName || away.athlete?.shortName || away.team?.name || 'Away';
+          return {
+            id: ev.id, league: lg.key, path: lg.path, oddsKey: lg.oddsKey, state, time: timeStr,
+            venue: comp.venue?.fullName || 'TBD Venue', venueCity: [comp.venue?.address?.city, comp.venue?.address?.state].filter(Boolean).join(', '),
+            broadcast: comp.broadcasts?.[0]?.names?.[0] || comp.geoBroadcasts?.[0]?.media?.shortName || '', eventNote: comp.notes?.[0]?.headline || '',
+            oddsText: oddsObj?.details || '', oddsFav: oddsObj?.homeTeamOdds?.favorite ? 'home' : (oddsObj?.awayTeamOdds?.favorite ? 'away' : null),
+            homeML: typeof oddsObj?.homeTeamOdds?.moneyLine === 'number' ? oddsObj.homeTeamOdds.moneyLine : null,
+            awayML: typeof oddsObj?.awayTeamOdds?.moneyLine === 'number' ? oddsObj.awayTeamOdds.moneyLine : null,
+            leaders: [...extractLeadersFromArr(home.leaders, hShort, 'home'), ...extractLeadersFromArr(away.leaders, aShort, 'away')],
+            home: { id: String(home.team?.id || home.id || ''), name: home.team?.displayName || home.athlete?.displayName || 'Home', short: hShort, location: home.team?.location || '', mascot: home.team?.name || home.athlete?.displayName || '', logo: home.team?.logo || '', score: home.score ?? '', record: getRec(home, 'total') || home.records?.[0]?.summary || '', homeRecord: getRec(home, 'home') },
+            away: { id: String(away.team?.id || away.id || ''), name: away.team?.displayName || away.athlete?.displayName || 'Away', short: aShort, location: away.team?.location || '', mascot: away.team?.name || away.athlete?.displayName || '', logo: away.team?.logo || '', score: away.score ?? '', record: getRec(away, 'total') || away.records?.[0]?.summary || '', roadRecord: getRec(away, 'road') }
+          };
+        }).filter(Boolean);
+      } catch { return []; }
+    })),
+    fetchYesterdayB2B(currentDate)
+  ]);
 
   let fightGames = [];
   if (oddsApiKey && isSameDay(currentDate, new Date())) {
@@ -723,11 +785,11 @@ function renderFeed() {
         <div class="card-mid">
           <div class="teams-col">
             <div class="team-row">
-              <div class="team-left"><span class="pick-dot ${g.pickSide === 'away' ? 'active' : ''}"></span>${g.away.logo ? `<img class="team-logo" src="${g.away.logo}" alt="" />` : ''}<span class="team-name">${g.away.name}</span></div>
+              <div class="team-left"><span class="pick-dot ${g.pickSide === 'away' ? 'active' : ''}"></span>${g.away.logo ? `<img class="team-logo" src="${g.away.logo}" alt="" />` : ''}<span class="team-name">${g.away.name}${g.awayB2B ? ' (B2B)' : ''}</span></div>
               <div class="team-right"><span class="team-rec">${g.away.record || '—'}</span>${showScore ? `<span class="team-score">${g.away.score}</span>` : ''}</div>
             </div>
             <div class="team-row">
-              <div class="team-left"><span class="pick-dot ${g.pickSide === 'home' ? 'active' : ''}"></span>${g.home.logo ? `<img class="team-logo" src="${g.home.logo}" alt="" />` : ''}<span class="team-name">${g.home.name}</span></div>
+              <div class="team-left"><span class="pick-dot ${g.pickSide === 'home' ? 'active' : ''}"></span>${g.home.logo ? `<img class="team-logo" src="${g.home.logo}" alt="" />` : ''}<span class="team-name">${g.home.name}${g.homeB2B ? ' (B2B)' : ''}</span></div>
               <div class="team-right"><span class="team-rec">${g.home.record || '—'}</span>${showScore ? `<span class="team-score">${g.home.score}</span>` : ''}</div>
             </div>
           </div>
@@ -810,17 +872,22 @@ function renderDetailTab() {
     const schedSrc = registerSources(`${g.pickedTeam.short} Schedule & Form`, [{ platform: 'ESPN SCHEDULE', title: `${g.pickedTeam.name} Official Schedule & Scores`, sub: 'Verify L5 & L10 game results', url: espnTeamScheduleUrl(g, g.pickedTeam.id) }, { platform: 'ESPN MATCHUP', title: `${g.away.short} @ ${g.home.short} Gamecast`, sub: 'Live splits & boxscore', url: gameSrcUrl }]);
     const bullSrc = registerSources(`${g.pickedTeam.short} Matchup Proof`, [{ platform: 'ESPN GAMECAST', title: `${g.away.name} vs ${g.home.name}`, sub: 'Official records, odds & play-by-play', url: gameSrcUrl }, ...buildSocialAndNewsSources(g.pickedTeam.name, `${g.league} matchup preview`, sum?.news)]);
     const bestRow = g.pickSide === 'home' ? oddsAnalysis.homeRows[0] : oddsAnalysis.awayRows[0], bulls = [], bears = [];
-    if (g.isUnderdogPick) bulls.push(`Live Underdog passed the Agreement Gate (close market + confirmed form/signal edge).`);
+    if (g.isUnderdogPick) bulls.push(`Live Underdog passed the Agreement Gate (close market + confirmed form/sharp-move edge).`);
     if (g.dogGateTriggered) bulls.push(`Underdog Agreement Gate blocked a low-conviction longshot override and held the market favorite.`);
+    if (g.pickLineMove >= 3) bulls.push(`Sharp Line Movement: ${g.pickedTeam.short}'s implied odds strengthened by +${g.pickLineMove}% since open.`);
+    const pickB2B = g.pickSide === 'home' ? g.homeB2B : g.awayB2B;
+    const oppB2B = g.pickSide === 'home' ? g.awayB2B : g.homeB2B;
+    if (oppB2B && !pickB2B) bulls.push(`Rest Advantage: Opponent is on a back-to-back (B2B) fatigue spot (-6 pt penalty applied).`);
+    if (pickB2B && !oppB2B) bears.push(`Rest Risk: ${g.pickedTeam.short} is playing on a back-to-back (B2B) with a -6 pt fatigue deduction.`);
     if (g.hasScaledOdds) bulls.push(`Scaled No-Vig Fair Odds give ${g.pickedTeam.short} a ${g.fairProbPick}% consensus win probability (normalized in CONF %).`);
-    if (g.hitsCount >= 2) bulls.push(`Strong Gematria convergence (${g.hitsCount} matching references across 4 ciphers).`); else bears.push(`Gematria threshold not met (${g.hitsCount}/2 hits) — relying on Normalized Fair Odds, Form & Health.`);
+    if (g.hitsCount >= 2) bulls.push(`Strong Gematria convergence (${g.hitsCount} matching references across 4 ciphers).`); else bears.push(`Gematria threshold not met (${g.hitsCount}/2 hits) — relying on Normalized Fair Odds, Splits & Rest.`);
     if (bestRow && bestRow.ev >= 0.5) bulls.push(`Positive EV edge: ${bestRow.title} is paying +${bestRow.ev.toFixed(1)}% above fair market consensus.`);
     if (g.fightIQ?.hasData && g.fightIQ.edge !== 0) { const favSide = g.fightIQ.edge > 0 ? 'home' : 'away'; if (favSide === g.pickSide) bulls.push(`Fight IQ edge (+${Math.abs(g.fightIQ.edge)} pts) from striking defense, absorbed rate & reach.`); else bears.push(`Opponent holds a +${Math.abs(g.fightIQ.edge)} pt striking defense / reach advantage.`); }
     if (g.oppInjuryBonus >= 10) bulls.push(`Opponent missing key star production (+${g.oppInjuryBonus} pt health edge).`);
     if (g.injuryPenalty >= 10) bears.push(`Picked side has significant star/injury/cut risk (-${g.injuryPenalty} pt deduction).`);
     if (l5 && l5.filter(x => x.won).length >= 4) bulls.push(`${g.pickedTeam.short} is hot — won ${l5.filter(x => x.won).length} of their last ${l5.length} games.`);
     if (l5 && l5.filter(x => x.won).length <= 1) bears.push(`Recent form concern — ${g.pickedTeam.short} won only ${l5.filter(x => x.won).length} of their last ${l5.length}.`);
-    if (!bulls.length) bulls.push(`Composite model (${g.confidence}%) favors ${g.pickedTeam.short} based on ${g.league} Phase 1 normalized weights.`);
+    if (!bulls.length) bulls.push(`Composite model (${g.confidence}%) favors ${g.pickedTeam.short} using ${g.league} Phase 3 league weights.`);
     if (!bears.length) bears.push(`Standard matchup variance — check live line movement in Best Odds before locking in.`);
     const chartsHtml = sched && sched.length ? `<div class="hr-grid">${renderHitRateCard(`${g.pickedTeam.short} Last 5`, l5, schedSrc.idx)}${renderHitRateCard(`${g.pickedTeam.short} Last 10`, l10, schedSrc.idx)}</div>` : `<div class="proof-item clickable-ref" onclick="triggerSource(${schedSrc.idx}, event)"><span class="src-chip">🔗 ${schedSrc.count} Sources</span><strong>Hit-Rate Form</strong><div class="proof-sub">${g.away.short} (${g.away.record || '—'}) vs ${g.home.short} (${g.home.record || '—'}) · Fair Win Prob: ${g.fairProbPick}%</div></div>`;
     const eventsHtml = g.liveEvents.map(ev => { const evSrc = registerSources(`Live Play: ${ev.tag}`, [{ platform: 'ESPN PLAY-BY-PLAY', title: ev.text, sub: ev.clock, url: gameSrcUrl }]); return `<div class="proof-item clickable-ref ${ev.impact < 0 ? 'danger' : ''}" onclick="triggerSource(${evSrc.idx}, event)"><span class="src-chip">🔗 Source ↗</span><strong>[${ev.tag}] ${ev.clock}</strong> (${ev.impact > 0 ? '+' : ''}${ev.impact}% shift)<div class="proof-sub">${ev.text}</div></div>`; }).join('');
@@ -830,7 +897,7 @@ function renderDetailTab() {
       const gSrc = registerSources('Gematria Reference Sources', [{ platform: 'ESPN MATCHUP', title: `Verify Records & Venue: ${g.away.short} @ ${g.home.short}`, sub: h, url: gameSrcUrl }, { platform: 'GEMATRIX', title: `Check 4-Cipher Calculation Online`, sub: 'Verify Ordinal / Reduction / Reverse values', url: `https://www.gematrix.org/?word=${encodeURIComponent(g.pickedTeam.name)}` }]);
       return `<div class="proof-item clickable-ref" onclick="triggerSource(${gSrc.idx}, event)"><span class="src-chip">🔗 ${gSrc.count} Sources</span><strong>✓ Hit:</strong> ${h}</div>`;
     }).join('') : `<div class="proof-item warn"><strong>Threshold Not Met (${g.primaryHits.length}/2):</strong> Fewer than 2 references matched. Gematria pillar is 0% until 2+ align.</div>`;
-    body.innerHTML = `<div class="proof-item"><strong>Composite: ${g.confidence}%</strong> (${g.pickLabel})<div class="proof-sub">Weights (${g.league}): ${g.activeW.gem}% Gem · ${g.activeW.h2h}% Normalized Fair Odds/H2H · ${g.activeW.ros}% Form/Health</div></div><div class="context-box"><h4>+ Add Walkout Song, Performer, Refs or Coaches</h4><div class="form-grid"><div class="form-group"><label>Performer</label><input id="ctx-artist" class="form-input" value="${ctx.artist || ''}" placeholder="Artist name" /></div><div class="form-group"><label>Song Title</label><input id="ctx-song" class="form-input" value="${ctx.song || ''}" placeholder="Song title" /></div></div><div class="form-group"><label>Coaches / Extra Keywords</label><input id="ctx-extra" class="form-input" value="${ctx.extra || ''}" placeholder="Coach, ref, theme..." /></div><button class="primary-btn" onclick="saveExtraContext('${g.id}')">Recalculate Gematria with Context</button></div>${hitsHtml}`;
+    body.innerHTML = `<div class="proof-item"><strong>Composite: ${g.confidence}%</strong> (${g.pickLabel})<div class="proof-sub">Weights (${g.league}): ${g.activeW.gem}% Gem · ${g.activeW.h2h}% Normalized Fair Odds/H2H · ${g.activeW.ros}% Splits/Rest/Health</div></div><div class="context-box"><h4>+ Add Walkout Song, Performer, Refs or Coaches</h4><div class="form-grid"><div class="form-group"><label>Performer</label><input id="ctx-artist" class="form-input" value="${ctx.artist || ''}" placeholder="Artist name" /></div><div class="form-group"><label>Song Title</label><input id="ctx-song" class="form-input" value="${ctx.song || ''}" placeholder="Song title" /></div></div><div class="form-group"><label>Coaches / Extra Keywords</label><input id="ctx-extra" class="form-input" value="${ctx.extra || ''}" placeholder="Coach, ref, theme..." /></div><button class="primary-btn" onclick="saveExtraContext('${g.id}')">Recalculate Gematria with Context</button></div>${hitsHtml}`;
   } else if (currentTab === 'ros') {
     if (FIGHT_LEAGUES.has(g.league)) {
       const fA = findFighterStats(g.away.name), fB = findFighterStats(g.home.name), fi = fightIntelMap[g.id] || { awayCutPen: 0, awayInjPen: 0, homeCutPen: 0, homeInjPen: 0, notes: '' };
@@ -872,7 +939,7 @@ function renderDetailTab() {
         const badge = i.tier === 'star' ? `<span class="star-badge">★ STAR ${i.statLabels ? '(' + i.statLabels + ')' : ''}</span>` : i.tier === 'key' ? `<span class="key-badge">KEY (${i.statLabels})</span>` : `<span class="bench-badge">ROTATION</span>`;
         return `<div class="proof-item clickable-ref ${i.tier === 'star' ? 'danger star-out' : i.pts > 0 ? 'danger' : ''}" onclick="triggerSource(${s.idx}, event)"><span class="src-chip">🔗 ${s.count} Sources</span>${badge}<strong>${i.player}</strong> (${i.team}) — ${i.status} (${i.pts > 0 ? '-' + i.pts + ' pts' : '0 pts'})<div class="proof-sub">${i.detail || 'Listed on official ESPN injury report.'}</div></div>`;
       }).join('') : `<div class="proof-item"><strong>Clean Injury Report</strong><div class="proof-sub">No major ESPN injury deductions impacting this game.</div></div>`;
-      body.innerHTML = `<div class="proof-item"><strong>Star-Weighted Health &amp; Form Score: ${g.rosScore}%</strong><div class="proof-sub">Pick Star/Injury Penalty: -${g.injuryPenalty} pts · Opponent Injury Boost: +${g.oppInjuryBonus} pts</div></div>${renderBodyOutlineCard('Injury Weak-Point Body Map', teamHotspots)}${leadersHtml}${injHtml}`;
+      body.innerHTML = `<div class="proof-item"><strong>Star-Weighted Health, Splits &amp; Rest Score: ${g.rosScore}%</strong><div class="proof-sub">Pick Star/Injury Penalty: -${g.injuryPenalty} pts · Opponent Injury Boost: +${g.oppInjuryBonus} pts</div></div>${renderBodyOutlineCard('Injury Weak-Point Body Map', teamHotspots)}${leadersHtml}${injHtml}`;
     }
   } else {
     const news = sum?.news || [];
@@ -952,7 +1019,8 @@ function onWeightChange() { manualOverride = true; weights.gem = Number(document
 function resetToAgentWeights() {
   manualOverride = false;
   const reportW = agentReport?.weights || agentReport?.active_weights;
-  weights = reportW ? { ...reportW } : { ...PHASE1_DEFAULT_WEIGHTS };
+  weights = reportW ? { ...reportW } : { ...PHASE3_DEFAULT_WEIGHTS };
+  if (agentReport?.league_weights) leagueWeights = { ...PHASE3_LEAGUE_WEIGHTS, ...agentReport.league_weights };
   syncSlidersToWeights();
   renderFeed();
 }
