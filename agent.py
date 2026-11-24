@@ -7,7 +7,8 @@ HISTORY_FILE = "history.json"
 REPORT_FILE = "agent_report.json"
 TARGET_WIN_RATE = 95.0
 
-DEFAULT_WEIGHTS = {"gem": 42, "h2h": 21, "ros": 37}
+# Phase 1: Market-anchored weights (10% Gem / 60% H2H / 30% ROS)
+DEFAULT_WEIGHTS = {"gem": 10, "h2h": 60, "ros": 30}
 
 
 def load_json(path, default):
@@ -25,12 +26,80 @@ def save_json(path, data):
         json.dump(data, f, indent=2)
 
 
+def clamp(val, low=0.0, high=100.0):
+    return max(low, min(high, float(val)))
+
+
+def normalize_h2h(raw_h2h):
+    """Stretch compressed h2h (36-68) onto a full 0-100 scale."""
+    return clamp(((safe_float(raw_h2h, 50.0) - 36.0) / 32.0) * 100.0)
+
+
+def scale_gematria(raw_gem):
+    """Soft-scale Gematria so a single hit cannot hijack heavy favorites."""
+    return clamp(safe_float(raw_gem, 0.0) * 0.85)
+
+
+def score_matchup(home, away, weights=None):
+    """Phase 1 normalized scoring + Underdog Agreement Gate."""
+    w = {**DEFAULT_WEIGHTS, **(weights or {})}
+
+    h_gem = scale_gematria(home.get("gem", 0))
+    a_gem = scale_gematria(away.get("gem", 0))
+    h_h2h = normalize_h2h(home.get("h2h", 50))
+    a_h2h = normalize_h2h(away.get("h2h", 50))
+    h_ros = clamp(safe_float(home.get("ros", 50), 50.0))
+    a_ros = clamp(safe_float(away.get("ros", 50), 50.0))
+
+    home_score = round((h_gem * w["gem"] + h_h2h * w["h2h"] + h_ros * w["ros"]) / 100.0, 2)
+    away_score = round((a_gem * w["gem"] + a_h2h * w["h2h"] + a_ros * w["ros"]) / 100.0, 2)
+
+    pick = "home" if home_score >= away_score else "away"
+
+    raw_h_h2h = safe_float(home.get("h2h", 50), 50.0)
+    raw_a_h2h = safe_float(away.get("h2h", 50), 50.0)
+    market_dog = None if raw_h_h2h == raw_a_h2h else ("home" if raw_h_h2h < raw_a_h2h else "away")
+
+    # Underdog Agreement Gate
+    dog_gate_triggered = False
+    if market_dog and pick == market_dog:
+        dog = home if pick == "home" else away
+        fav = away if pick == "home" else home
+
+        dog_h2h = safe_float(dog.get("h2h", 50), 50.0)
+        dog_ros = safe_float(dog.get("ros", 50), 50.0)
+        fav_ros = safe_float(fav.get("ros", 50), 50.0)
+        dog_gem = safe_float(dog.get("gem", 0), 0.0)
+        fav_gem = safe_float(fav.get("gem", 0), 0.0)
+
+        close_market = dog_h2h >= 44.0
+        both_agree = (dog_ros > fav_ros) and (dog_gem > fav_gem)
+        strong_form_edge = (dog_ros - fav_ros) >= 22.0
+
+        if not (close_market and (both_agree or strong_form_edge)):
+            pick = "away" if pick == "home" else "home"
+            dog_gate_triggered = True
+
+    diff = abs(home_score - away_score)
+    confidence = round(clamp(50.0 + (diff * 0.5), 50.0, 99.0), 1)
+
+    return {
+        "pick": pick,
+        "home_score": home_score,
+        "away_score": away_score,
+        "confidence": confidence,
+        "is_underdog_pick": bool(market_dog and pick == market_dog),
+        "dog_gate_triggered": dog_gate_triggered,
+        "weights_used": w,
+    }
+
+
 def normalize_weights(w):
     total = max(1, w["gem"] + w["h2h"] + w["ros"])
     gem = round((w["gem"] / total) * 100)
     h2h = round((w["h2h"] / total) * 100)
     ros = 100 - gem - h2h
-    return {"gem": max(5, gem), "h2h": max(5, h2h), "ros": max(5, ros)}
+    return {"gem": max(5, gem), "h2h": max(20, h2h), "ros": max(10, ros)}
 
 
 def safe_float(val, default=50.0):
@@ -124,6 +193,41 @@ def extract_graded_games(history):
         for g in entry.get("games", []):
             if not isinstance(g, dict):
                 continue
+
+            weights_used = g.get("weights_used", entry.get("weights_used", DEFAULT_WEIGHTS))
+            factors = dict(g.get("factors", {})) if isinstance(g.get("factors"), dict) else {}
+
+            # Format A: Structured home/away pillar scores + actual_winner
+            actual_winner = str(g.get("actual_winner") or "").lower().strip()
+            if actual_winner in ("home", "away") and isinstance(g.get("home"), dict) and isinstance(g.get("away"), dict):
+                scored = score_matchup(g["home"], g["away"], weights_used)
+                pick_side = scored["pick"]
+                picked_team = g[pick_side]
+                opp_team = g["away" if pick_side == "home" else "home"]
+
+                if safe_float(factors.get("gematria_score", 0), 0) == 0:
+                    factors["gematria_score"] = safe_float(picked_team.get("gem", 0), 0)
+                if safe_float(factors.get("odds_edge", 0), 0) == 0:
+                    factors["odds_edge"] = safe_float(picked_team.get("h2h", 50), 50) - safe_float(opp_team.get("h2h", 50), 50)
+                if safe_float(factors.get("form_health_score", 0), 0) == 0:
+                    factors["form_health_score"] = safe_float(picked_team.get("ros", 50), 50)
+
+                graded.append({
+                    "date": date_str,
+                    "league": g.get("league", "OTHER"),
+                    "matchup": g.get("matchup", g.get("id", "Game")),
+                    "pick": pick_side,
+                    "confidence": scored["confidence"],
+                    "win": pick_side == actual_winner,
+                    "is_underdog_pick": scored["is_underdog_pick"],
+                    "final_score": g.get("final_score", ""),
+                    "algo_version": g.get("algo_version", entry.get("algo_version", "v1")),
+                    "weights_used": weights_used,
+                    "factors": factors
+                })
+                continue
+
+            # Format B: Legacy result/outcome/grade ("W"/"L")
             res = str(g.get("result") or g.get("outcome") or g.get("grade") or "").upper().strip()
             if res in ("W", "L", "WIN", "LOSS"):
                 graded.append({
@@ -133,21 +237,23 @@ def extract_graded_games(history):
                     "pick": g.get("pick", ""),
                     "confidence": safe_float(g.get("confidence", 50)),
                     "win": res in ("W", "WIN"),
+                    "is_underdog_pick": bool(g.get("is_underdog_pick", False)),
                     "final_score": g.get("final_score", ""),
                     "algo_version": g.get("algo_version", entry.get("algo_version", "v1")),
-                    "weights_used": g.get("weights_used", entry.get("weights_used", DEFAULT_WEIGHTS)),
-                    "factors": g.get("factors", {}) if isinstance(g.get("factors"), dict) else {}
+                    "weights_used": weights_used,
+                    "factors": factors
                 })
     return graded
 
 
 def analyze_factors(games):
-    """Measures how each determining factor correlates with real Win/Loss outcomes."""
+    """Measures how each determining factor and underdog picks correlate with real Win/Loss outcomes."""
     buckets = {
         "gematria": {"label": "Gematria Convergence (2+ Hits)", "w": 0, "n": 0},
         "odds": {"label": "Fair Odds / +EV Edge", "w": 0, "n": 0},
         "form_health": {"label": "L5/L10 Form, Health & Weight Cut", "w": 0, "n": 0},
         "high_conf": {"label": "70%+ High Confidence Picks", "w": 0, "n": 0},
+        "underdogs": {"label": "Market Underdog Picks", "w": 0, "n": 0},
     }
     by_league = defaultdict(lambda: {"w": 0, "n": 0})
     calibration = {
@@ -162,7 +268,7 @@ def analyze_factors(games):
         f = g["factors"]
         win = 1 if g["win"] else 0
 
-        if safe_float(f.get("gematria_hits", 0), 0) >= 2 or safe_float(f.get("gematria_score", 0), 0) >= 60:
+        if safe_float(f.get("gematria_hits", 0), 0) >= 2 or safe_float(f.get("gematria_score", 0), 0) >= 42:
             buckets["gematria"]["n"] += 1
             buckets["gematria"]["w"] += win
         if safe_float(f.get("odds_edge", 0), 0) > 0:
@@ -174,6 +280,9 @@ def analyze_factors(games):
         if g["confidence"] >= 70:
             buckets["high_conf"]["n"] += 1
             buckets["high_conf"]["w"] += win
+        if g.get("is_underdog_pick"):
+            buckets["underdogs"]["n"] += 1
+            buckets["underdogs"]["w"] += win
 
         by_league[g["league"]]["n"] += 1
         by_league[g["league"]]["w"] += win
@@ -199,13 +308,14 @@ def analyze_factors(games):
 
     factor_metrics = {}
     for k, v in buckets.items():
-        rate = round((v["w"] / v["n"]) * 100, 1) if v["n"] else overall_rate
+        rate = round((v["w"] / v["n"]) * 100, 1) if v["n"] else 0.0
         factor_metrics[k] = {
             "label": v["label"],
             "wins": v["w"],
+            "losses": v["n"] - v["w"],
             "total": v["n"],
             "win_rate": rate,
-            "lift_vs_avg": round(rate - overall_rate, 1)
+            "lift_vs_avg": round(rate - overall_rate, 1) if v["n"] else 0.0
         }
 
     league_metrics = {
@@ -243,6 +353,7 @@ def analyze_factors(games):
         "total": total_n,
         "win_rate": overall_rate,
         "gap_to_target": round(max(0.0, TARGET_WIN_RATE - overall_rate), 1),
+        "underdogs": factor_metrics["underdogs"],
         "factors": factor_metrics,
         "leagues": league_metrics,
         "calibration": cal_metrics,
@@ -262,6 +373,14 @@ def build_suggestions(stats, current_weights):
         elif m["lift_vs_avg"] <= -2.0:
             not_working.append(f"{m['label']} is lagging at {m['win_rate']}% ({m['lift_vs_avg']}% vs baseline).")
             suggestions.append(f"Trim weight on {m['label']} and require stricter signal confirmation.")
+
+    dog = stats.get("underdogs", {})
+    if dog.get("total", 0) > 0:
+        if dog["win_rate"] >= 45.0:
+            working.append(f"Underdog Gate picks are cashing at {dog['win_rate']}% ({dog['wins']}-{dog['losses']}).")
+        else:
+            not_working.append(f"Underdog picks are at {dog['win_rate']}% ({dog['wins']}-{dog['losses']}).")
+            suggestions.append("Keep Underdog Agreement Gate active until sample reaches 50+ dog picks.")
 
     for lg, lm in stats["leagues"].items():
         if lm["total"] >= 5 and lm["win_rate"] >= 70.0:
@@ -293,7 +412,7 @@ def compute_monthly_weights(current_weights, stats):
     for w_key, f_key in map_keys:
         lift = stats["factors"][f_key]["lift_vs_avg"]
         shift = max(-6, min(6, round(lift * 0.45)))
-        new_w[w_key] = max(10, min(70, new_w[w_key] + shift))
+        new_w[w_key] = max(5, min(70, new_w[w_key] + shift))
         if shift != 0:
             deltas.append(f"{w_key.upper()} {'+' if shift > 0 else ''}{shift}%")
 
@@ -309,7 +428,7 @@ def main():
     force_rebalance = os.getenv("FORCE_REBALANCE", "false").lower() == "true"
 
     default_report = {
-        "algo_version": month_tag,
+        "algo_version": f"{month_tag}-phase1",
         "rebalance_cadence": "monthly",
         "target_win_rate": TARGET_WIN_RATE,
         "weights": dict(DEFAULT_WEIGHTS),
@@ -321,8 +440,15 @@ def main():
     if not isinstance(report, dict):
         report = default_report
 
-    active_weights = report.get("weights") if isinstance(report.get("weights"), dict) else dict(DEFAULT_WEIGHTS)
-    active_version = report.get("algo_version", month_tag)
+    # Enforce Phase 1 base weights on first run after upgrade
+    if not str(report.get("algo_version", "")).endswith("-phase1"):
+        active_weights = dict(DEFAULT_WEIGHTS)
+        active_version = f"{month_tag}-phase1"
+        report["algo_version"] = active_version
+        report["weights"] = active_weights
+    else:
+        active_weights = report.get("weights") if isinstance(report.get("weights"), dict) else dict(DEFAULT_WEIGHTS)
+        active_version = report.get("algo_version", f"{month_tag}-phase1")
 
     raw_history = load_json(HISTORY_FILE, {"dates": {}})
     history = normalize_history(raw_history, today_str)
@@ -340,12 +466,12 @@ def main():
     working, not_working, suggestions = build_suggestions(stats_60, active_weights)
 
     # 1. MONTHLY REBALANCE GATE (Runs only on the 1st of the month or manual force)
-    rebalance_note = "Next scheduled weight adjustment: 1st of next month."
+    rebalance_note = "Phase 1 active (10/60/30 + Normalized H2H + Dog Gate). Next rebalance: 1st of next month."
     if (now.day == 1 and report.get("last_rebalance_month") != month_tag) or force_rebalance:
         prev_weights = dict(active_weights)
         new_weights, rebalance_note = compute_monthly_weights(active_weights, stats_60)
         active_weights = new_weights
-        active_version = month_tag
+        active_version = f"{month_tag}-phase1"
         report["algo_version"] = active_version
         report["weights"] = active_weights
         report["last_rebalance_month"] = month_tag
@@ -372,6 +498,7 @@ def main():
             "games_graded": stats_14["total"],
             "record": f"{stats_14['wins']}-{stats_14['losses']}",
             "win_rate": stats_14["win_rate"],
+            "underdog_record": f"{stats_14['underdogs']['wins']}-{stats_14['underdogs']['losses']}",
             "what_changed": rebalance_note,
             "whats_working": bw_working,
             "whats_not_working": bw_not_working,
@@ -394,7 +521,11 @@ def main():
 
     save_json(HISTORY_FILE, history)
     save_json(REPORT_FILE, report)
-    print(f"AlignIQ Agent complete | Algo {active_version} | 60d: {stats_60['win_rate']}% ({stats_60['wins']}-{stats_60['losses']})")
+    print(
+        f"AlignIQ Agent complete | Algo {active_version} | "
+        f"60d: {stats_60['win_rate']}% ({stats_60['wins']}-{stats_60['losses']}) | "
+        f"Dogs: {stats_60['underdogs']['wins']}-{stats_60['underdogs']['losses']}"
+    )
 
 
 if __name__ == "__main__":
