@@ -11,7 +11,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="icon" type="image/png" href="icon.png" />
-  <link rel="stylesheet" href="styles.css?v=10" />
+  <link rel="stylesheet" href="styles.css?v=11" />
 </head>
 <body>
   <div id="app">
@@ -85,7 +85,7 @@
           </div>
         </div>
 
-        <!-- KALSHI-STYLE HORIZONTAL LEAGUE TABS -->
+        <!-- HORIZONTAL LEAGUE TABS -->
         <div class="sports-bar" id="sports-bar"></div>
 
         <!-- CLEAN SEARCH BAR -->
@@ -103,7 +103,7 @@
         </div>
       </div>
 
-      <!-- AI MODEL WEIGHTS PANEL (SLIDES OPEN FROM MENU / BOTTOM NAV) -->
+      <!-- AI MODEL WEIGHTS PANEL -->
       <div id="tuner-panel">
         <div class="tuner-header">
           <h3>AI Model Weights</h3>
@@ -131,8 +131,8 @@
         </div>
       </div>
 
-      <!-- GRADED PICKS SUMMARY BANNER -->
-      <div id="accuracy-banner">
+      <!-- GRADED PICKS SUMMARY BANNER (DIRECT ONCLICK) -->
+      <div id="accuracy-banner" onclick="openGradedAuditModal()">
         <div class="acc-left">
           <strong id="acc-record">Graded Picks: 0–0</strong>
           <span>Tap to inspect verified results &amp; locked odds</span>
@@ -373,10 +373,10 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="app.js?v=10"></script>
-  <script type="module" src="security.js?v=3"></script>
-  <script src="audit_analytics.js?v=2"></script>
+  <script type="module" src="security.js?v=4"></script>
+  <script src="audit_analytics.js?v=3"></script>
   <script>
-    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js?v=7'); }
+    if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js?v=8'); }
   </script>
 </body>
 </html>
