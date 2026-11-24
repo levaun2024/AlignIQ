@@ -29,6 +29,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 58,
+            "away": 42
+          },
+          "close_h2h": {
+            "home": 58,
+            "away": 42
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -58,6 +80,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 41,
+            "away": 59
+          },
+          "close_h2h": {
+            "home": 41,
+            "away": 59
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -87,6 +131,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -116,6 +182,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -145,6 +233,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "close_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -174,6 +284,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -203,6 +335,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 43,
+            "away": 57
+          },
+          "close_h2h": {
+            "home": 43,
+            "away": 57
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -232,6 +386,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -261,6 +437,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "close_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -290,6 +488,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "close_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -319,6 +539,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "close_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -348,6 +590,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -377,6 +641,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -406,6 +692,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "close_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -435,6 +743,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -464,6 +794,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -493,6 +845,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -522,6 +896,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -551,6 +947,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -580,6 +998,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -609,6 +1049,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -638,6 +1100,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -667,6 +1151,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -696,6 +1202,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -725,6 +1253,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "close_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -754,6 +1304,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 57,
+            "away": 43
+          },
+          "close_h2h": {
+            "home": 57,
+            "away": 43
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -783,6 +1355,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 52,
+            "away": 48
+          },
+          "close_h2h": {
+            "home": 52,
+            "away": 48
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -812,6 +1406,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 58,
+            "away": 42
+          },
+          "close_h2h": {
+            "home": 58,
+            "away": 42
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -841,6 +1457,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "close_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -870,6 +1508,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "close_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -899,6 +1559,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -928,6 +1610,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "close_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -957,6 +1661,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "close_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -986,6 +1712,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "close_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1015,6 +1763,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 37,
+            "away": 63
+          },
+          "close_h2h": {
+            "home": 37,
+            "away": 63
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1044,6 +1814,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "close_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1073,6 +1865,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1102,6 +1916,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "close_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1131,6 +1967,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 58,
+            "away": 42
+          },
+          "close_h2h": {
+            "home": 58,
+            "away": 42
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1160,6 +2018,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "close_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1189,6 +2069,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1218,6 +2120,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 58,
+            "away": 42
+          },
+          "close_h2h": {
+            "home": 58,
+            "away": 42
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1247,6 +2171,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 60,
+            "away": 40
+          },
+          "close_h2h": {
+            "home": 60,
+            "away": 40
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1276,6 +2222,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1305,6 +2273,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "close_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1334,6 +2324,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1363,6 +2375,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "close_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1392,6 +2426,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1421,6 +2477,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "close_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1450,6 +2528,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1479,6 +2579,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "close_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1508,6 +2630,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "close_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1537,6 +2681,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1566,6 +2732,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1595,6 +2783,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1624,6 +2834,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "close_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1653,6 +2885,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "close_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1682,6 +2936,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1711,6 +2987,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "close_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1740,6 +3038,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1769,6 +3089,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1798,6 +3140,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1827,6 +3191,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "close_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1856,6 +3242,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "close_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1885,6 +3293,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "close_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1914,6 +3344,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1943,6 +3395,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "close_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -1972,6 +3446,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2001,6 +3497,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2030,6 +3548,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2059,6 +3599,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2088,6 +3650,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2117,6 +3701,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 39,
+            "away": 61
+          },
+          "close_h2h": {
+            "home": 39,
+            "away": 61
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2146,6 +3752,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2175,6 +3803,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2204,6 +3854,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "close_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2233,6 +3905,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "close_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2262,6 +3956,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2291,6 +4007,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "close_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2320,6 +4058,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2349,6 +4109,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2378,6 +4160,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         }
       ],
@@ -2418,6 +4222,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 63,
+            "away": 37
+          },
+          "close_h2h": {
+            "home": 63,
+            "away": 37
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2447,6 +4273,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2476,6 +4324,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2505,6 +4375,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "close_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2534,6 +4426,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 39,
+            "away": 61
+          },
+          "close_h2h": {
+            "home": 39,
+            "away": 61
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2563,6 +4477,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "close_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2592,6 +4528,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2621,6 +4579,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "close_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2650,6 +4630,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "close_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2679,6 +4681,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 57,
+            "away": 43
+          },
+          "close_h2h": {
+            "home": 57,
+            "away": 43
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2708,6 +4732,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2737,6 +4783,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "close_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2766,6 +4834,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "close_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2795,6 +4885,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "close_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2824,6 +4936,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2853,6 +4987,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "close_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2882,6 +5038,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 45,
+            "away": 55
+          },
+          "close_h2h": {
+            "home": 45,
+            "away": 55
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2911,6 +5089,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2940,6 +5140,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "close_h2h": {
+            "home": 55,
+            "away": 45
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2969,6 +5191,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "close_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -2998,6 +5242,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3027,6 +5293,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3056,6 +5344,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3085,6 +5395,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3114,6 +5446,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3143,6 +5497,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3172,6 +5548,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3201,6 +5599,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3230,6 +5650,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3259,6 +5701,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         }
       ],
@@ -3299,6 +5763,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3328,6 +5814,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3357,6 +5865,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3386,6 +5916,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "close_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3415,6 +5967,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 43,
+            "away": 57
+          },
+          "close_h2h": {
+            "home": 43,
+            "away": 57
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3444,6 +6018,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "close_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3473,6 +6069,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 37,
+            "away": 63
+          },
+          "close_h2h": {
+            "home": 37,
+            "away": 63
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3502,6 +6120,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "close_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3531,6 +6171,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "close_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3560,6 +6222,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 43,
+            "away": 57
+          },
+          "close_h2h": {
+            "home": 43,
+            "away": 57
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3589,6 +6273,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "close_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3618,6 +6324,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3647,6 +6375,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "close_h2h": {
+            "home": 48,
+            "away": 52
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3676,6 +6426,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3705,6 +6477,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 43,
+            "away": 57
+          },
+          "close_h2h": {
+            "home": 43,
+            "away": 57
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3734,6 +6528,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 45,
+            "away": 55
+          },
+          "close_h2h": {
+            "home": 45,
+            "away": 55
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3763,6 +6579,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "close_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3792,6 +6630,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "close_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3821,6 +6681,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3850,6 +6732,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3879,6 +6783,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3908,6 +6834,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3937,6 +6885,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3966,6 +6936,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "close_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -3995,6 +6987,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4024,6 +7038,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4053,6 +7089,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4082,6 +7140,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4111,6 +7191,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4140,6 +7242,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "close_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4169,6 +7293,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4198,6 +7344,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4227,6 +7395,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4256,6 +7446,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4285,6 +7497,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4314,6 +7548,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         }
       ],
@@ -4354,6 +7610,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4383,6 +7661,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4412,6 +7712,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 36,
+            "away": 64
+          },
+          "close_h2h": {
+            "home": 36,
+            "away": 64
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         }
       ],
@@ -4452,6 +7774,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4481,6 +7825,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4510,6 +7876,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "close_h2h": {
+            "home": 47,
+            "away": 53
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4539,6 +7927,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 60,
+            "away": 40
+          },
+          "close_h2h": {
+            "home": 60,
+            "away": 40
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4568,6 +7978,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 42,
+            "away": 58
+          },
+          "close_h2h": {
+            "home": 42,
+            "away": 58
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4597,6 +8029,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "close_h2h": {
+            "home": 56,
+            "away": 44
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4626,6 +8080,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "close_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4655,6 +8131,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 52,
+            "away": 48
+          },
+          "close_h2h": {
+            "home": 52,
+            "away": 48
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4684,6 +8182,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "close_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4713,6 +8233,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 45,
+            "away": 55
+          },
+          "close_h2h": {
+            "home": 45,
+            "away": 55
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4742,6 +8284,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "close_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4771,6 +8335,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "close_h2h": {
+            "home": 46,
+            "away": 54
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4800,6 +8386,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 52,
+            "away": 48
+          },
+          "close_h2h": {
+            "home": 52,
+            "away": 48
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4829,6 +8437,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 39,
+            "away": 61
+          },
+          "close_h2h": {
+            "home": 39,
+            "away": 61
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4858,6 +8488,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "close_h2h": {
+            "home": 51,
+            "away": 49
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4887,6 +8539,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 42,
+            "away": 58
+          },
+          "close_h2h": {
+            "home": 42,
+            "away": 58
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4916,6 +8590,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 42,
+            "away": 58
+          },
+          "close_h2h": {
+            "home": 42,
+            "away": 58
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4945,6 +8641,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -4974,6 +8692,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "close_h2h": {
+            "home": 59,
+            "away": 41
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5003,6 +8743,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "close_h2h": {
+            "home": 54,
+            "away": 46
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5032,6 +8794,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "close_h2h": {
+            "home": 61,
+            "away": 39
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5061,6 +8845,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "close_h2h": {
+            "home": 49,
+            "away": 51
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5090,6 +8896,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 60,
+            "away": 40
+          },
+          "close_h2h": {
+            "home": 60,
+            "away": 40
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5119,6 +8947,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "close_h2h": {
+            "home": 44,
+            "away": 56
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5148,6 +8998,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 65,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5177,6 +9049,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "close_h2h": {
+            "home": 50,
+            "away": 50
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5206,6 +9100,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5235,6 +9151,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "close_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5264,6 +9202,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "close_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5293,6 +9253,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "close_h2h": {
+            "home": 62,
+            "away": 38
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5322,6 +9304,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "close_h2h": {
+            "home": 53,
+            "away": 47
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5351,6 +9355,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 64,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5380,6 +9406,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "close_h2h": {
+            "home": 68,
+            "away": 36
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5409,6 +9457,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 41,
+            "away": 59
+          },
+          "close_h2h": {
+            "home": 41,
+            "away": 59
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         },
         {
@@ -5438,6 +9508,28 @@
             "odds_edge": 0,
             "form_health_score": 0,
             "references": []
+          },
+          "home_ml": null,
+          "away_ml": null,
+          "open_h2h": {
+            "home": 38,
+            "away": 62
+          },
+          "close_h2h": {
+            "home": 38,
+            "away": 62
+          },
+          "rest_days": {
+            "home": null,
+            "away": null
+          },
+          "splits": {
+            "home_at_home_pct": null,
+            "away_on_road_pct": null
+          },
+          "starter_flag": {
+            "home": "unknown",
+            "away": "unknown"
           }
         }
       ],
