@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>AlignIQ — Hybrid Gematria, +EV &amp; Live Matchup Engine</title>
-  <meta name="theme-color" content="#060a12" id="meta-theme-color" />
+  <title>AlignIQ — Live Sports Intelligence</title>
+  <meta name="theme-color" content="#06090f" id="meta-theme-color" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="AlignIQ" />
@@ -21,17 +21,17 @@
       <div class="glow-orb glow-2"></div>
       <div class="auth-card">
         <div class="logo-badge">
-          <svg width="34" height="34" viewBox="0 0 36 36" fill="none">
-            <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" stroke="#10b981" stroke-width="2.4" fill="rgba(16,185,129,0.12)"/>
+          <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+            <polygon points="18,3 31,10.5 31,25.5 18,33 5,25.5 5,10.5" stroke="#00d285" stroke-width="2.4" fill="rgba(0,210,133,0.1)"/>
             <line x1="18" y1="18" x2="31" y2="10.5" stroke="#34d399" stroke-width="2"/>
             <line x1="18" y1="18" x2="18" y2="33" stroke="#34d399" stroke-width="2"/>
             <line x1="18" y1="18" x2="5" y2="10.5" stroke="#34d399" stroke-width="2"/>
-            <circle cx="18" cy="18" r="2.8" fill="#34d399"/>
+            <circle cx="18" cy="18" r="2.8" fill="#00d285"/>
           </svg>
         </div>
         <div class="live-pill"><span class="pulse-dot"></span><span id="auth-date-badge">LIVE MULTI-SPORT ENGINE</span></div>
         <h1 class="auth-title">Align<span>IQ</span></h1>
-        <p class="auth-sub">Normalized Fair Odds, Sharp Movement, Fight IQ &amp; Verified Sources</p>
+        <p class="auth-sub">Real-time odds, sharp movement, form splits &amp; AI projections.</p>
 
         <button class="oauth-btn btn-google" onclick="signInGoogle()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.7 14.8 1 12 1 7.4 1 3.5 3.6 1.6 7.4l3.6 2.8C6.1 7.2 8.8 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.6l3.7 2.9c2.2-2 3.7-5 3.7-8.7z"/><path fill="#FBBC05" d="M5.2 14.8c-.2-.8-.4-1.8-.4-2.8s.2-2 .4-2.8L1.6 6.4C.6 8.1 0 10 0 12s.6 3.9 1.6 5.6l3.6-2.8z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3.2 0-5.9-2.2-6.8-5.1l-3.6 2.8C3.5 19.8 7.4 23 12 23z"/></svg>
@@ -45,145 +45,181 @@
             <input id="remember-device" type="checkbox" checked />
             Stay logged in on this device
           </label>
-          <div style="display:flex;gap:8px;">
-            <button class="primary-btn" style="flex:1;margin:0;" onclick="signInEmail(false)">Sign In</button>
-            <button class="icon-btn" style="flex:1;height:42px;" onclick="signInEmail(true)">Create Account</button>
+          <div class="auth-btn-row">
+            <button class="primary-btn" onclick="signInEmail(false)">Sign In</button>
+            <button class="secondary-btn" onclick="signInEmail(true)">Create Account</button>
           </div>
           <p id="auth-error" class="auth-error"></p>
         </div>
 
-        <p class="auth-note">For entertainment &amp; analytical modeling only. Auto-syncs live scores, odds &amp; AI weights.</p>
+        <p class="auth-note">For analytical modeling &amp; entertainment only.</p>
       </div>
     </section>
 
     <!-- MAIN DASHBOARD -->
     <section id="dashboard">
       <div class="sticky-top">
+        <!-- ULTRA-CLEAN TOP BAR -->
         <div class="top-bar">
           <div class="brand-left">
-            <div class="brand-icon">
-              <svg width="17" height="17" viewBox="0 0 36 36" fill="none">
-                <polygon points="18,4 30,11 30,25 18,32 6,25 6,11" stroke="#04130d" stroke-width="3.2" fill="none"/>
-                <circle cx="18" cy="18" r="3.5" fill="#04130d"/>
+            <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
               </svg>
-            </div>
+            </button>
             <div class="brand-name">Align<span>IQ</span></div>
-            <span class="owner-badge owner-only" style="display:none;">OWNER</span>
           </div>
           <div class="top-actions">
-            <button class="icon-btn owner-only" style="display:none;border-color:#10b981;" onclick="openAdminModal()" title="Owner Security &amp; Access">🛡️</button>
-            <button class="icon-btn owner-only" style="display:none;border-color:#38bdf8;" onclick="openOwnerAnalyticsModal()" title="Owner Intelligence &amp; ROI">📊</button>
-            <button class="icon-btn" onclick="openToolsModal('calc')" title="Calculators">🧮</button>
-            <button class="icon-btn" onclick="toggleTuner()">🤖 Agent</button>
-            <button class="icon-btn accent" onclick="openScanModal()">+ Scan</button>
-            <button class="icon-btn" onclick="openSettingsModal('theme')" title="Settings">⚙</button>
-            <button class="icon-btn" onclick="signOut()" title="Sign Out">↪</button>
-          </div>
-        </div>
-
-        <div class="date-bar">
-          <button class="date-nav-btn" onclick="shiftDate(-1)">‹</button>
-          <div class="date-center">
-            <button class="date-label-btn">
-              <span id="date-display">Today</span>
-              <input type="date" id="date-picker" class="date-input-hidden" onchange="onPickDate(this.value)" />
-            </button>
+            <div class="compact-date">
+              <button class="date-arrow" onclick="shiftDate(-1)" aria-label="Previous day">‹</button>
+              <button class="date-label-btn">
+                <span id="date-display">Today</span>
+                <input type="date" id="date-picker" class="date-input-hidden" onchange="onPickDate(this.value)" />
+              </button>
+              <button class="date-arrow" onclick="shiftDate(1)" aria-label="Next day">›</button>
+            </div>
             <button id="today-btn" class="today-chip" style="display:none;" onclick="goToday()">Today</button>
+            <button class="circle-btn" onclick="loadSlate(false)" title="Refresh Slate">↻</button>
           </div>
-          <button class="date-nav-btn" onclick="shiftDate(1)">›</button>
-          <button class="date-nav-btn" onclick="loadSlate(false)" title="Refresh">↻</button>
         </div>
 
-        <div class="search-row">
-          <input id="search-input" class="search-input" type="search" placeholder="Search team, fighter, stadium, or TV network..." oninput="renderFeed()" />
-        </div>
-
-        <div class="mode-pills">
-          <button class="mode-pill active" id="mode-all" onclick="setFilterMode('all')">All Games</button>
-          <button class="mode-pill" id="mode-high" onclick="setFilterMode('high')">🔥 70%+ Conf</button>
-          <button class="mode-pill" id="mode-gem" onclick="setFilterMode('gem')">✦ 2+ Hits</button>
-          <button class="mode-pill" id="mode-live" onclick="setFilterMode('live')">● Live Now</button>
-          <button class="mode-pill" id="mode-upcoming" onclick="setFilterMode('upcoming')">Upcoming</button>
-          <button class="mode-pill" id="mode-saved" onclick="openToolsModal('slip')">★ Slip (<span id="saved-count">0</span>)</button>
-        </div>
-
-        <div class="date-math-bar" onclick="openDateMathModal()">
-          <span class="dm-title">DATE MATH</span>
-          <div id="dm-pills" style="display:flex;gap:5px;"></div>
-        </div>
-
+        <!-- KALSHI-STYLE HORIZONTAL LEAGUE TABS -->
         <div class="sports-bar" id="sports-bar"></div>
+
+        <!-- CLEAN SEARCH BAR -->
+        <div class="search-row">
+          <input id="search-input" class="search-input" type="search" placeholder="Search teams, fighters, or leagues..." oninput="renderFeed()" />
+        </div>
+
+        <!-- COMPACT FILTER PILLS -->
+        <div class="mode-pills">
+          <button class="mode-pill active" id="mode-all" onclick="setFilterMode('all')">For You</button>
+          <button class="mode-pill" id="mode-high" onclick="setFilterMode('high')">🔥 Top Locks</button>
+          <button class="mode-pill" id="mode-live" onclick="setFilterMode('live')">● Live</button>
+          <button class="mode-pill" id="mode-upcoming" onclick="setFilterMode('upcoming')">Upcoming</button>
+          <button class="mode-pill" id="mode-gem" onclick="setFilterMode('gem')">✦ Signals</button>
+        </div>
       </div>
 
-      <!-- AI AGENT & WEIGHT PANEL (EDITABLE FOR OWNER ONLY, READ-ONLY VISUAL SCALE FOR EVERYONE ELSE) -->
+      <!-- AI MODEL WEIGHTS PANEL (SLIDES OPEN FROM MENU / BOTTOM NAV) -->
       <div id="tuner-panel">
         <div class="tuner-header">
-          <h3>AI Agent Model Weights</h3>
-          <button class="icon-btn owner-only" style="display:none;height:26px;font-size:11px;" onclick="resetToAgentWeights()">Reset AI Weights</button>
-          <span class="viewer-only lock-pill">🔒 Live Model (Read-Only)</span>
+          <h3>AI Model Weights</h3>
+          <button class="icon-btn" style="height:26px;font-size:11px;" onclick="resetToAgentWeights()">Reset to AI</button>
         </div>
         <div id="agent-status-box" class="agent-box">
-          <strong>Connecting to AlignIQ Agent...</strong>
-          Loading verified 60-day record and league pillar weights.
+          <strong>Connecting to AlignIQ Model...</strong>
+          Loading verified record and active league weights.
         </div>
-
-        <!-- READ-ONLY VISUAL WEIGHT BAR (SHOWN TO NON-OWNERS) -->
-        <div id="viewer-weight-bars" class="viewer-only">
-          <div class="scale-row">
-            <div class="scale-head"><span>Gematria Convergence (2+ Refs)</span><strong id="vw-gem-val">10%</strong></div>
-            <div class="scale-track"><div class="scale-fill" id="vw-gem-bar" style="width:10%;background:#a78bfa;"></div></div>
-          </div>
-          <div class="scale-row">
-            <div class="scale-head"><span>Normalized Fair Odds &amp; Line Move</span><strong id="vw-h2h-val">60%</strong></div>
-            <div class="scale-track"><div class="scale-fill" id="vw-h2h-bar" style="width:60%;background:var(--accent);"></div></div>
-          </div>
-          <div class="scale-row">
-            <div class="scale-head"><span>Splits, B2B Rest, Health &amp; Fight IQ</span><strong id="vw-ros-val">30%</strong></div>
-            <div class="scale-track"><div class="scale-fill" id="vw-ros-bar" style="width:30%;background:var(--blue);"></div></div>
-          </div>
+        <div class="slider-row">
+          <div class="slider-label"><span>Pattern Signals</span><strong id="w-gem-val">10%</strong></div>
+          <input type="range" id="w-gem" min="0" max="100" value="10" oninput="onWeightChange()" />
         </div>
-
-        <!-- OWNER-ONLY INTERACTIVE SLIDERS -->
-        <div class="owner-only" style="display:none;">
-          <div class="slider-row">
-            <div class="slider-label"><span>Gematria Convergence (2+ Refs)</span><strong id="w-gem-val">10%</strong></div>
-            <input type="range" id="w-gem" min="0" max="100" value="10" oninput="onWeightChange()" />
-          </div>
-          <div class="slider-row">
-            <div class="slider-label"><span>Normalized Fair Odds &amp; Line Move</span><strong id="w-h2h-val">60%</strong></div>
-            <input type="range" id="w-h2h" min="0" max="100" value="60" oninput="onWeightChange()" />
-          </div>
-          <div class="slider-row">
-            <div class="slider-label"><span>Splits, B2B Rest, Health &amp; Fight IQ</span><strong id="w-ros-val">30%</strong></div>
-            <input type="range" id="w-ros" min="0" max="100" value="30" oninput="onWeightChange()" />
-          </div>
-          <div class="form-group" style="margin-top:10px;margin-bottom:0;">
-            <label>Owner Odds Proxy Active <span id="credits-badge" style="color:var(--blue);font-weight:800;"></span></label>
-            <input id="odds-api-key" type="hidden" value="PROXY_ACTIVE" />
-          </div>
+        <div class="slider-row">
+          <div class="slider-label"><span>Market Odds &amp; Line Move</span><strong id="w-h2h-val">60%</strong></div>
+          <input type="range" id="w-h2h" min="0" max="100" value="60" oninput="onWeightChange()" />
+        </div>
+        <div class="slider-row">
+          <div class="slider-label"><span>Form, Rest &amp; Health</span><strong id="w-ros-val">30%</strong></div>
+          <input type="range" id="w-ros" min="0" max="100" value="30" oninput="onWeightChange()" />
+        </div>
+        <div class="form-group owner-only" style="display:none;margin-top:10px;margin-bottom:0;">
+          <label>Owner Odds Proxy Active <span id="credits-badge" style="color:var(--blue);font-weight:800;"></span></label>
+          <input id="odds-api-key" type="hidden" value="PROXY_ACTIVE" />
         </div>
       </div>
 
-      <!-- CLICKABLE GRADED PICKS BANNER -->
+      <!-- GRADED PICKS SUMMARY BANNER -->
       <div id="accuracy-banner">
         <div class="acc-left">
           <strong id="acc-record">Graded Picks: 0–0</strong>
-          <span>Tap to inspect frozen picks, algo snapshot &amp; references</span>
+          <span>Tap to inspect verified results &amp; locked odds</span>
         </div>
         <div class="acc-rate" id="acc-pct">0%</div>
       </div>
 
+      <!-- MAIN FEED -->
       <div class="feed-wrap">
         <div class="feed-header">
           <div>
-            <div class="feed-title">Top Matchups · Highest Confidence</div>
-            <div class="feed-sub" id="feed-sub">Phase 4 ROI-tuned model · Live 30s sync</div>
+            <div class="feed-title">Featured Matchups</div>
+            <div class="feed-sub" id="feed-sub">Live odds &amp; model sync</div>
           </div>
-          <div class="status-badge"><span class="pulse-dot"></span><span id="live-count-badge">Loading...</span></div>
+          <div class="status-badge"><span class="pulse-dot"></span><span id="live-count-badge">Syncing...</span></div>
         </div>
         <div id="games-feed"></div>
       </div>
+
+      <!-- FIXED BOTTOM NAVIGATION BAR -->
+      <nav class="bottom-nav">
+        <button class="bnav-btn active" id="bnav-all" onclick="setFilterMode('all'); setBottomNav('bnav-all')">
+          <span class="bnav-ico">🧭</span><span>Explore</span>
+        </button>
+        <button class="bnav-btn" id="bnav-live" onclick="setFilterMode('live'); setBottomNav('bnav-live')">
+          <span class="bnav-ico">🔴</span><span>Live</span>
+        </button>
+        <button class="bnav-btn" id="bnav-high" onclick="setFilterMode('high'); setBottomNav('bnav-high')">
+          <span class="bnav-ico">🔥</span><span>Top Locks</span>
+        </button>
+        <button class="bnav-btn" id="bnav-slip" onclick="openToolsModal('slip')">
+          <span class="bnav-ico">★</span><span>Slip (<span id="saved-count">0</span>)</span>
+        </button>
+        <button class="bnav-btn" id="bnav-model" onclick="toggleTuner()">
+          <span class="bnav-ico">🤖</span><span>Model</span>
+        </button>
+      </nav>
     </section>
+
+    <!-- SLIDE-OUT HAMBURGER NAVIGATION DRAWER -->
+    <div id="drawer-backdrop" onclick="closeDrawer()"></div>
+    <aside id="nav-drawer">
+      <div class="drawer-head">
+        <div class="brand-name">Align<span>IQ</span></div>
+        <button class="close-btn" onclick="closeDrawer()">×</button>
+      </div>
+
+      <div class="drawer-section owner-only" style="display:none;">
+        <div class="drawer-label">OWNER COMMAND</div>
+        <button class="drawer-item accent" onclick="closeDrawer(); openOwnerAnalyticsModal()">
+          <span>📊</span> Owner Analytics &amp; ROI
+        </button>
+        <button class="drawer-item" onclick="closeDrawer(); openAdminModal()">
+          <span>🛡️</span> Security &amp; Access Control
+        </button>
+      </div>
+
+      <div class="drawer-section">
+        <div class="drawer-label">TOOLS &amp; RESEARCH</div>
+        <button class="drawer-item" onclick="closeDrawer(); toggleTuner()">
+          <span>🤖</span> AI Model Weights
+        </button>
+        <button class="drawer-item" onclick="closeDrawer(); openScanModal()">
+          <span>✨</span> Custom Matchup Scan
+        </button>
+        <button class="drawer-item" onclick="closeDrawer(); openToolsModal('calc')">
+          <span>🧮</span> +EV &amp; Arbitrage Calc
+        </button>
+        <button class="drawer-item" onclick="closeDrawer(); openDateMathModal()">
+          <span>📅</span> Daily Numerology
+          <div id="dm-pills" class="drawer-pills"></div>
+        </button>
+      </div>
+
+      <div class="drawer-section">
+        <div class="drawer-label">PREFERENCES</div>
+        <button class="drawer-item" onclick="closeDrawer(); openSettingsModal('theme')">
+          <span>🎨</span> Theme (Dark / Light)
+        </button>
+        <button class="drawer-item" onclick="closeDrawer(); openSettingsModal('help')">
+          <span>💬</span> Help Assistant
+        </button>
+        <button class="drawer-item danger" onclick="closeDrawer(); signOut()">
+          <span>↪</span> Sign Out
+        </button>
+      </div>
+    </aside>
 
     <!-- OWNER-ONLY SECURITY & ACCESS MODAL -->
     <div class="modal-backdrop" id="admin-modal" onclick="closeModalOnBg(event, 'admin-modal')">
@@ -200,7 +236,7 @@
     <div class="modal-backdrop" id="owner-analytics-modal" onclick="closeModalOnBg(event, 'owner-analytics-modal')">
       <div class="modal-sheet">
         <div class="modal-head">
-          <h2>📊 Owner Intelligence &amp; ROI Audit</h2>
+          <h2>📊 Owner Intelligence &amp; ROI</h2>
           <button class="close-btn" onclick="closeModal('owner-analytics-modal')">×</button>
         </div>
         <div id="owner-analytics-body"></div>
@@ -211,7 +247,7 @@
     <div class="modal-backdrop" id="graded-audit-modal" onclick="closeModalOnBg(event, 'graded-audit-modal')">
       <div class="modal-sheet">
         <div class="modal-head">
-          <h2>📋 Graded Picks &amp; Frozen Algo Audit</h2>
+          <h2>📋 Graded Picks &amp; Audit</h2>
           <button class="close-btn" onclick="closeModal('graded-audit-modal')">×</button>
         </div>
         <div id="graded-audit-body"></div>
@@ -237,7 +273,7 @@
     <div class="modal-backdrop" id="detail-modal" onclick="closeModalOnBg(event, 'detail-modal')">
       <div class="modal-sheet">
         <div class="modal-head">
-          <h2 id="detail-title">Game Decode</h2>
+          <h2 id="detail-title">Matchup Breakdown</h2>
           <div class="modal-head-actions">
             <button class="icon-btn accent" style="height:30px;font-size:11px;" onclick="shareSelectedGame()">Share</button>
             <button class="close-btn" onclick="closeModal('detail-modal')">×</button>
@@ -245,24 +281,13 @@
         </div>
         <div class="tabs-row" id="detail-tabs">
           <button class="tab-btn active" data-tab="odds" onclick="switchTab('odds', this)">Best Odds</button>
-          <button class="tab-btn" data-tab="props" onclick="switchTab('props', this)">Props/DFS</button>
-          <button class="tab-btn" data-tab="trends" onclick="switchTab('trends', this)">Trends/AI</button>
-          <button class="tab-btn" data-tab="gem" onclick="switchTab('gem', this)">Gematria</button>
+          <button class="tab-btn" data-tab="props" onclick="switchTab('props', this)">Props</button>
+          <button class="tab-btn" data-tab="trends" onclick="switchTab('trends', this)">AI Edge</button>
+          <button class="tab-btn" data-tab="gem" onclick="switchTab('gem', this)">Signals</button>
           <button class="tab-btn" data-tab="ros" id="tab-ros-btn" onclick="switchTab('ros', this)">Health</button>
           <button class="tab-btn" data-tab="news" onclick="switchTab('news', this)">News</button>
         </div>
         <div id="detail-body"></div>
-      </div>
-    </div>
-
-    <!-- DIRECT YOUTUBE VIDEO PLAYER MODAL -->
-    <div class="modal-backdrop" id="video-modal" onclick="closeModalOnBg(event, 'video-modal')">
-      <div class="modal-sheet">
-        <div class="modal-head">
-          <h2 id="video-modal-title">▶ Video Breakdown</h2>
-          <button class="close-btn" onclick="closeVideoModal()">×</button>
-        </div>
-        <div id="video-modal-body"></div>
       </div>
     </div>
 
@@ -281,12 +306,12 @@
     <div class="modal-backdrop" id="tools-modal" onclick="closeModalOnBg(event, 'tools-modal')">
       <div class="modal-sheet">
         <div class="modal-head">
-          <h2>Parlay Slip &amp; Pro Calculators</h2>
+          <h2>Parlay Slip &amp; Calculators</h2>
           <button class="close-btn" onclick="closeModal('tools-modal')">×</button>
         </div>
         <div class="tabs-row">
           <button class="tab-btn active" id="tool-tab-slip" onclick="switchToolsTab('slip', this)">★ Parlay Slip</button>
-          <button class="tab-btn" id="tool-tab-calc" onclick="switchToolsTab('calc', this)">+EV &amp; Arb Calc</button>
+          <button class="tab-btn" id="tool-tab-calc" onclick="switchToolsTab('calc', this)">+EV &amp; Arb</button>
           <button class="tab-btn" id="tool-tab-conv" onclick="switchToolsTab('conv', this)">Odds / ¢</button>
         </div>
         <div id="tools-body"></div>
@@ -297,7 +322,7 @@
     <div class="modal-backdrop" id="dm-modal" onclick="closeModalOnBg(event, 'dm-modal')">
       <div class="modal-sheet">
         <div class="modal-head">
-          <h2>Date Numerology Breakdown</h2>
+          <h2>Daily Numerology</h2>
           <button class="close-btn" onclick="closeModal('dm-modal')">×</button>
         </div>
         <div id="dm-modal-body"></div>
@@ -308,7 +333,7 @@
     <div class="modal-backdrop" id="scan-modal" onclick="closeModalOnBg(event, 'scan-modal')">
       <div class="modal-sheet">
         <div class="modal-head">
-          <h2>Custom Matchup / Fight Scanner</h2>
+          <h2>Custom Matchup Scanner</h2>
           <button class="close-btn" onclick="closeModal('scan-modal')">×</button>
         </div>
         <div class="form-grid">
@@ -325,12 +350,27 @@
           <div class="form-group"><label>Song Title</label><input id="sc-song" class="form-input" placeholder="e.g. Not Like Us" /></div>
         </div>
         <div class="form-group"><label>Promotion / Refs / Coaches</label><input id="sc-extra" class="form-input" placeholder="e.g. BKFC, UFC, Herb Dean" /></div>
-        <button class="primary-btn" onclick="runCustomScan()">Run Full 4-Cipher Convergence Scan</button>
+        <button class="primary-btn" onclick="runCustomScan()">Run Matchup Scan</button>
         <div id="scan-result" style="margin-top:12px;"></div>
       </div>
     </div>
   </div>
 
+  <script>
+    function openDrawer() {
+      document.getElementById('nav-drawer').classList.add('open');
+      document.getElementById('drawer-backdrop').classList.add('open');
+    }
+    function closeDrawer() {
+      document.getElementById('nav-drawer').classList.remove('open');
+      document.getElementById('drawer-backdrop').classList.remove('open');
+    }
+    function setBottomNav(activeId) {
+      document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('active'));
+      const el = document.getElementById(activeId);
+      if (el) el.classList.add('active');
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script src="app.js?v=10"></script>
   <script type="module" src="security.js?v=3"></script>
