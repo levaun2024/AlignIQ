@@ -45,6 +45,16 @@ ESPN_PATHS = {
 }
 
 
+def as_dict(val):
+    return val if isinstance(val, dict) else {}
+
+
+def first_dict(val):
+    if isinstance(val, list) and val and isinstance(val[0], dict):
+        return val[0]
+    return {}
+
+
 def load_json(path, default):
     if not os.path.exists(path):
         return default
@@ -118,6 +128,8 @@ def score_matchup(
     splits=None, open_h2h=None, close_h2h=None, starter_flag=None
 ):
     w = weights if isinstance(weights, dict) else get_league_weights(league)
+    home = as_dict(home)
+    away = as_dict(away)
 
     h_gem = scale_gematria(home.get("gem", 0))
     a_gem = scale_gematria(away.get("gem", 0))
@@ -157,9 +169,9 @@ def score_matchup(
         if a_move >= 3.0:
             a_h2h = clamp(a_h2h + 3.0)
 
-    total_w = max(1, w["gem"] + w["h2h"] + w["ros"])
-    home_score = round((h_gem * w["gem"] + h_h2h * w["h2h"] + h_ros * w["ros"]) / total_w, 2)
-    away_score = round((a_gem * w["gem"] + a_h2h * w["h2h"] + a_ros * w["ros"]) / total_w, 2)
+    total_w = max(1, w.get("gem", 10) + w.get("h2h", 60) + w.get("ros", 30))
+    home_score = round((h_gem * w.get("gem", 10) + h_h2h * w.get("h2h", 60) + h_ros * w.get("ros", 30)) / total_w, 2)
+    away_score = round((a_gem * w.get("gem", 10) + a_h2h * w.get("h2h", 60) + a_ros * w.get("ros", 30)) / total_w, 2)
 
     pick = "home" if home_score >= away_score else "away"
     raw_h_h2h = safe_float(home.get("h2h", 50), 50.0)
@@ -200,8 +212,8 @@ def build_postgame_autopsy(g, scored, won):
     """Generates per-game determining factors & learning takeaway."""
     pick = scored["pick"]
     opp = "away" if pick == "home" else "home"
-    p_team = g.get(pick, {}) if isinstance(g.get(pick), dict) else {}
-    o_team = g.get(opp, {}) if isinstance(g.get(opp), dict) else {}
+    p_team = as_dict(g.get(pick))
+    o_team = as_dict(g.get(opp))
 
     factors = []
     if safe_float(p_team.get("h2h", 50)) > safe_float(o_team.get("h2h", 50)):
@@ -241,8 +253,8 @@ def build_postgame_autopsy(g, scored, won):
 
 def sync_and_enrich_espn_history(history, now, active_version, active_weights):
     """
-    Fixes the Nov 23+ missing-date bug & replaces raw Game #IDs with real team names,
-    logos, final scores, and in-game stat leaders from ESPN for the last 3 days.
+    Backfills completed games for the last 3 days and replaces raw numeric IDs
+    with real team/fighter names, logos, final scores, and in-game stat leaders.
     """
     dates = history.setdefault("dates", {})
     for offset in (3, 2, 1):
@@ -255,17 +267,24 @@ def sync_and_enrich_espn_history(history, now, active_version, active_weights):
             "locked": True,
             "games": [],
         })
-        existing_by_id = {str(g.get("id")): g for g in entry.get("games", []) if isinstance(g, dict)}
+        if not isinstance(entry.get("games"), list):
+            entry["games"] = []
+        existing_by_id = {str(g.get("id")): g for g in entry["games"] if isinstance(g, dict)}
 
         for lg, path in ESPN_PATHS.items():
             data = fetch_json(f"https://site.api.espn.com/apis/site/v2/sports/{path}/scoreboard?dates={ymd}")
-            if not data or not isinstance(data.get("events"), list):
+            if not isinstance(data, dict) or not isinstance(data.get("events"), list):
                 continue
+
             for ev in data["events"]:
-                comp = (ev.get("competitions") or [{}])[0]
-                if comp.get("status", {}).get("type", {}).get("state") != "post":
+                if not isinstance(ev, dict):
                     continue
-                comps = comp.get("competitors") or []
+                comp = first_dict(ev.get("competitions"))
+                status_type = as_dict(as_dict(comp.get("status")).get("type"))
+                if status_type.get("state") != "post":
+                    continue
+
+                comps = [c for c in (comp.get("competitors") or []) if isinstance(c, dict)]
                 if len(comps) < 2:
                     continue
                 home_c = next((c for c in comps if c.get("homeAway") == "home"), comps[0])
@@ -275,26 +294,37 @@ def sync_and_enrich_espn_history(history, now, active_version, active_weights):
                 if h_score == a_score:
                     continue
 
-                ev_id = str(ev.get("id"))
-                h_name = home_c.get("team", {}).get("shortDisplayName") or home_c.get("athlete", {}).get("displayName") or "Home"
-                a_name = away_c.get("team", {}).get("shortDisplayName") or away_c.get("athlete", {}).get("displayName") or "Away"
-                h_logo = home_c.get("team", {}).get("logo", "")
-                a_logo = away_c.get("team", {}).get("logo", "")
+                ev_id = str(ev.get("id") or "")
+                if not ev_id:
+                    continue
+
+                h_team = as_dict(home_c.get("team"))
+                a_team = as_dict(away_c.get("team"))
+                h_ath = as_dict(home_c.get("athlete"))
+                a_ath = as_dict(away_c.get("athlete"))
+
+                h_name = h_team.get("shortDisplayName") or h_ath.get("displayName") or "Home"
+                a_name = a_team.get("shortDisplayName") or a_ath.get("displayName") or "Away"
+                h_logo = h_team.get("logo", "")
+                a_logo = a_team.get("logo", "")
                 actual_winner = "home" if h_score > a_score else "away"
 
-                odds_obj = (comp.get("odds") or [{}])[0]
-                h_ml = odds_obj.get("homeTeamOdds", {}).get("moneyLine")
-                a_ml = odds_obj.get("awayTeamOdds", {}).get("moneyLine")
+                odds_obj = first_dict(comp.get("odds"))
+                h_odds = as_dict(odds_obj.get("homeTeamOdds"))
+                a_odds = as_dict(odds_obj.get("awayTeamOdds"))
+                h_ml = h_odds.get("moneyLine")
+                a_ml = a_odds.get("moneyLine")
 
-                # Extract in-game stat highlights
                 in_game_stats = []
                 for side_c, lbl in ((away_c, a_name), (home_c, h_name)):
                     for ld in (side_c.get("leaders") or [])[:2]:
-                        top = (ld.get("leaders") or [{}])[0]
-                        ath = top.get("athlete", {}).get("shortName")
+                        if not isinstance(ld, dict):
+                            continue
+                        top = first_dict(ld.get("leaders"))
+                        ath = as_dict(top.get("athlete")).get("shortName")
                         val = top.get("displayValue")
                         cat = ld.get("shortDisplayName") or ld.get("name")
-                        if ath and val:
+                        if ath and val and cat:
                             in_game_stats.append(f"{lbl} {cat}: {ath} ({val})")
 
                 if ev_id in existing_by_id:
@@ -314,8 +344,7 @@ def sync_and_enrich_espn_history(history, now, active_version, active_weights):
                     if in_game_stats:
                         g["in_game_stats"] = in_game_stats
                 else:
-                    # Backfill missing completed game (fixes Nov 23+ gap)
-                    h_prob = 55 if odds_obj.get("homeTeamOdds", {}).get("favorite") else (45 if odds_obj.get("awayTeamOdds", {}).get("favorite") else 50)
+                    h_prob = 55 if h_odds.get("favorite") else (45 if a_odds.get("favorite") else 50)
                     a_prob = 100 - h_prob
                     new_g = {
                         "id": ev_id,
@@ -354,6 +383,8 @@ def normalize_history(raw, fallback_date):
 def extract_graded_games(history, league_weights_map=None):
     graded = []
     for date_str, entry in sorted(history.get("dates", {}).items()):
+        if not isinstance(entry, dict):
+            continue
         for g in entry.get("games", []):
             if not isinstance(g, dict):
                 continue
