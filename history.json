@@ -16430,6 +16430,56 @@
             "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
             "in_game_stats": []
           }
+        },
+        {
+          "id": "401909800",
+          "league": "NCAAB",
+          "matchup": "Gonzaga @ Kansas St",
+          "final_score": "101-61",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2306.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2250.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Kansas St",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Gonzaga",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Gonzaga Pts: M. Diop (18)",
+            "Gonzaga Reb: X. Lee (9)",
+            "Kansas St Pts: D. Lindsay (16)",
+            "Kansas St Reb: P. N'Diaye (5)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Gonzaga Pts: M. Diop (18)",
+              "Gonzaga Reb: X. Lee (9)",
+              "Kansas St Pts: D. Lindsay (16)",
+              "Kansas St Reb: P. N'Diaye (5)"
+            ]
+          }
         }
       ]
     }
