@@ -1,13 +1,13 @@
 {
   "date": "2026-11-25",
-  "generated_at": "2026-11-25T06:42:21.779002+00:00",
-  "win_rate_60d": 75.4,
-  "record_60d": "218-71",
+  "generated_at": "2026-11-25T14:20:41.200893+00:00",
+  "win_rate_60d": 75.2,
+  "record_60d": "218-72",
   "app_health_audit": {
     "agent": "App Health & QA Auditor",
     "status": "ATTENTION NEEDED",
     "passed": [
-      "Yesterday's slate (2026-11-24) is archived (32 games)."
+      "Yesterday's slate (2026-11-24) is archived (33 games)."
     ],
     "issues": [
       "186 legacy archived games still use numeric IDs instead of team names.",
@@ -37,7 +37,7 @@
       }
     ]
   },
-  "chief_auditor_critique": "Chief Auditor verified App Health (ATTENTION NEEDED) against 60-day performance (75.4%). 2 visual update proposals queued for Owner approval. Zero live changes were pushed automatically.",
+  "chief_auditor_critique": "Chief Auditor verified App Health (ATTENTION NEEDED) against 60-day performance (75.2%). 2 visual update proposals queued for Owner approval. Zero live changes were pushed automatically.",
   "pending_proposals": [
     {
       "id": "prop_edge_pill_v1",
