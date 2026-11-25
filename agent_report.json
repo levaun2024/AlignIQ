@@ -10,9 +10,9 @@
   },
   "league_weights": {
     "NBA": {
-      "gem": 15,
-      "h2h": 51,
-      "ros": 34
+      "gem": 10,
+      "h2h": 60,
+      "ros": 30
     },
     "NFL": {
       "gem": 10,
@@ -55,9 +55,9 @@
       "ros": 35
     },
     "NCAAF": {
-      "gem": 12,
-      "h2h": 51,
-      "ros": 37
+      "gem": 8,
+      "h2h": 68,
+      "ros": 24
     },
     "NCAAB": {
       "gem": 8,
@@ -96,171 +96,157 @@
       ]
     }
   ],
-  "updated_at": "2026-11-24T08:54:33.908033+00:00",
+  "updated_at": "2026-11-25T06:42:12.771105+00:00",
   "rebalance_cadence": "monthly",
   "target_win_rate": 95.0,
   "weights": {
-    "gem": 42,
-    "h2h": 21,
-    "ros": 37
+    "gem": 10,
+    "h2h": 60,
+    "ros": 30
   },
   "summary_60d": {
-    "wins": 151,
-    "losses": 35,
-    "total": 186,
-    "win_rate": 81.2,
+    "wins": 218,
+    "losses": 71,
+    "total": 289,
+    "win_rate": 75.4,
     "graded_with_odds": 0,
     "net_units": null,
     "roi_pct": null,
-    "gap_to_target": 13.8,
+    "gap_to_target": 19.6,
     "underdogs": {
-      "label": "Market Underdog Picks",
+      "label": "Underdog Gate Picks",
       "wins": 1,
-      "losses": 1,
-      "total": 2,
-      "win_rate": 50.0,
-      "lift_vs_avg": -31.2,
+      "losses": 0,
+      "total": 1,
+      "win_rate": 100.0,
+      "lift_vs_avg": 24.6,
       "net_units": null,
       "roi_pct": null
     },
     "factors": {
       "gematria": {
-        "label": "Gematria Convergence (2+ Hits)",
-        "wins": 10,
-        "losses": 5,
-        "total": 15,
-        "win_rate": 66.7,
-        "lift_vs_avg": -14.5,
+        "label": "Pattern Signals (2+ Hits)",
+        "wins": 0,
+        "losses": 0,
+        "total": 0,
+        "win_rate": 0.0,
+        "lift_vs_avg": 0.0,
         "net_units": null,
         "roi_pct": null
       },
       "odds": {
         "label": "Fair Odds / +EV Edge",
-        "wins": 140,
-        "losses": 24,
-        "total": 164,
-        "win_rate": 85.4,
-        "lift_vs_avg": 4.2,
+        "wins": 0,
+        "losses": 0,
+        "total": 0,
+        "win_rate": 0.0,
+        "lift_vs_avg": 0.0,
         "net_units": null,
         "roi_pct": null
       },
       "form_health": {
-        "label": "L5/L10 Form, Health & Weight Cut",
-        "wins": 103,
-        "losses": 27,
-        "total": 130,
-        "win_rate": 79.2,
-        "lift_vs_avg": -2.0,
+        "label": "Form, Rest & Health",
+        "wins": 0,
+        "losses": 0,
+        "total": 0,
+        "win_rate": 0.0,
+        "lift_vs_avg": 0.0,
         "net_units": null,
         "roi_pct": null
       },
       "high_conf": {
-        "label": "70%+ High Confidence Picks",
-        "wins": 72,
+        "label": "70%+ High Confidence",
+        "wins": 78,
         "losses": 5,
-        "total": 77,
-        "win_rate": 93.5,
-        "lift_vs_avg": 12.3,
+        "total": 83,
+        "win_rate": 94.0,
+        "lift_vs_avg": 18.6,
         "net_units": null,
         "roi_pct": null
       },
       "underdogs": {
-        "label": "Market Underdog Picks",
+        "label": "Underdog Gate Picks",
         "wins": 1,
-        "losses": 1,
-        "total": 2,
-        "win_rate": 50.0,
-        "lift_vs_avg": -31.2,
+        "losses": 0,
+        "total": 1,
+        "win_rate": 100.0,
+        "lift_vs_avg": 24.6,
         "net_units": null,
         "roi_pct": null
       }
     },
     "leagues": {
       "EPL": {
-        "wins": 2,
+        "wins": 5,
         "losses": 2,
-        "total": 4,
-        "win_rate": 50.0,
+        "total": 7,
+        "win_rate": 71.4,
         "net_units": null,
         "roi_pct": null
       },
       "MLS": {
-        "wins": 3,
-        "losses": 1,
-        "total": 4,
-        "win_rate": 75.0,
+        "wins": 6,
+        "losses": 3,
+        "total": 9,
+        "win_rate": 66.7,
         "net_units": null,
         "roi_pct": null
       },
       "NBA": {
-        "wins": 23,
-        "losses": 8,
-        "total": 31,
-        "win_rate": 74.2,
+        "wins": 33,
+        "losses": 18,
+        "total": 51,
+        "win_rate": 64.7,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAB": {
-        "wins": 21,
-        "losses": 3,
-        "total": 24,
-        "win_rate": 87.5,
+        "wins": 34,
+        "losses": 8,
+        "total": 42,
+        "win_rate": 81.0,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAF": {
-        "wins": 55,
+        "wins": 57,
         "losses": 12,
-        "total": 67,
-        "win_rate": 82.1,
+        "total": 69,
+        "win_rate": 82.6,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAW": {
-        "wins": 24,
-        "losses": 2,
-        "total": 26,
-        "win_rate": 92.3,
+        "wins": 38,
+        "losses": 11,
+        "total": 49,
+        "win_rate": 77.6,
         "net_units": null,
         "roi_pct": null
       },
       "NFL": {
-        "wins": 1,
-        "losses": 0,
-        "total": 1,
-        "win_rate": 100.0,
+        "wins": 12,
+        "losses": 1,
+        "total": 13,
+        "win_rate": 92.3,
         "net_units": null,
         "roi_pct": null
       },
       "NHL": {
-        "wins": 22,
-        "losses": 7,
-        "total": 29,
-        "win_rate": 75.9,
+        "wins": 28,
+        "losses": 14,
+        "total": 42,
+        "win_rate": 66.7,
         "net_units": null,
         "roi_pct": null
-      }
-    },
-    "calibration": {
-      "50-59%": {
-        "wins": 42,
-        "total": 64,
-        "actual_rate": 65.6
       },
-      "60-69%": {
-        "wins": 37,
-        "total": 45,
-        "actual_rate": 82.2
-      },
-      "70-79%": {
-        "wins": 30,
-        "total": 35,
-        "actual_rate": 85.7
-      },
-      "80%+": {
-        "wins": 42,
-        "total": 42,
-        "actual_rate": 100.0
+      "UCL": {
+        "wins": 5,
+        "losses": 2,
+        "total": 7,
+        "win_rate": 71.4,
+        "net_units": null,
+        "roi_pct": null
       }
     },
     "daily_trend": [
@@ -284,175 +270,173 @@
       },
       {
         "date": "2026-11-21",
-        "wins": 68,
+        "wins": 69,
         "total": 82,
-        "win_rate": 82.9
+        "win_rate": 84.1
       },
       {
         "date": "2026-11-22",
-        "wins": 28,
-        "total": 35,
-        "win_rate": 80.0
+        "wins": 56,
+        "total": 76,
+        "win_rate": 73.7
+      },
+      {
+        "date": "2026-11-23",
+        "wins": 20,
+        "total": 30,
+        "win_rate": 66.7
+      },
+      {
+        "date": "2026-11-24",
+        "wins": 18,
+        "total": 32,
+        "win_rate": 56.2
       }
     ]
   },
   "summary_14d": {
-    "wins": 151,
-    "losses": 35,
-    "total": 186,
-    "win_rate": 81.2,
+    "wins": 218,
+    "losses": 71,
+    "total": 289,
+    "win_rate": 75.4,
     "graded_with_odds": 0,
     "net_units": null,
     "roi_pct": null,
-    "gap_to_target": 13.8,
+    "gap_to_target": 19.6,
     "underdogs": {
-      "label": "Market Underdog Picks",
+      "label": "Underdog Gate Picks",
       "wins": 1,
-      "losses": 1,
-      "total": 2,
-      "win_rate": 50.0,
-      "lift_vs_avg": -31.2,
+      "losses": 0,
+      "total": 1,
+      "win_rate": 100.0,
+      "lift_vs_avg": 24.6,
       "net_units": null,
       "roi_pct": null
     },
     "factors": {
       "gematria": {
-        "label": "Gematria Convergence (2+ Hits)",
-        "wins": 10,
-        "losses": 5,
-        "total": 15,
-        "win_rate": 66.7,
-        "lift_vs_avg": -14.5,
+        "label": "Pattern Signals (2+ Hits)",
+        "wins": 0,
+        "losses": 0,
+        "total": 0,
+        "win_rate": 0.0,
+        "lift_vs_avg": 0.0,
         "net_units": null,
         "roi_pct": null
       },
       "odds": {
         "label": "Fair Odds / +EV Edge",
-        "wins": 140,
-        "losses": 24,
-        "total": 164,
-        "win_rate": 85.4,
-        "lift_vs_avg": 4.2,
+        "wins": 0,
+        "losses": 0,
+        "total": 0,
+        "win_rate": 0.0,
+        "lift_vs_avg": 0.0,
         "net_units": null,
         "roi_pct": null
       },
       "form_health": {
-        "label": "L5/L10 Form, Health & Weight Cut",
-        "wins": 103,
-        "losses": 27,
-        "total": 130,
-        "win_rate": 79.2,
-        "lift_vs_avg": -2.0,
+        "label": "Form, Rest & Health",
+        "wins": 0,
+        "losses": 0,
+        "total": 0,
+        "win_rate": 0.0,
+        "lift_vs_avg": 0.0,
         "net_units": null,
         "roi_pct": null
       },
       "high_conf": {
-        "label": "70%+ High Confidence Picks",
-        "wins": 72,
+        "label": "70%+ High Confidence",
+        "wins": 78,
         "losses": 5,
-        "total": 77,
-        "win_rate": 93.5,
-        "lift_vs_avg": 12.3,
+        "total": 83,
+        "win_rate": 94.0,
+        "lift_vs_avg": 18.6,
         "net_units": null,
         "roi_pct": null
       },
       "underdogs": {
-        "label": "Market Underdog Picks",
+        "label": "Underdog Gate Picks",
         "wins": 1,
-        "losses": 1,
-        "total": 2,
-        "win_rate": 50.0,
-        "lift_vs_avg": -31.2,
+        "losses": 0,
+        "total": 1,
+        "win_rate": 100.0,
+        "lift_vs_avg": 24.6,
         "net_units": null,
         "roi_pct": null
       }
     },
     "leagues": {
       "EPL": {
-        "wins": 2,
+        "wins": 5,
         "losses": 2,
-        "total": 4,
-        "win_rate": 50.0,
+        "total": 7,
+        "win_rate": 71.4,
         "net_units": null,
         "roi_pct": null
       },
       "MLS": {
-        "wins": 3,
-        "losses": 1,
-        "total": 4,
-        "win_rate": 75.0,
+        "wins": 6,
+        "losses": 3,
+        "total": 9,
+        "win_rate": 66.7,
         "net_units": null,
         "roi_pct": null
       },
       "NBA": {
-        "wins": 23,
-        "losses": 8,
-        "total": 31,
-        "win_rate": 74.2,
+        "wins": 33,
+        "losses": 18,
+        "total": 51,
+        "win_rate": 64.7,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAB": {
-        "wins": 21,
-        "losses": 3,
-        "total": 24,
-        "win_rate": 87.5,
+        "wins": 34,
+        "losses": 8,
+        "total": 42,
+        "win_rate": 81.0,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAF": {
-        "wins": 55,
+        "wins": 57,
         "losses": 12,
-        "total": 67,
-        "win_rate": 82.1,
+        "total": 69,
+        "win_rate": 82.6,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAW": {
-        "wins": 24,
-        "losses": 2,
-        "total": 26,
-        "win_rate": 92.3,
+        "wins": 38,
+        "losses": 11,
+        "total": 49,
+        "win_rate": 77.6,
         "net_units": null,
         "roi_pct": null
       },
       "NFL": {
-        "wins": 1,
-        "losses": 0,
-        "total": 1,
-        "win_rate": 100.0,
+        "wins": 12,
+        "losses": 1,
+        "total": 13,
+        "win_rate": 92.3,
         "net_units": null,
         "roi_pct": null
       },
       "NHL": {
-        "wins": 22,
-        "losses": 7,
-        "total": 29,
-        "win_rate": 75.9,
+        "wins": 28,
+        "losses": 14,
+        "total": 42,
+        "win_rate": 66.7,
         "net_units": null,
         "roi_pct": null
-      }
-    },
-    "calibration": {
-      "50-59%": {
-        "wins": 42,
-        "total": 64,
-        "actual_rate": 65.6
       },
-      "60-69%": {
-        "wins": 37,
-        "total": 45,
-        "actual_rate": 82.2
-      },
-      "70-79%": {
-        "wins": 30,
-        "total": 35,
-        "actual_rate": 85.7
-      },
-      "80%+": {
-        "wins": 42,
-        "total": 42,
-        "actual_rate": 100.0
+      "UCL": {
+        "wins": 5,
+        "losses": 2,
+        "total": 7,
+        "win_rate": 71.4,
+        "net_units": null,
+        "roi_pct": null
       }
     },
     "daily_trend": [
@@ -476,36 +460,42 @@
       },
       {
         "date": "2026-11-21",
-        "wins": 68,
+        "wins": 69,
         "total": 82,
-        "win_rate": 82.9
+        "win_rate": 84.1
       },
       {
         "date": "2026-11-22",
-        "wins": 28,
-        "total": 35,
-        "win_rate": 80.0
+        "wins": 56,
+        "total": 76,
+        "win_rate": 73.7
+      },
+      {
+        "date": "2026-11-23",
+        "wins": 20,
+        "total": 30,
+        "win_rate": 66.7
+      },
+      {
+        "date": "2026-11-24",
+        "wins": 18,
+        "total": 32,
+        "win_rate": 56.2
       }
     ]
   },
   "whats_working": [
-    "Fair Odds / +EV Edge is outperforming at 85.4% (+4.2% lift over baseline).",
-    "Underdog Gate picks are cashing at 50.0% (1-1).",
-    "NBA is strong at 74.2% (23-8).",
-    "NCAAB is strong at 87.5% (21-3).",
-    "NCAAF is strong at 82.1% (55-12).",
-    "NCAAW is strong at 92.3% (24-2).",
-    "NHL is strong at 75.9% (22-7)."
+    "60-day model win rate is 75.4% (218-71).",
+    "ESPN post-game enrichment & per-game autopsy learning active."
   ],
   "whats_not_working": [
-    "Gematria Convergence (2+ Hits) is lagging at 66.7% (-14.5% vs baseline).",
-    "L5/L10 Form, Health & Weight Cut is lagging at 79.2% (-2.0% vs baseline)."
+    "Sample guardrail active (289/500 games) before auto-tuning unlocks."
   ],
   "suggestions": [
     "Sample guardrail active: 186/500 total games logged before global auto-tuning unlocks.",
     "Log home_ml/away_ml on upcoming slates (0/50) to activate ROI-first tuning."
   ],
-  "last_rebalance_note": "Phase 4 active (ROI Tuner + 500g/100g guardrails). Next rebalance: 1st of next month.",
+  "last_rebalance_note": "Phase 4 active (10/60/30 + League Profiles + Post-Game Autopsy). Guardrail: 289/500 games.",
   "algo_version": "2026-11-phase4",
   "guardrails": {
     "min_global_games": 500,
