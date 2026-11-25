@@ -59,7 +59,7 @@ const PHASE4_LEAGUE_WEIGHTS = {
 
 let currentDate = new Date(), allGames = [], summaryCache = {}, scheduleCache = {}, leagueNewsCache = {}, oddsSportCache = {}, propsEventCache = {}, fightersDb = {}, prevConfMap = {};
 let yesterdayTeamsSet = new Set();
-let activeSport = 'All', filterMode = 'all', agentReport = null, weights = { ...PHASE4_DEFAULT_WEIGHTS }, leagueWeights = { ...PHASE4_LEAGUE_WEIGHTS }, manualOverride = false;
+let activeSport = 'All', filterMode = 'all', agentReport = null, weights = { ...PHASE4_DEFAULT_WEIGHTS }, leagueWeights = { ...PHASE4_LEAGUE_WEIGHTS };
 let selectedGameId = null, currentTab = 'odds', currentToolsTab = 'slip', currentSettingsTab = 'theme', oddsViewSide = 'pick', livePollTimer = null, sourceRegistry = [];
 let savedIds = new Set(JSON.parse(localStorage.getItem('aligniq_saved') || '[]'));
 let customContextMap = JSON.parse(localStorage.getItem('aligniq_ctx') || '{}');
@@ -67,7 +67,7 @@ let fightIntelMap = JSON.parse(localStorage.getItem('aligniq_fight_intel') || '{
 let openOddsMap = JSON.parse(localStorage.getItem('aligniq_open_odds') || '{}');
 let helpChatLog = [{ role: 'bot', text: 'Hi! I’m the AlignIQ Help Assistant. Ask me anything about CONF %, +EV, Weight Cut Gauges, Body Maps, or our multi-pillar model.' }];
 
-// --- NORMALIZATION & OWNER ACCESS HELPERS ---
+// --- NORMALIZATION & AUTO-LOCKED ALGO WEIGHTS ---
 function clampVal(val, min = 0, max = 100) {
   return Math.max(min, Math.min(max, Number(val) || 0));
 }
@@ -82,25 +82,22 @@ function scaleGematria(rawGem) {
   return clampVal(val * 0.85, 0, 100);
 }
 
+// Sliders are strictly read-only for everyone (including Owner) to prevent accidental edits
 function syncOwnerAlgoLock() {
-  const isOwner = Boolean(window.ALIGNIQ_IS_OWNER);
   ['w-gem', 'w-h2h', 'w-ros'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
-      el.disabled = !isOwner;
-      el.style.opacity = isOwner ? '1' : '0.6';
-      el.style.cursor = isOwner ? 'pointer' : 'not-allowed';
+      el.disabled = true;
+      el.style.opacity = '0.75';
+      el.style.cursor = 'default';
+      el.style.pointerEvents = 'none';
     }
   });
   const resetBtn = document.querySelector('#tuner-panel .tuner-header button');
-  if (resetBtn) {
-    resetBtn.style.display = isOwner ? '' : 'none';
-  }
+  if (resetBtn) resetBtn.style.display = 'none';
   const hdr = document.querySelector('#tuner-panel .tuner-header h3');
   if (hdr) {
-    hdr.innerHTML = isOwner
-      ? 'AI Agent Weights <span style="font-size:10px;color:#34d399;font-weight:700;margin-left:6px;">OWNER EDIT</span>'
-      : 'AI Agent Weights <span style="font-size:10px;color:#94a3b8;font-weight:700;margin-left:6px;">READ-ONLY</span>';
+    hdr.innerHTML = 'AI Agent Weights <span style="font-size:10px;color:#34d399;font-weight:700;margin-left:6px;">AUTO-LOCKED</span>';
   }
 }
 window.syncOwnerAlgoLock = syncOwnerAlgoLock;
@@ -150,7 +147,7 @@ function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('aligniq_theme', t);
   const meta = document.getElementById('meta-theme-color');
-  if (meta) meta.setAttribute('content', t === 'light' ? '#f8fafc' : '#080d17');
+  if (meta) meta.setAttribute('content', t === 'light' ? '#f4f6fa' : '#06090f');
 }
 applyTheme(localStorage.getItem('aligniq_theme') || 'dark');
 
@@ -176,7 +173,7 @@ function getHelpAnswer(q) {
   if (/body|weak|red|dot|map|injur/.test(s)) return 'Red pulsing dots on the Body Outline highlight fighter target/defense weak points or injured body zones on team sports. Tap any red dot to open ESPN reports, X/Twitter posts, Google News, and YouTube clips.';
   if (/source|link|box|hover|proof/.test(s)) return 'Every reference has verified source links. If there is 1 source, tapping opens it directly; if there are 2+ sources, a floating scrollable box pops up so you can choose which one to visit.';
   if (/theme|light|dark|mode/.test(s)) return 'Switch between Dark Mode and Light Mode right here in Settings → Theme. Your preference saves automatically on this device.';
-  if (/parlay|slip|calc/.test(s)) return 'Tap ☆ on any game card to add it to your ★ Parlay Slip. Tap 🧮 in the top bar for the Parlay Slip, Arbitrage Splitter, +EV Calculator, and American ↔ Kalshi ¢ converter.';
+  if (/parlay|slip|calc/.test(s)) return 'Tap ☆ on any game card to add it to your ★ Parlay Slip. Tap Slip in the bottom bar or Calculators in the menu for the Parlay Slip, Arbitrage Splitter, +EV Calculator, and American ↔ Kalshi ¢ converter.';
   return 'I can explain CONF % weights, +EV & Arbitrage, Weight Cut Gauges, Body Weak-Point Maps, Player Props/DFS, or the Parlay Slip. What would you like to know?';
 }
 
@@ -277,6 +274,7 @@ function triggerSource(idx, ev) {
   document.getElementById('source-popover').classList.add('open');
 }
 function closeSourceBox() { document.getElementById('source-popover').classList.remove('open'); }
+
 function buildSocialAndNewsSources(subject, topic, extraNews = []) {
   const rawQ = `${subject} ${topic}`.trim();
   const q = encodeURIComponent(rawQ), list = [];
@@ -289,12 +287,20 @@ function buildSocialAndNewsSources(subject, topic, extraNews = []) {
   );
   return list;
 }
+
 function espnGameUrl(g) {
   const lg = LEAGUES.find(l => l.key === g.league);
   if (g.path && lg?.espnSlug && !String(g.id).startsWith('odds_')) return `https://www.espn.com/${lg.espnSlug}/game/_/gameId/${g.id}`;
   return `https://www.google.com/search?q=${encodeURIComponent(`${g.away.name} vs ${g.home.name} ${g.league}`)}`;
 }
+
+// Verified sport-specific routing (prevents MMA fighters from linking to team schedules)
 function espnTeamScheduleUrl(g, teamId) {
+  if (FIGHT_LEAGUES.has(g.league)) {
+    return teamId
+      ? `https://www.espn.com/mma/fighter/_/id/${teamId}`
+      : `https://www.tapology.com/search?term=${encodeURIComponent(g.pickedTeam?.name || '')}`;
+  }
   const lg = LEAGUES.find(l => l.key === g.league);
   return (lg?.espnSlug && teamId) ? `https://www.espn.com/${lg.espnSlug}/team/schedule/_/id/${teamId}` : espnGameUrl(g);
 }
@@ -327,7 +333,7 @@ function renderBodyOutlineCard(title, hotspots) {
 // --- AUTO WEIGHT-CUT GAUGE ---
 function computeWeightCutGauge(fighterObj, manualCutPen = 0) {
   const wc = fighterObj?.weight_cut;
-  if (!wc || !wc.min_lbs || !wc.max_lbs || !wc.current_lbs) return { hasAuto: false, pen: manualCutPen, label: manualCutPen > 0 ? `Manual Cut Stress (-${manualCutPen} pts)` : 'Awaiting Weight History' };
+  if (!wc || !wc.min_lbs || !wc.max_lbs || !wc.current_lbs) return { hasAuto: false, pen: manualCutPen, label: manualCutPen > 0 ? `Manual Cut Stress (-${manualCutPen} pts)` : 'Pending Official Weigh-In' };
   const minL = Number(wc.min_lbs), maxL = Number(wc.max_lbs), curL = Number(wc.current_lbs), missed = Number(wc.missed_count || 0), span = Math.max(0, maxL - minL);
   const cutRatio = span > 0 ? Math.max(0, Math.min(1, (maxL - curL) / span)) : 0.25;
   const totalPen = Math.min(20, Math.max(Math.min(16, Math.round(cutRatio * 10) + missed * 5), manualCutPen));
@@ -429,8 +435,8 @@ function parseReachInches(s) { const m = String(s || '').match(/(\d+(?:\.\d+)?)/
 function findFighterStats(name) { return (!name || !fightersDb) ? null : (fightersDb[name.toLowerCase().replace(/[^a-z0-9]/g, '')] || null); }
 function computeFightEdge(homeName, awayName) {
   const fH = findFighterStats(homeName), fA = findFighterStats(awayName);
-  if (!fH || !fA) return { edge: 0, hasData: false };
-  const defDiff = ((fH.str_def || 55) - (fA.str_def || 55)) * 0.6, sapmDiff = ((fA.sapm || 3.2) - (fH.sapm || 3.2)) * 4.0;
+  if (!fH || !fA || !fH.str_def || !fA.str_def) return { edge: 0, hasData: false };
+  const defDiff = (fH.str_def - fA.str_def) * 0.6, sapmDiff = ((fA.sapm || 3.2) - (fH.sapm || 3.2)) * 4.0;
   const rH = parseReachInches(fH.reach), rA = parseReachInches(fA.reach);
   const reachDiff = (rH && rA) ? Math.max(-6, Math.min(6, (rH - rA) * 1.2)) : 0;
   return { edge: Math.max(-22, Math.min(22, Math.round(defDiff + sapmDiff + reachDiff))), hasData: true, defDiff: Math.round(defDiff), sapmDiff: Math.round(sapmDiff), reachDiff: Math.round(reachDiff) };
@@ -496,7 +502,7 @@ function buildEntities(game, sumData, userCtx) {
 function evaluateGame(game, dm) {
   const sumData = summaryCache[game.id] || null, userCtx = customContextMap[game.id] || game.customCtx || null, fIntel = fightIntelMap[game.id] || null;
   const entities = buildEntities(game, sumData, userCtx);
-  const activeW = (manualOverride && window.ALIGNIQ_IS_OWNER) ? weights : (leagueWeights[game.league] || PHASE4_LEAGUE_WEIGHTS[game.league] || weights);
+  const activeW = leagueWeights[game.league] || PHASE4_LEAGUE_WEIGHTS[game.league] || weights;
   const awayRec = parseRecord(game.away.record), homeRec = parseRecord(game.home.record);
 
   function scanOutcome(winT, oppLossT, winLbl, oppLossLbl, shortNm) {
@@ -769,6 +775,7 @@ async function loadSlate(silent = false) {
   if (silent && espnFlat.length === 0 && allGames.length > 0) return;
 
   allGames = [...espnFlat, ...fightGames].map(g => evaluateGame(g, dm));
+  window.allGames = allGames;
   renderSportsBar(); renderFeed(); setupLivePolling();
   const liveGames = allGames.filter(g => g.state === 'in' && g.path).slice(0, 8);
   if (liveGames.length) { await Promise.all(liveGames.map(g => fetchGameSummary(g, true))); renderFeed(); }
@@ -841,8 +848,18 @@ function renderSportsBar() {
   document.getElementById('sports-bar').innerHTML = `<button class="sport-pill ${activeSport === 'All' ? 'active' : ''}" onclick="setSport('All')">All <span class="sport-count">${allGames.length}</span></button>` + activeLeagues.map(lg => `<button class="sport-pill ${activeSport === lg ? 'active' : ''}" onclick="setSport('${lg}')">${lg} <span class="sport-count">${counts[lg]}</span></button>`).join('');
   document.getElementById('live-count-badge').textContent = `${allGames.length} Games · ${activeLeagues.length} Sports`;
 }
+
+// Tiered Animated Underdog Emblems
+function renderUnderdogEmblem(g) {
+  if (!g.isUnderdogPick) return '';
+  if (g.confidence >= 70) return `<span class="dog-emblem tier-3">👑 APEX DOG</span>`;
+  if (g.confidence >= 60) return `<span class="dog-emblem tier-2">⚡ SHARP DOG</span>`;
+  return `<span class="dog-emblem tier-1">🐶 LIVE DOG</span>`;
+}
+
 function renderFeed() {
   const dm = getDateMath(currentDate); allGames = allGames.map(g => evaluateGame(g, dm));
+  window.allGames = allGames;
   const graded = allGames.filter(g => g.grade), banner = document.getElementById('accuracy-banner');
   if (graded.length) {
     const wins = graded.filter(g => g.grade === 'WON').length;
@@ -861,10 +878,10 @@ function renderFeed() {
   list = list.sort((a, b) => b.confidence - a.confidence);
 
   const feed = document.getElementById('games-feed');
-  if (!list.length) { feed.innerHTML = '<div class="empty-state">No games match this filter. Try another date, filter, or use <strong>+ Scan</strong>.</div>'; return; }
+  if (!list.length) { feed.innerHTML = '<div class="empty-state">No games match this filter. Try another date, filter, or use <strong>Custom Scan</strong>.</div>'; return; }
 
   feed.innerHTML = list.map(g => {
-    const tier = g.confidence >= 70 ? 'high' : g.confidence >= 52 ? 'mid' : 'low', barColor = tier === 'high' ? '#10b981' : tier === 'mid' ? '#f59e0b' : '#64748b';
+    const tier = g.confidence >= 70 ? 'high' : g.confidence >= 52 ? 'mid' : 'low', barColor = tier === 'high' ? '#00d285' : tier === 'mid' ? '#f59e0b' : '#64748b';
     const isSaved = savedIds.has(g.id), showScore = g.state === 'in' || g.state === 'post', isFight = FIGHT_LEAGUES.has(g.league);
     let flashClass = '';
     if (g.state === 'in' && prevConfMap[g.id] !== undefined && g.confidence !== prevConfMap[g.id]) flashClass = g.confidence > prevConfMap[g.id] ? 'flash-up' : 'flash-down';
@@ -901,68 +918,66 @@ function renderFeed() {
           <div class="conf-box ${tier} ${flashClass}"><span class="conf-num">${g.confidence}%</span><span class="conf-lbl">CONF</span></div>
         </div>
         <div class="card-sub-info"><span>${g.venue}${g.broadcast ? ' · ' + g.broadcast : ''}</span><span>${g.oddsText || ''}</span></div>
-        <div class="card-foot"><span class="pick-text ${tier === 'high' ? 'high' : ''}">Pick: ${g.pickLabel}${g.isUnderdogPick ? ' · LIVE DOG' : ''}</span><span class="decode-link">Scales, +EV &amp; Sources ›</span></div>
+        <div class="card-foot"><span class="pick-text ${tier === 'high' ? 'high' : ''}">Pick: ${g.pickLabel}${renderUnderdogEmblem(g)}</span><span class="decode-link">Scales, +EV &amp; Sources ›</span></div>
         <div class="meter-track"><div class="meter-fill ${flashClass}" style="width:${g.confidence}%;background:${barColor};"></div></div>
       </div>
     `;
   }).join('');
 }
 
-// --- ALGO VISUALS & DIAGRAMS (TRENDS/AI TAB) ---
+// --- ALGO VISUALS & DIAGRAMS (AI EDGE TAB) ---
 function renderAlgoVisuals(g) {
   const w = g.activeW || PHASE4_DEFAULT_WEIGHTS;
   const gateStatus = g.isUnderdogPick
-    ? { label: 'LIVE UNDERDOG PASSED', color: '#10b981', desc: 'Close market + multi-signal confirmation unlocked.' }
+    ? { label: 'LIVE UNDERDOG PASSED', color: '#00d285', desc: 'Close market + multi-signal confirmation unlocked.' }
     : g.dogGateTriggered
     ? { label: 'LONGSHOT BLOCKED', color: '#f59e0b', desc: 'Gate prevented low-conviction underdog flip; favorite held.' }
     : { label: 'MARKET FAVORITE ALIGNED', color: '#38bdf8', desc: 'Normalized pillars agree with market favorite.' };
 
-  const moveColor = g.pickLineMove >= 3 ? '#10b981' : g.pickLineMove <= -3 ? '#ef4444' : '#94a3b8';
+  const moveColor = g.pickLineMove >= 3 ? '#00d285' : g.pickLineMove <= -3 ? '#ef4444' : '#8b95a5';
   const moveText = g.pickLineMove > 0 ? `+${g.pickLineMove}% Sharp Steam` : g.pickLineMove < 0 ? `${g.pickLineMove}% Drift` : 'Flat (0%)';
 
   return `
     <div style="background:rgba(15,23,42,0.85);border:1px solid rgba(56,189,248,0.28);border-radius:14px;padding:12px;margin-bottom:10px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <strong style="font-size:12px;color:#38bdf8;">⚖️ ${g.league} Normalized Pillar Scale</strong>
-        <span style="font-size:10px;color:#94a3b8;">${w.gem}% Gem · ${w.h2h}% Odds · ${w.ros}% Form</span>
+        <span style="font-size:10px;color:#8b95a5;">${w.gem}% Signals · ${w.h2h}% Odds · ${w.ros}% Form</span>
       </div>
       <div style="display:flex;height:9px;border-radius:999px;overflow:hidden;background:#1e293b;margin-bottom:10px;">
-        <div style="width:${w.gem}%;background:#a78bfa;" title="Gematria ${w.gem}%"></div>
-        <div style="width:${w.h2h}%;background:#38bdf8;" title="Odds ${w.h2h}%"></div>
-        <div style="width:${w.ros}%;background:#10b981;" title="Form/Rest/Splits ${w.ros}%"></div>
+        <div style="width:${w.gem}%;background:#a78bfa;"></div>
+        <div style="width:${w.h2h}%;background:#38bdf8;"></div>
+        <div style="width:${w.ros}%;background:#00d285;"></div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;font-size:11px;">
-        <div style="background:#080d17;border-radius:8px;padding:6px;border:1px solid #1e293b;">
-          <div style="color:#a78bfa;font-weight:800;">${g.gemScore}</div><div style="color:#94a3b8;font-size:9.5px;">Gematria</div>
+        <div style="background:#06090f;border-radius:8px;padding:6px;border:1px solid #1e293b;">
+          <div style="color:#a78bfa;font-weight:800;">${g.gemScore}</div><div style="color:#8b95a5;font-size:9.5px;">Signals</div>
         </div>
-        <div style="background:#080d17;border-radius:8px;padding:6px;border:1px solid #1e293b;">
-          <div style="color:#38bdf8;font-weight:800;">${g.normH2HPick}</div><div style="color:#94a3b8;font-size:9.5px;">Norm Odds</div>
+        <div style="background:#06090f;border-radius:8px;padding:6px;border:1px solid #1e293b;">
+          <div style="color:#38bdf8;font-weight:800;">${g.normH2HPick}</div><div style="color:#8b95a5;font-size:9.5px;">Norm Odds</div>
         </div>
-        <div style="background:#080d17;border-radius:8px;padding:6px;border:1px solid #1e293b;">
-          <div style="color:#10b981;font-weight:800;">${g.rosScore}</div><div style="color:#94a3b8;font-size:9.5px;">Form/Rest</div>
+        <div style="background:#06090f;border-radius:8px;padding:6px;border:1px solid #1e293b;">
+          <div style="color:#00d285;font-weight:800;">${g.rosScore}</div><div style="color:#8b95a5;font-size:9.5px;">Form/Rest</div>
         </div>
       </div>
     </div>
 
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
       <div style="background:rgba(15,23,42,0.85);border:1px solid #1e2d47;border-radius:12px;padding:10px;">
-        <div style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;">🏟️ HOME / ROAD SPLITS</div>
+        <div style="font-size:10px;color:#8b95a5;font-weight:700;margin-bottom:6px;">🏟️ HOME / ROAD SPLITS</div>
         <div style="font-size:11px;display:flex;justify-content:space-between;"><span>${g.home.short} (Home)</span><strong>${g.homeSplitPct}%</strong></div>
         <div style="height:5px;background:#1e293b;border-radius:999px;margin:3px 0 6px;overflow:hidden;"><div style="height:100%;width:${g.homeSplitPct}%;background:#38bdf8;"></div></div>
         <div style="font-size:11px;display:flex;justify-content:space-between;"><span>${g.away.short} (Road)</span><strong>${g.awaySplitPct}%</strong></div>
         <div style="height:5px;background:#1e293b;border-radius:999px;margin-top:3px;overflow:hidden;"><div style="height:100%;width:${g.awaySplitPct}%;background:#a78bfa;"></div></div>
       </div>
       <div style="background:rgba(15,23,42,0.85);border:1px solid #1e2d47;border-radius:12px;padding:10px;">
-        <div style="font-size:10px;color:#94a3b8;font-weight:700;margin-bottom:6px;">⚡ LINE MOVE &amp; REST</div>
+        <div style="font-size:10px;color:#8b95a5;font-weight:700;margin-bottom:6px;">⚡ LINE MOVE &amp; REST</div>
         <div style="font-size:11px;margin-bottom:6px;">Steam: <strong style="color:${moveColor};">${moveText}</strong></div>
         <div style="font-size:11px;">Rest: <strong>${g.homeB2B ? `${g.home.short} B2B (-6)` : g.awayB2B ? `${g.away.short} B2B (-6)` : 'Both Rested'}</strong></div>
       </div>
     </div>
 
     <div style="background:rgba(15,23,42,0.85);border:1px solid ${gateStatus.color};border-radius:12px;padding:10px;margin-bottom:10px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <strong style="font-size:11px;color:${gateStatus.color};">🛡️ UNDERDOG GATE: ${gateStatus.label}</strong>
-      </div>
+      <strong style="font-size:11px;color:${gateStatus.color};">🛡️ UNDERDOG GATE: ${gateStatus.label}</strong>
       <div style="font-size:11px;color:#cbd5e1;margin-top:3px;">${gateStatus.desc}</div>
     </div>
   `;
@@ -1044,8 +1059,9 @@ function renderDetailTab() {
     }).join('') : `<div class="proof-item warn"><strong>No Player Props Posted Yet</strong></div>`;
   } else if (currentTab === 'trends') {
     const sched = g.path && g.pickedTeam?.id ? scheduleCache[`${g.path}_${g.pickedTeam.id}`] : null, l5 = sched ? sched.slice(-5) : null, l10 = sched ? sched.slice(-10) : null;
-    const schedSrc = registerSources(`${g.pickedTeam.short} Schedule & Form`, [{ platform: 'ESPN SCHEDULE', title: `${g.pickedTeam.name} Official Schedule & Scores`, sub: 'Verify L5 & L10 game results', url: espnTeamScheduleUrl(g, g.pickedTeam.id) }, { platform: 'ESPN MATCHUP', title: `${g.away.short} @ ${g.home.short} Gamecast`, sub: 'Live splits & boxscore', url: gameSrcUrl }]);
-    const bullSrc = registerSources(`${g.pickedTeam.short} Matchup Proof`, [{ platform: 'ESPN GAMECAST', title: `${g.away.name} vs ${g.home.name}`, sub: 'Official records, odds & play-by-play', url: gameSrcUrl }, ...buildSocialAndNewsSources(g.pickedTeam.name, `${g.league} matchup preview`, sum?.news)]);
+    const schedLabel = FIGHT_LEAGUES.has(g.league) ? `${g.pickedTeam.name} Official Fighter Profile` : `${g.pickedTeam.name} Official Schedule & Scores`;
+    const schedSrc = registerSources(`${g.pickedTeam.short} Verified Profile`, [{ platform: 'ESPN PROFILE', title: schedLabel, sub: 'Verified sport-specific record', url: espnTeamScheduleUrl(g, g.pickedTeam.id) }, { platform: 'ESPN MATCHUP', title: `${g.away.short} @ ${g.home.short} Gamecast`, sub: 'Live splits & boxscore', url: gameSrcUrl }]);
+    const bullSrc = registerSources(`${g.pickedTeam.short} Matchup Proof`, [{ platform: 'ESPN GAMECAST', title: `${g.away.name} vs ${g.home.name}`, sub: 'Official records, odds & play-by-play', url: gameSrcUrl }, ...buildSocialAndNewsSources(`${g.pickedTeam.name} ${g.league}`, `matchup preview`, sum?.news)]);
     const bestRow = g.pickSide === 'home' ? oddsAnalysis.homeRows[0] : oddsAnalysis.awayRows[0], bulls = [], bears = [];
     if (g.isUnderdogPick) bulls.push(`Live Underdog passed the Agreement Gate (close market + confirmed form/sharp-move edge).`);
     if (g.dogGateTriggered) bulls.push(`Underdog Agreement Gate blocked a low-conviction longshot override and held the market favorite.`);
@@ -1054,7 +1070,7 @@ function renderDetailTab() {
     if (oppB2B && !pickB2B) bulls.push(`Rest Advantage: Opponent is on a back-to-back (B2B) fatigue spot (-6 pt penalty applied).`);
     if (pickB2B && !oppB2B) bears.push(`Rest Risk: ${g.pickedTeam.short} is playing on a back-to-back (B2B) with a -6 pt fatigue deduction.`);
     if (g.hasScaledOdds) bulls.push(`Scaled No-Vig Fair Odds give ${g.pickedTeam.short} a ${g.fairProbPick}% consensus win probability (normalized in CONF %).`);
-    if (g.hitsCount >= 2) bulls.push(`Strong Gematria convergence (${g.hitsCount} matching references across 4 ciphers).`); else bears.push(`Gematria threshold not met (${g.hitsCount}/2 hits) — relying on Normalized Fair Odds, Splits & Rest.`);
+    if (g.hitsCount >= 2) bulls.push(`Strong Pattern Signal convergence (${g.hitsCount} matching references across 4 ciphers).`); else bears.push(`Signal threshold not met (${g.hitsCount}/2 hits) — relying on Normalized Fair Odds, Splits & Rest.`);
     if (bestRow && bestRow.ev >= 0.5) bulls.push(`Positive EV edge: ${bestRow.title} is paying +${bestRow.ev.toFixed(1)}% above fair market consensus.`);
     if (g.fightIQ?.hasData && g.fightIQ.edge !== 0) { const favSide = g.fightIQ.edge > 0 ? 'home' : 'away'; if (favSide === g.pickSide) bulls.push(`Fight IQ edge (+${Math.abs(g.fightIQ.edge)} pts) from striking defense, absorbed rate & reach.`); else bears.push(`Opponent holds a +${Math.abs(g.fightIQ.edge)} pt striking defense / reach advantage.`); }
     if (g.oppInjuryBonus >= 10) bulls.push(`Opponent missing key star production (+${g.oppInjuryBonus} pt health edge).`);
@@ -1068,20 +1084,21 @@ function renderDetailTab() {
     body.innerHTML = `${renderAlgoVisuals(g)}${chartsHtml}<div class="proof-item clickable-ref" onclick="triggerSource(${bullSrc.idx}, event)"><span class="src-chip">🔗 ${bullSrc.count} Sources</span><strong>🤖 AI Breakdown — Why ${g.pickedTeam.short} Hits</strong>${bulls.map(b => `<div class="proof-sub">• ${b}</div>`).join('')}</div><div class="proof-item warn clickable-ref" onclick="triggerSource(${bullSrc.idx}, event)"><span class="src-chip">🔗 ${bullSrc.count} Sources</span><strong>⚠ Main Risk Factors</strong>${bears.map(b => `<div class="proof-sub">• ${b}</div>`).join('')}</div>${sum?.officials?.length ? `<div class="proof-item clickable-ref" onclick="triggerSource(${bullSrc.idx}, event)"><span class="src-chip">🔗 Sources</span><strong>Officials:</strong> ${sum.officials.join(', ')}</div>` : ''}${eventsHtml}`;
   } else if (currentTab === 'gem') {
     const hitsHtml = g.primaryHits.length >= 2 ? g.primaryHits.map(h => {
-      const gSrc = registerSources('Gematria Reference Sources', [{ platform: 'ESPN MATCHUP', title: `Verify Records & Venue: ${g.away.short} @ ${g.home.short}`, sub: h, url: gameSrcUrl }, { platform: 'GEMATRIX', title: `Check 4-Cipher Calculation Online`, sub: 'Verify Ordinal / Reduction / Reverse values', url: `https://www.gematrix.org/?word=${encodeURIComponent(g.pickedTeam.name)}` }]);
+      const gSrc = registerSources('Pattern Signal Sources', [{ platform: 'ESPN MATCHUP', title: `Verify Records & Venue: ${g.away.short} @ ${g.home.short}`, sub: h, url: gameSrcUrl }, { platform: 'GEMATRIX', title: `Check 4-Cipher Calculation Online`, sub: 'Verify Ordinal / Reduction / Reverse values', url: `https://www.gematrix.org/?word=${encodeURIComponent(g.pickedTeam.name)}` }]);
       return `<div class="proof-item clickable-ref" onclick="triggerSource(${gSrc.idx}, event)"><span class="src-chip">🔗 ${gSrc.count} Sources</span><strong>✓ Hit:</strong> ${h}</div>`;
-    }).join('') : `<div class="proof-item warn"><strong>Threshold Not Met (${g.primaryHits.length}/2):</strong> Fewer than 2 references matched. Gematria pillar is 0% until 2+ align.</div>`;
-    body.innerHTML = `<div class="proof-item"><strong>Composite: ${g.confidence}%</strong> (${g.pickLabel})<div class="proof-sub">Weights (${g.league}): ${g.activeW.gem}% Gem · ${g.activeW.h2h}% Normalized Fair Odds/H2H · ${g.activeW.ros}% Splits/Rest/Health</div></div><div class="context-box"><h4>+ Add Walkout Song, Performer, Refs or Coaches</h4><div class="form-grid"><div class="form-group"><label>Performer</label><input id="ctx-artist" class="form-input" value="${ctx.artist || ''}" placeholder="Artist name" /></div><div class="form-group"><label>Song Title</label><input id="ctx-song" class="form-input" value="${ctx.song || ''}" placeholder="Song title" /></div></div><div class="form-group"><label>Coaches / Extra Keywords</label><input id="ctx-extra" class="form-input" value="${ctx.extra || ''}" placeholder="Coach, ref, theme..." /></div><button class="primary-btn" onclick="saveExtraContext('${g.id}')">Recalculate Gematria with Context</button></div>${hitsHtml}`;
+    }).join('') : `<div class="proof-item warn"><strong>Threshold Not Met (${g.primaryHits.length}/2):</strong> Fewer than 2 references matched. Signal pillar is 0% until 2+ align.</div>`;
+    body.innerHTML = `<div class="proof-item"><strong>Composite: ${g.confidence}%</strong> (${g.pickLabel})<div class="proof-sub">Weights (${g.league}): ${g.activeW.gem}% Signals · ${g.activeW.h2h}% Normalized Fair Odds/H2H · ${g.activeW.ros}% Splits/Rest/Health</div></div><div class="context-box"><h4>+ Add Walkout Song, Performer, Refs or Coaches</h4><div class="form-grid"><div class="form-group"><label>Performer</label><input id="ctx-artist" class="form-input" value="${ctx.artist || ''}" placeholder="Artist name" /></div><div class="form-group"><label>Song Title</label><input id="ctx-song" class="form-input" value="${ctx.song || ''}" placeholder="Song title" /></div></div><div class="form-group"><label>Coaches / Extra Keywords</label><input id="ctx-extra" class="form-input" value="${ctx.extra || ''}" placeholder="Coach, ref, theme..." /></div><button class="primary-btn" onclick="saveExtraContext('${g.id}')">Recalculate Signals with Context</button></div>${hitsHtml}`;
   } else if (currentTab === 'ros') {
     if (FIGHT_LEAGUES.has(g.league)) {
       const fA = findFighterStats(g.away.name), fB = findFighterStats(g.home.name), fi = fightIntelMap[g.id] || { awayCutPen: 0, awayInjPen: 0, homeCutPen: 0, homeInjPen: 0, notes: '' };
       const hotspots = [];
       const addF = (nm, fObj) => {
-        const def = fObj?.str_def ?? 54, sapm = fObj?.sapm ?? 3.4, headP = fObj?.head_pct ?? 66, bodyP = fObj?.body_pct ?? 20, legP = fObj?.leg_pct ?? 14;
-        const base = (fObj?.sources || []).map(u => ({ platform: 'FIGHT PROFILE', title: `${nm} Official Stats`, sub: 'Career striking & fight history', url: u }));
-        if (def < 60 || sapm >= 3.0) hotspots.push({ zone: 'head', label: `${nm}: Head / Chin Risk`, sub: `Str Def ${def}% · Absorbs ${sapm}/m (${headP}% head target)`, srcIdx: registerSources(`${nm} — Head Defense`, [...base, ...buildSocialAndNewsSources(nm, 'chin knockout head defense', sum?.news)]).idx });
-        if (bodyP >= 18) hotspots.push({ zone: 'upper', label: `${nm}: Body / Cut Zone`, sub: `${bodyP}% body strike exposure · Weight cut impact`, srcIdx: registerSources(`${nm} — Body & Weight Cut`, [...base, ...buildSocialAndNewsSources(nm, 'body shot weight cut', sum?.news)]).idx });
-        if (legP >= 14 && g.league === 'UFC') hotspots.push({ zone: 'legs', label: `${nm}: Leg / Calf Risk`, sub: `${legP}% leg strike exposure`, srcIdx: registerSources(`${nm} — Leg Kick Vulnerability`, [...base, ...buildSocialAndNewsSources(nm, 'leg kick knee injury', sum?.news)]).idx });
+        if (!fObj || !fObj.str_def) return;
+        const def = fObj.str_def, sapm = fObj.sapm ?? 0, headP = fObj.head_pct ?? 0, bodyP = fObj.body_pct ?? 0, legP = fObj.leg_pct ?? 0;
+        const base = (fObj.sources || []).map(u => ({ platform: 'FIGHT PROFILE', title: `${nm} Official Stats`, sub: 'Career striking & fight history', url: u }));
+        if (def < 60 || sapm >= 3.0) hotspots.push({ zone: 'head', label: `${nm}: Head / Chin Risk`, sub: `Str Def ${def}% · Absorbs ${sapm}/m`, srcIdx: registerSources(`${nm} — Head Defense`, [...base, ...buildSocialAndNewsSources(`${nm} ${g.league} fighter`, 'chin knockout head defense', sum?.news)]).idx });
+        if (bodyP >= 18) hotspots.push({ zone: 'upper', label: `${nm}: Body / Cut Zone`, sub: `${bodyP}% body strike exposure`, srcIdx: registerSources(`${nm} — Body & Weight Cut`, [...base, ...buildSocialAndNewsSources(`${nm} ${g.league} fighter`, 'body shot weight cut', sum?.news)]).idx });
+        if (legP >= 14 && g.league === 'UFC') hotspots.push({ zone: 'legs', label: `${nm}: Leg / Calf Risk`, sub: `${legP}% leg strike exposure`, srcIdx: registerSources(`${nm} — Leg Kick Vulnerability`, [...base, ...buildSocialAndNewsSources(`${nm} ${g.league} fighter`, 'leg kick knee injury', sum?.news)]).idx });
       };
       addF(g.away.short, fA); addF(g.home.short, fB);
 
@@ -1089,40 +1106,49 @@ function renderDetailTab() {
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
           <div style="background:rgba(15,23,42,0.85);border:1px solid #1e2d47;border-radius:12px;padding:10px;display:flex;align-items:center;gap:10px;">
             ${renderAvatar(g.away.name, g.away.headshot, 44)}
-            <div style="min-width:0;"><div style="font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${g.away.short}</div><div style="font-size:10px;color:#94a3b8;">${g.away.record || 'Fighter A'}</div></div>
+            <div style="min-width:0;"><div style="font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${g.away.short}</div><div style="font-size:10px;color:#8b95a5;">${g.away.record || 'Fighter A'}</div></div>
           </div>
           <div style="background:rgba(15,23,42,0.85);border:1px solid #1e2d47;border-radius:12px;padding:10px;display:flex;align-items:center;gap:10px;">
             ${renderAvatar(g.home.name, g.home.headshot, 44)}
-            <div style="min-width:0;"><div style="font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${g.home.short}</div><div style="font-size:10px;color:#94a3b8;">${g.home.record || 'Fighter B'}</div></div>
+            <div style="min-width:0;"><div style="font-weight:800;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${g.home.short}</div><div style="font-size:10px;color:#8b95a5;">${g.home.record || 'Fighter B'}</div></div>
           </div>
         </div>
       `;
 
       const renderWc = (nm, gauge, fObj) => {
-        const srcs = []; if (fObj?.weight_cut?.source_url) srcs.push({ platform: 'WEIGH-IN RECORD', title: `${nm} Official Weigh-In History`, sub: 'Career weight classes & bouts', url: fObj.weight_cut.source_url });
-        srcs.push(...buildSocialAndNewsSources(nm, 'weigh in weight cut', sum?.news));
+        const srcs = [
+          { platform: 'TAPOLOGY', title: `${nm} — Official Weigh-In History`, sub: 'Verified MMA/Boxing weigh-in records', url: `https://www.tapology.com/search?term=${encodeURIComponent(nm)}` }
+        ];
+        if (fObj?.weight_cut?.source_url) srcs.unshift({ platform: 'WEIGH-IN RECORD', title: `${nm} Official Weigh-In`, sub: 'Career weight classes & bouts', url: fObj.weight_cut.source_url });
+        srcs.push(...buildSocialAndNewsSources(`${nm} ${g.league} fighter`, 'weigh in weight cut', sum?.news));
         const s = registerSources(`${nm} Weight Cut Sources`, srcs);
         if (gauge?.hasAuto) return `<div class="wc-gauge-card clickable-ref" onclick="triggerSource(${s.idx}, event)"><span class="src-chip">🔗 ${s.count} Sources</span><div class="wc-top"><strong>⚖ ${nm}: ${gauge.curL} lbs</strong><span style="color:${gauge.pen >= 10 ? 'var(--danger)' : 'var(--amber)'};font-weight:800;">${gauge.label}</span></div><div class="wc-track"><div class="wc-marker" style="left:${gauge.posPct}%;"></div></div><div class="wc-labels"><span>Biggest Cut: ${gauge.minL} lbs</span><span>Now: ${gauge.curL} lbs</span><span>Lowest Cut: ${gauge.maxL} lbs</span></div></div>`;
-        return `<div class="wc-gauge-card clickable-ref" onclick="triggerSource(${s.idx}, event)"><span class="src-chip">🔗 ${s.count} Sources</span><div class="wc-top"><strong>⚖ ${nm} Weight Cut Gauge</strong><span style="color:var(--text-muted);">${gauge?.label || 'Syncing history'}</span></div><div class="proof-sub">Tap for live weigh-in news, X posts &amp; YouTube weigh-in videos.</div></div>`;
+        return `<div class="wc-gauge-card clickable-ref" onclick="triggerSource(${s.idx}, event)"><span class="src-chip">🔗 ${s.count} Sources</span><div class="wc-top"><strong>⚖ ${nm} Weight Cut Gauge</strong><span style="color:var(--text-muted);">${gauge?.label || 'Pending Official Weigh-In'}</span></div><div class="proof-sub">Tap for verified Tapology weigh-in history, X posts &amp; YouTube weigh-in videos.</div></div>`;
       };
+
       const renderFC = (nm, st) => {
-        const s = registerSources(`${nm} Striking Sources`, [...(st?.sources || []).map(u => ({ platform: 'FIGHTER PROFILE', title: `${nm} Stats & Record`, url: u })), ...buildSocialAndNewsSources(nm, `${g.league} stats highlights`, sum?.news)]);
-        if (!st) return `<div class="strike-card" onclick="triggerSource(${s.idx}, event)"><div class="strike-name">${nm} ↗</div><div class="proof-sub">Tap for live fighter stats, X &amp; YouTube film.</div></div>`;
-        return `<div class="strike-card" onclick="triggerSource(${s.idx}, event)"><div class="strike-name">${nm} <span style="color:var(--blue);font-size:10px;">↗</span></div><div class="proof-sub" style="margin-bottom:6px;">${st.stance || 'Orthodox'} · Reach: ${st.reach || '—'} · Def: ${st.str_def || 55}%</div><div class="zone-row"><div class="zone-lbl"><span>Fav Target: Head</span><strong>${st.head_pct || 65}%</strong></div><div class="zone-track"><div class="zone-fill" style="width:${st.head_pct || 65}%;background:var(--accent);"></div></div></div><div class="zone-row"><div class="zone-lbl"><span>Body / Leg</span><strong>${st.body_pct || 20}% / ${st.leg_pct || 15}%</strong></div><div class="zone-track"><div class="zone-fill" style="width:${(st.body_pct || 20) + (st.leg_pct || 15)}%;background:var(--blue);"></div></div></div><div class="zone-row"><div class="zone-lbl"><span>Defense Gap</span><strong style="color:var(--danger);">${st.sapm || '3.2'}/m</strong></div><div class="zone-track"><div class="zone-fill" style="width:${Math.min(100, Math.round(100 - (st.str_def || 55)))}%;background:var(--danger);"></div></div></div></div>`;
+        const s = registerSources(`${nm} Verified ${g.league} Sources`, [
+          ...(st?.sources || []).map(u => ({ platform: 'FIGHTER PROFILE', title: `${nm} Official Stats`, url: u })),
+          { platform: 'TAPOLOGY', title: `${nm} — Official Fight & Weigh-In History`, sub: 'Verified MMA/Boxing database', url: `https://www.tapology.com/search?term=${encodeURIComponent(nm)}` },
+          ...buildSocialAndNewsSources(`${nm} ${g.league} fighter`, `weigh in highlights`, sum?.news)
+        ]);
+        if (!st || !st.str_def) return `<div class="strike-card" onclick="triggerSource(${s.idx}, event)"><div class="strike-name">${nm} ↗</div><div class="proof-sub">Official striking &amp; weigh-in data pending. Tap for verified Tapology &amp; ${g.league} fighter profile.</div></div>`;
+        return `<div class="strike-card" onclick="triggerSource(${s.idx}, event)"><div class="strike-name">${nm} <span style="color:var(--blue);font-size:10px;">↗</span></div><div class="proof-sub" style="margin-bottom:6px;">${st.stance || '—'} · Reach: ${st.reach || '—'} · Def: ${st.str_def}%</div><div class="zone-row"><div class="zone-lbl"><span>Head Target</span><strong>${st.head_pct || '—'}%</strong></div><div class="zone-track"><div class="zone-fill" style="width:${st.head_pct || 0}%;background:var(--accent);"></div></div></div><div class="zone-row"><div class="zone-lbl"><span>Defense Gap</span><strong style="color:var(--danger);">${st.sapm || '—'}/m</strong></div><div class="zone-track"><div class="zone-fill" style="width:${Math.min(100, Math.round(100 - st.str_def))}%;background:var(--danger);"></div></div></div></div>`;
       };
+
       body.innerHTML = `${fighterBanner}${renderBodyOutlineCard('Fighter Weak-Point Body Map', hotspots)}${renderWc(g.away.short, g.awayCutGauge, fA)}${renderWc(g.home.short, g.homeCutGauge, fB)}<div class="strike-grid">${renderFC(g.away.short, fA)}${renderFC(g.home.short, fB)}</div><div class="context-box"><h4>⚖ Manual Camp / Weigh-In Override (Optional)</h4><div class="form-grid"><div class="form-group"><label>${g.away.short} Weight Cut</label><select id="fi-away-cut" class="form-input"><option value="0" ${fi.awayCutPen==0?'selected':''}>Auto-Gauged (Default)</option><option value="6" ${fi.awayCutPen==6?'selected':''}>Drained / Tough Cut (-6 pts)</option><option value="12" ${fi.awayCutPen==12?'selected':''}>Missed Weight / Severe (-12 pts)</option></select></div><div class="form-group"><label>${g.away.short} Prior Injury</label><select id="fi-away-inj" class="form-input"><option value="0" ${fi.awayInjPen==0?'selected':''}>Healthy Camp (0 pts)</option><option value="5" ${fi.awayInjPen==5?'selected':''}>Minor Knock (-5 pts)</option><option value="12" ${fi.awayInjPen==12?'selected':''}>Major / Recent Surgery (-12 pts)</option></select></div></div><div class="form-grid"><div class="form-group"><label>${g.home.short} Weight Cut</label><select id="fi-home-cut" class="form-input"><option value="0" ${fi.homeCutPen==0?'selected':''}>Auto-Gauged (Default)</option><option value="6" ${fi.homeCutPen==6?'selected':''}>Drained / Tough Cut (-6 pts)</option><option value="12" ${fi.homeCutPen==12?'selected':''}>Missed Weight / Severe (-12 pts)</option></select></div><div class="form-group"><label>${g.home.short} Prior Injury</label><select id="fi-home-inj" class="form-input"><option value="0" ${fi.homeInjPen==0?'selected':''}>Healthy Camp (0 pts)</option><option value="5" ${fi.homeInjPen==5?'selected':''}>Minor Knock (-5 pts)</option><option value="12" ${fi.homeInjPen==12?'selected':''}>Major / Recent Surgery (-12 pts)</option></select></div></div><div class="form-group"><label>Camp / Weight Cut Notes</label><input id="fi-notes" class="form-input" value="${fi.notes || ''}" placeholder="e.g. Moving down a division, rib injury in camp..." /></div><button class="primary-btn" onclick="saveFightIntel('${g.id}')">Apply Override to Confidence</button></div>`;
     } else {
       const sortedInj = [...(g.gradedInjuries || [])].sort((a, b) => b.pts - a.pts);
       const teamHotspots = sortedInj.slice(0, 5).map(i => {
         const zone = detectBodyZoneFromText(`${i.detail} ${i.status}`);
-        const s = registerSources(`${i.player} (${i.team}) — Injury Intel`, [{ platform: 'ESPN INJURY REPORT', title: `${i.player} — ${i.status}`, sub: i.detail || 'Official ESPN status', url: gameSrcUrl }, ...buildSocialAndNewsSources(i.player, `injury ${i.team} ${g.league}`, sum?.news)]);
+        const s = registerSources(`${i.player} (${i.team}) — Injury Intel`, [{ platform: 'ESPN INJURY REPORT', title: `${i.player} — ${i.status}`, sub: i.detail || 'Official ESPN status', url: gameSrcUrl }, ...buildSocialAndNewsSources(`${i.player} ${g.league}`, `injury ${i.team}`, sum?.news)]);
         return { zone, label: `${i.player} (${i.team}) — ${i.status}`, sub: i.detail || `${zone.toUpperCase()} zone`, srcIdx: s.idx };
       });
       const uniqueLeaders = []; (g.allLeaders || []).forEach(l => { if (l.name && !uniqueLeaders.some(u => u.name === l.name && u.stat === l.stat)) uniqueLeaders.push(l); });
       const lSrc = registerSources('Key Stat Leaders', [{ platform: 'ESPN BOXSCORE', title: `${g.away.short} @ ${g.home.short} Team Leaders`, url: gameSrcUrl }]);
       const leadersHtml = uniqueLeaders.length ? `<div class="proof-item clickable-ref" onclick="triggerSource(${lSrc.idx}, event)"><span class="src-chip">🔗 Source ↗</span><strong>Tracked Key Stat Leaders</strong><div class="proof-sub">${uniqueLeaders.slice(0, 6).map(l => `${l.team} ${l.stat}: ${l.name} (${l.value})`).join(' · ')}</div></div>` : '';
       const injHtml = sortedInj.length ? sortedInj.map(i => {
-        const s = registerSources(`${i.player} Injury Sources`, [{ platform: 'ESPN REPORT', title: `${i.player} (${i.team}) — ${i.status}`, sub: i.detail || 'Official injury status', url: gameSrcUrl }, ...buildSocialAndNewsSources(i.player, `injury update ${i.team}`, sum?.news)]);
+        const s = registerSources(`${i.player} Injury Sources`, [{ platform: 'ESPN REPORT', title: `${i.player} (${i.team}) — ${i.status}`, sub: i.detail || 'Official injury status', url: gameSrcUrl }, ...buildSocialAndNewsSources(`${i.player} ${g.league}`, `injury update ${i.team}`, sum?.news)]);
         const badge = i.tier === 'star' ? `<span class="star-badge">★ STAR ${i.statLabels ? '(' + i.statLabels + ')' : ''}</span>` : i.tier === 'key' ? `<span class="key-badge">KEY (${i.statLabels})</span>` : `<span class="bench-badge">ROTATION</span>`;
         return `<div class="proof-item clickable-ref ${i.tier === 'star' ? 'danger star-out' : i.pts > 0 ? 'danger' : ''}" onclick="triggerSource(${s.idx}, event)"><span class="src-chip">🔗 ${s.count} Sources</span>${badge}<strong>${i.player}</strong> (${i.team}) — ${i.status} (${i.pts > 0 ? '-' + i.pts + ' pts' : '0 pts'})<div class="proof-sub">${i.detail || 'Listed on official ESPN injury report.'}</div></div>`;
       }).join('') : `<div class="proof-item"><strong>Clean Injury Report</strong><div class="proof-sub">No major ESPN injury deductions impacting this game.</div></div>`;
@@ -1134,7 +1160,7 @@ function renderDetailTab() {
   }
 }
 
-// --- TOOLS, SCANNER & AUTH ---
+// --- TOOLS, SCANNER & NAVIGATION ---
 function openToolsModal(tab = 'slip') { currentToolsTab = tab; document.getElementById('tools-modal').classList.add('open'); ['slip', 'calc', 'conv'].forEach(t => document.getElementById(`tool-tab-${t}`).classList.toggle('active', t === tab)); renderToolsTab(); }
 function switchToolsTab(tab, btn) { currentToolsTab = tab; document.querySelectorAll('#tools-modal .tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderToolsTab(); }
 function renderToolsTab() {
@@ -1189,7 +1215,7 @@ function openScanModal() { document.getElementById('scan-result').innerHTML = ''
 function runCustomScan() {
   const dm = getDateMath(currentDate), awayFull = document.getElementById('sc-away').value.trim(), homeFull = document.getElementById('sc-home').value.trim();
   const custom = evaluateGame({ id: 'custom', league: 'CUSTOM', state: 'pre', time: 'Custom Scan', venue: document.getElementById('sc-venue').value, leaders: [], homeML: null, awayML: null, away: { id: '', name: awayFull, short: awayFull.split(' ').pop(), location: awayFull.split(' ')[0], mascot: awayFull.split(' ').pop(), record: document.getElementById('sc-away-rec').value }, home: { id: '', name: homeFull, short: homeFull.split(' ').pop(), location: homeFull.split(' ')[0], mascot: homeFull.split(' ').pop(), record: document.getElementById('sc-home-rec').value }, customCtx: { artist: document.getElementById('sc-artist').value, song: document.getElementById('sc-song').value, extra: document.getElementById('sc-extra').value } }, dm);
-  document.getElementById('scan-result').innerHTML = `<div class="proof-item"><strong>${custom.pickLabel} — ${custom.confidence}% Confidence</strong><div class="proof-sub">${custom.hitsCount} Gematria Hits across ${custom.entitiesCount} variables · Gematria Score: ${custom.gemScore}%</div></div>${custom.primaryHits.map(h => `<div class="proof-item">${h}</div>`).join('') || '<div class="proof-item warn">Fewer than 2 references matched.</div>'}`;
+  document.getElementById('scan-result').innerHTML = `<div class="proof-item"><strong>${custom.pickLabel} — ${custom.confidence}% Confidence</strong><div class="proof-sub">${custom.hitsCount} Pattern Hits across ${custom.entitiesCount} variables · Signal Score: ${custom.gemScore}%</div></div>${custom.primaryHits.map(h => `<div class="proof-item">${h}</div>`).join('') || '<div class="proof-item warn">Fewer than 2 references matched.</div>'}`;
 }
 function openDateMathModal() {
   const dm = getDateMath(currentDate);
@@ -1202,24 +1228,8 @@ function toggleSave(e, id) { e.stopPropagation(); if (savedIds.has(id)) savedIds
 function setFilterMode(m) { filterMode = m; ['all', 'high', 'gem', 'live', 'upcoming'].forEach(k => document.getElementById(`mode-${k}`).classList.toggle('active', k === m)); renderFeed(); }
 function setSport(s) { activeSport = s; renderSportsBar(); renderFeed(); }
 function toggleTuner() { document.getElementById('tuner-panel').classList.toggle('open'); syncOwnerAlgoLock(); }
-function onWeightChange() {
-  if (!window.ALIGNIQ_IS_OWNER) { syncSlidersToWeights(); return; }
-  manualOverride = true;
-  weights.gem = Number(document.getElementById('w-gem').value);
-  weights.h2h = Number(document.getElementById('w-h2h').value);
-  weights.ros = Number(document.getElementById('w-ros').value);
-  syncSlidersToWeights();
-  renderFeed();
-}
-function resetToAgentWeights() {
-  if (!window.ALIGNIQ_IS_OWNER) return;
-  manualOverride = false;
-  const reportW = agentReport?.weights || agentReport?.active_weights;
-  weights = reportW ? { ...reportW } : { ...PHASE4_DEFAULT_WEIGHTS };
-  if (agentReport?.league_weights) leagueWeights = { ...PHASE4_LEAGUE_WEIGHTS, ...agentReport.league_weights };
-  syncSlidersToWeights();
-  renderFeed();
-}
+function onWeightChange() { syncSlidersToWeights(); }
+function resetToAgentWeights() { syncSlidersToWeights(); }
 function shiftDate(delta) { currentDate.setDate(currentDate.getDate() + delta); loadSlate(false); }
 function onPickDate(val) { if (!val) return; const [y, m, d] = val.split('-').map(Number); currentDate = new Date(y, m - 1, d); loadSlate(false); }
 function goToday() { currentDate = new Date(); loadSlate(false); }
