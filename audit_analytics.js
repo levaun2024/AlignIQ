@@ -2,6 +2,9 @@
   let activeCharts = [];
   let cachedHistory = null;
   let cachedReport = null;
+  let ownerTab = 'overview';
+  let selectedReportDate = null;
+  let approvalState = JSON.parse(localStorage.getItem('aligniq_owner_approvals') || '{}');
 
   async function fetchFresh(file) {
     const res = await fetch(`./${file}?t=${Date.now()}`, { cache: 'no-store' });
@@ -13,130 +16,90 @@
     activeCharts = [];
   }
 
-  function clamp(v, lo = 0, hi = 100) {
-    return Math.max(lo, Math.min(hi, Number(v) || 0));
-  }
-
-  // Mirrors agent.py Phase 4 scoring so history.json grades accurately
-  function scoreHistoryGame(g, fallbackWeights) {
-    const w = (g.weights_used && typeof g.weights_used.h2h === 'number')
-      ? g.weights_used
-      : (fallbackWeights || { gem: 10, h2h: 60, ros: 30 });
-
-    const h = g.home || {};
-    const a = g.away || {};
-    const hGem = clamp((Number(h.gem) || 0) * 0.85);
-    const aGem = clamp((Number(a.gem) || 0) * 0.85);
-    const hH2H = clamp((((Number(h.h2h) || 50) - 36) / 32) * 100);
-    const aH2H = clamp((((Number(a.h2h) || 50) - 36) / 32) * 100);
-    const hRos = clamp(Number(h.ros) || 50);
-    const aRos = clamp(Number(a.ros) || 50);
-
-    const totalW = (w.gem + w.h2h + w.ros) || 1;
-    const hScore = (hGem * w.gem + hH2H * w.h2h + hRos * w.ros) / totalW;
-    const aScore = (aGem * w.gem + aH2H * w.h2h + aRos * w.ros) / totalW;
-
-    let pick = hScore >= aScore ? 'home' : 'away';
-    const rawH = Number(h.h2h) || 50;
-    const rawA = Number(a.h2h) || 50;
-    const marketDog = rawH === rawA ? null : (rawH < rawA ? 'home' : 'away');
-
-    if (marketDog && pick === marketDog) {
-      const dogH2H = pick === 'home' ? rawH : rawA;
-      const dogRos = pick === 'home' ? hRos : aRos;
-      const favRos = pick === 'home' ? aRos : hRos;
-      const dogGem = pick === 'home' ? (Number(h.gem) || 0) : (Number(a.gem) || 0);
-      const favGem = pick === 'home' ? (Number(a.gem) || 0) : (Number(h.gem) || 0);
-
-      const closeMarket = dogH2H >= 44;
-      const bothAgree = (dogRos > favRos) && (dogGem > favGem);
-      const strongForm = (dogRos - favRos) >= 22;
-      if (!(closeMarket && (bothAgree || strongForm))) {
-        pick = pick === 'home' ? 'away' : 'home';
-      }
-    }
-
-    const diff = Math.abs(hScore - aScore);
-    const confidence = Math.round(clamp(50 + diff * 0.5, 50, 99));
-    return { pick, confidence, isUnderdog: Boolean(marketDog && pick === marketDog) };
-  }
-
-  window.openGradedAuditModal = async () => {
+  // --- 1. GRADED PICKS & POST-GAME AUTOPSY MODAL ---
+  window.openGradedAuditModal = async (overrideDate = null) => {
     const modal = document.getElementById('graded-audit-modal');
     const body = document.getElementById('graded-audit-body');
     if (!modal || !body) return;
     modal.classList.add('open');
-    body.innerHTML = '<p style="font-size:12px;color:var(--text-muted);">Loading frozen audit record...</p>';
+    body.innerHTML = '<p style="font-size:12px;color:var(--text-muted);">Loading post-game autopsy cards...</p>';
 
     cachedHistory = await fetchFresh('history.json');
-    const pickerVal = document.getElementById('date-picker')?.value;
     const allDates = Object.keys(cachedHistory?.dates || {}).sort().reverse();
-    const targetDate = (pickerVal && cachedHistory?.dates?.[pickerVal]) ? pickerVal : allDates[0];
+    const pickerVal = overrideDate || document.getElementById('date-picker')?.value;
+    const hasExact = Boolean(pickerVal && cachedHistory?.dates?.[pickerVal]);
+    const targetDate = hasExact ? pickerVal : allDates[0];
 
     if (!targetDate || !cachedHistory?.dates?.[targetDate]) {
-      body.innerHTML = '<p style="font-size:12px;color:var(--text-muted);">No archived graded games found for this date yet.</p>';
+      body.innerHTML = '<p class="proof-sub">No archived graded slates found yet. Run the Daily Agents workflow once.</p>';
       return;
     }
 
     const snap = cachedHistory.dates[targetDate];
     const w = snap.weights_used || { gem: 10, h2h: 60, ros: 30 };
-    const liveGames = Array.isArray(window.allGames) ? window.allGames : [];
-
-    const games = (snap.games || []).filter((g) => {
-      const r = String(g.result || '').toUpperCase();
-      return ['W', 'L', 'WIN', 'LOSS'].includes(r) || ['home', 'away'].includes(String(g.actual_winner || '').toLowerCase());
-    });
+    const games = (snap.games || []).filter((g) => g.result || g.actual_winner);
 
     let wins = 0;
-    const rowsHtml = games.map((g) => {
-      const liveMatch = liveGames.find((lg) => String(lg.id) === String(g.id));
-      const actual = String(g.actual_winner || '').toLowerCase().trim();
-      const r = String(g.result || '').toUpperCase().trim();
-
-      let pickSide = String(g.pick || '').toLowerCase().trim();
-      let conf = g.confidence;
-      let isWin = false;
-
-      if (actual === 'home' || actual === 'away') {
-        const scored = scoreHistoryGame(g, w);
-        if (!pickSide || (pickSide !== 'home' && pickSide !== 'away')) pickSide = scored.pick;
-        if (!conf) conf = scored.confidence;
-        isWin = pickSide === actual;
-      } else {
-        isWin = r === 'W' || r === 'WIN';
-      }
-
+    const cardsHtml = games.map((g) => {
+      const isWin = String(g.result || '').toUpperCase() === 'W' || (g.pick && g.pick === g.actual_winner);
       if (isWin) wins++;
-
-      const title = g.matchup
-        || (liveMatch ? `${liveMatch.away.short} @ ${liveMatch.home.short}` : null)
-        || (g.away?.name && g.home?.name ? `${g.away.name} @ ${g.home.name}` : null)
-        || `Game #${g.id || ''}`;
-
-      const pickName = liveMatch
-        ? (pickSide === 'home' ? liveMatch.home.short : pickSide === 'away' ? liveMatch.away.short : pickSide)
-        : (pickSide === 'home' ? (g.home?.name || 'Home') : pickSide === 'away' ? (g.away?.name || 'Away') : (g.pick || '—'));
-
-      const scoreStr = g.final_score
-        || (liveMatch && liveMatch.state === 'post' ? `${liveMatch.away.score}-${liveMatch.home.score}` : '');
+      const autopsy = g.autopsy || {};
+      const detFactors = autopsy.determining_factors || [];
+      const inGame = g.in_game_stats || autopsy.in_game_stats || [];
+      const lesson = autopsy.lesson_learned || 'Logged into 60-day learning dataset.';
+      const pickName = g.pick === 'home' ? (g.home?.name || 'Home') : (g.away?.name || 'Away');
 
       return `
-        <div class="proof-item ${isWin ? '' : 'danger'}">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <strong>${g.league || ''} · ${title}</strong>
-            <span style="font-weight:800;color:${isWin ? 'var(--accent)' : 'var(--danger)'};">${isWin ? 'WIN' : 'LOSS'}</span>
+        <div class="game-card" style="cursor:default;border-color:${isWin ? 'rgba(0,210,133,0.4)' : 'rgba(239,68,68,0.4)'};">
+          <div class="card-top">
+            <div class="card-meta">
+              <span class="league-tag">${g.league || 'SPORT'}</span>
+              <span class="grade-tag ${isWin ? 'won' : 'lost'}">${isWin ? 'WIN' : 'LOSS'}</span>
+              ${g.final_score ? `<span class="meta-text">Final: ${g.final_score}</span>` : ''}
+            </div>
+            <span style="font-size:12px;font-weight:800;color:var(--blue);">${g.confidence || 55}% CONF</span>
           </div>
-          <div class="proof-sub">
-            Pick: <strong style="color:var(--text);">${pickName}</strong>
-            ${conf ? ` · Conf: <strong style="color:var(--blue);">${conf}%</strong>` : ''}
-            ${scoreStr ? ` · Final: <strong>${scoreStr}</strong>` : ''}
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              ${g.away_logo ? `<img src="${g.away_logo}" style="width:20px;height:20px;object-fit:contain;" />` : ''}
+              <strong style="font-size:14px;">${g.matchup || `Game #${g.id}`}</strong>
+              ${g.home_logo ? `<img src="${g.home_logo}" style="width:20px;height:20px;object-fit:contain;" />` : ''}
+            </div>
+          </div>
+          <div style="font-size:12px;margin-bottom:8px;">Pick: <strong style="color:var(--accent);">${pickName}</strong></div>
+
+          <div style="background:var(--surface-2);border-radius:10px;padding:8px;font-size:11px;margin-bottom:6px;">
+            <strong style="color:var(--blue);">⚖️ Determining Factors:</strong>
+            <div style="color:var(--text-muted);margin-top:2px;">${detFactors.length ? detFactors.join(' · ') : 'Multi-pillar composite'}</div>
+          </div>
+
+          ${inGame.length ? `
+            <div style="background:var(--surface-2);border-radius:10px;padding:8px;font-size:11px;margin-bottom:6px;">
+              <strong style="color:var(--text);">📊 In-Game Key Data:</strong>
+              <div style="color:var(--text-muted);margin-top:2px;">${inGame.join(' · ')}</div>
+            </div>
+          ` : ''}
+
+          <div style="background:rgba(0,210,133,0.08);border:1px solid rgba(0,210,133,0.25);border-radius:10px;padding:8px;font-size:11px;">
+            <strong style="color:var(--accent);">🧠 Agent Learned:</strong> <span style="color:var(--text);">${lesson}</span>
           </div>
         </div>
       `;
     }).join('');
 
     const pct = games.length ? ((wins / games.length) * 100).toFixed(1) : '0.0';
+    const notice = (!hasExact && pickerVal)
+      ? `<div class="proof-item warn" style="font-size:11px;">No archived games yet for <strong>${pickerVal}</strong>. Showing latest archived slate (<strong>${targetDate}</strong>).</div>`
+      : '';
+
     body.innerHTML = `
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+        <label style="font-size:11px;font-weight:700;color:var(--text-muted);">Archived Slate:</label>
+        <select class="form-input" style="height:34px;flex:1;" onchange="openGradedAuditModal(this.value)">
+          ${allDates.map((d) => `<option value="${d}" ${d === targetDate ? 'selected' : ''}>${d}</option>`).join('')}
+        </select>
+      </div>
+      ${notice}
       <div class="proof-item arb-box">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <strong>🔒 Frozen Slate: ${targetDate}</strong>
@@ -144,112 +107,194 @@
         </div>
         <div class="proof-sub">Model: ${snap.algo_version || 'Locked'} · ${w.gem}% Signals / ${w.h2h}% Odds / ${w.ros}% Form</div>
       </div>
-      ${rowsHtml || '<p class="proof-sub">Games on this date are pending final scores.</p>'}
+      ${cardsHtml || '<p class="proof-sub">No completed games archived for this date.</p>'}
     `;
+  };
+
+  // --- 2. OWNER COMMAND CENTER (OVERVIEW + DAILY REPORT ARCHIVE + VISUAL APPROVALS) ---
+  window.switchOwnerTab = (tab) => {
+    ownerTab = tab;
+    renderOwnerModal();
+  };
+
+  window.selectOwnerReportDate = (d) => {
+    selectedReportDate = d;
+    renderOwnerModal();
+  };
+
+  window.setProposalDecision = (propId, decision) => {
+    const noteEl = document.getElementById(`prop-note-${propId}`);
+    approvalState[propId] = {
+      decision,
+      notes: noteEl ? noteEl.value.trim() : '',
+      updated_at: new Date().toISOString()
+    };
+    localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
+    renderOwnerModal();
   };
 
   window.openOwnerAnalyticsModal = async () => {
     if (!window.ALIGNIQ_IS_OWNER) return;
-    const modal = document.getElementById('owner-analytics-modal');
+    document.getElementById('owner-analytics-modal').classList.add('open');
+    await renderOwnerModal();
+  };
+
+  async function renderOwnerModal() {
     const body = document.getElementById('owner-analytics-body');
-    if (!modal || !body) return;
-    modal.classList.add('open');
+    if (!body) return;
     destroyCharts();
-    body.innerHTML = '<p style="font-size:12px;color:var(--text-muted);">Loading owner intelligence &amp; ROI charts...</p>';
+    body.innerHTML = '<p style="font-size:12px;color:var(--text-muted);">Loading Owner Command Center...</p>';
 
-    cachedReport = await fetchFresh('agent_report.json');
-    if (!cachedReport) {
-      body.innerHTML = '<p style="color:var(--danger);font-size:12px;">Could not load agent_report.json.</p>';
-      return;
-    }
+    const [rep, idx] = await Promise.all([
+      fetchFresh('agent_report.json'),
+      fetchFresh('daily_reports/index.json')
+    ]);
+    cachedReport = rep || {};
+    const reportDates = idx?.dates || [];
+    if (!selectedReportDate && reportDates.length) selectedReportDate = reportDates[0];
+    const dailyRep = selectedReportDate ? await fetchFresh(`daily_reports/${selectedReportDate}.json`) : null;
 
-    const s60 = cachedReport.summary_60d || { wins: 0, losses: 0, total: 0, win_rate: 0, underdogs: { wins: 0, losses: 0, total: 0, win_rate: 0 }, factors: {}, leagues: {}, daily_trend: [] };
-    const dog = s60.underdogs || { wins: 0, losses: 0, total: 0, win_rate: 0, roi_pct: null };
-    const w = cachedReport.weights || { gem: 10, h2h: 60, ros: 30 };
-    const gr = cachedReport.guardrails || { min_global_games: 500, min_league_games: 100 };
-    const samplePct = Math.min(100, Math.round((s60.total / gr.min_global_games) * 100));
-
-    body.innerHTML = `
-      <div style="display:flex;flex-direction:column;gap:12px;font-size:12px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div class="proof-item" style="margin:0;">
-            <div style="font-size:10px;color:var(--text-muted);font-weight:700;">60-DAY RECORD</div>
-            <div style="font-size:20px;font-weight:800;color:var(--accent);margin-top:2px;">${s60.win_rate}%</div>
-            <div class="proof-sub">${s60.wins}-${s60.losses} (${s60.total} games)</div>
-          </div>
-          <div class="proof-item" style="margin:0;">
-            <div style="font-size:10px;color:var(--text-muted);font-weight:700;">NET UNITS / ROI</div>
-            <div style="font-size:20px;font-weight:800;color:var(--blue);margin-top:2px;">${s60.roi_pct != null ? (s60.roi_pct >= 0 ? '+' : '') + s60.roi_pct + '%' : 'Pending ML'}</div>
-            <div class="proof-sub">${s60.net_units != null ? (s60.net_units >= 0 ? '+' : '') + s60.net_units + 'u' : 'Log moneylines'}</div>
-          </div>
-        </div>
-
-        <div class="proof-item" style="margin:0;border-color:rgba(245,158,11,0.4);">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <strong style="color:var(--amber);">🐶 Underdog Gate Performance</strong>
-            <strong>${dog.wins}-${dog.losses} (${dog.win_rate}%)</strong>
-          </div>
-          <div class="proof-sub">Underdog ROI: <strong>${dog.roi_pct != null ? (dog.roi_pct >= 0 ? '+' : '') + dog.roi_pct + '%' : 'Pending ML'}</strong> · Active Scale: ${w.gem}/${w.h2h}/${w.ros}</div>
-        </div>
-
-        <div class="proof-item" style="margin:0;">
-          <div style="display:flex;justify-content:space-between;font-size:11px;">
-            <strong>🛡️ Auto-Tune Guardrail (${s60.total}/${gr.min_global_games} games)</strong>
-            <span>${samplePct}%</span>
-          </div>
-          <div style="height:7px;background:var(--bg);border-radius:999px;overflow:hidden;margin-top:6px;">
-            <div style="height:100%;width:${samplePct}%;background:linear-gradient(90deg,var(--blue),var(--accent));"></div>
-          </div>
-        </div>
-
-        <div class="proof-item" style="margin:0;">
-          <strong style="color:var(--blue);">📈 30-Day Win Rate Trend</strong>
-          <canvas id="chart-trend" height="145" style="margin-top:8px;"></canvas>
-        </div>
-
-        <div class="proof-item" style="margin:0;">
-          <strong style="color:var(--accent);">🏆 League Win Rates</strong>
-          <canvas id="chart-leagues" height="145" style="margin-top:8px;"></canvas>
-        </div>
-
-        <div class="proof-item" style="margin:0;">
-          <strong style="color:var(--accent);">✅ Working</strong>
-          <ul style="margin:4px 0 8px 16px;padding:0;color:var(--text-muted);">${(cachedReport.whats_working || []).map(x => `<li>${x}</li>`).join('')}</ul>
-          <strong style="color:var(--danger);">⚠️ Watchlist</strong>
-          <ul style="margin:4px 0 0 16px;padding:0;color:var(--text-muted);">${(cachedReport.whats_not_working || []).map(x => `<li>${x}</li>`).join('')}</ul>
-        </div>
+    const tabsHtml = `
+      <div class="tabs-row" style="margin-bottom:12px;">
+        <button class="tab-btn ${ownerTab === 'overview' ? 'active' : ''}" onclick="switchOwnerTab('overview')">📊 Overview &amp; ROI</button>
+        <button class="tab-btn ${ownerTab === 'reports' ? 'active' : ''}" onclick="switchOwnerTab('reports')">📁 Daily Reports</button>
+        <button class="tab-btn ${ownerTab === 'approvals' ? 'active' : ''}" onclick="switchOwnerTab('approvals')">✅ Approvals (${(dailyRep?.pending_proposals || []).length})</button>
       </div>
     `;
 
-    if (typeof window.Chart === 'function') {
-      const baseOpts = {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#8b95a5', font: { size: 9 } }, grid: { display: false } },
-          y: { min: 0, max: 100, ticks: { color: '#8b95a5', font: { size: 9 } }, grid: { color: 'rgba(148,163,184,0.1)' } }
-        }
-      };
+    if (ownerTab === 'overview') {
+      const s60 = cachedReport.summary_60d || { wins: 0, losses: 0, total: 0, win_rate: 0, underdogs: { wins: 0, losses: 0, win_rate: 0 }, leagues: {}, daily_trend: [] };
+      const dog = s60.underdogs || { wins: 0, losses: 0, win_rate: 0, roi_pct: null };
+      const gr = cachedReport.guardrails || { min_global_games: 500 };
+      const samplePct = Math.min(100, Math.round((s60.total / gr.min_global_games) * 100));
 
-      const trend = s60.daily_trend || [];
-      activeCharts.push(new Chart(document.getElementById('chart-trend'), {
-        type: 'line',
-        data: {
-          labels: trend.map(d => d.date.slice(5)),
-          datasets: [{ data: trend.map(d => d.win_rate), borderColor: '#00d285', backgroundColor: 'rgba(0,210,133,0.12)', fill: true, tension: 0.35 }]
-        },
-        options: baseOpts
-      }));
+      body.innerHTML = `${tabsHtml}
+        <div style="display:flex;flex-direction:column;gap:12px;font-size:12px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="proof-item" style="margin:0;">
+              <div style="font-size:10px;color:var(--text-muted);font-weight:700;">60-DAY RECORD</div>
+              <div style="font-size:20px;font-weight:800;color:var(--accent);">${s60.win_rate}%</div>
+              <div class="proof-sub">${s60.wins}-${s60.losses} (${s60.total} games)</div>
+            </div>
+            <div class="proof-item" style="margin:0;">
+              <div style="font-size:10px;color:var(--text-muted);font-weight:700;">NET UNITS / ROI</div>
+              <div style="font-size:20px;font-weight:800;color:var(--blue);">${s60.roi_pct != null ? (s60.roi_pct >= 0 ? '+' : '') + s60.roi_pct + '%' : 'Pending ML'}</div>
+              <div class="proof-sub">${s60.net_units != null ? (s60.net_units >= 0 ? '+' : '') + s60.net_units + 'u' : 'Log moneylines'}</div>
+            </div>
+          </div>
+          <div class="proof-item" style="margin:0;border-color:rgba(245,158,11,0.4);">
+            <div style="display:flex;justify-content:space-between;">
+              <strong style="color:var(--amber);">🐶 Underdog Gate</strong>
+              <strong>${dog.wins}-${dog.losses} (${dog.win_rate}%)</strong>
+            </div>
+            <div class="proof-sub">Guardrail: ${s60.total}/${gr.min_global_games} games (${samplePct}%)</div>
+          </div>
+          <div class="proof-item" style="margin:0;">
+            <strong style="color:var(--blue);">📈 30-Day Win Rate Trend</strong>
+            <canvas id="chart-trend" height="145" style="margin-top:8px;"></canvas>
+          </div>
+          <div class="proof-item" style="margin:0;">
+            <strong style="color:var(--accent);">🏆 League Win Rates</strong>
+            <canvas id="chart-leagues" height="145" style="margin-top:8px;"></canvas>
+          </div>
+        </div>
+      `;
 
-      const lgKeys = Object.keys(s60.leagues || {});
-      activeCharts.push(new Chart(document.getElementById('chart-leagues'), {
-        type: 'bar',
-        data: {
-          labels: lgKeys.length ? lgKeys : ['Pending'],
-          datasets: [{ data: lgKeys.length ? lgKeys.map(k => s60.leagues[k].win_rate) : [0], backgroundColor: '#38bdf8', borderRadius: 6 }]
-        },
-        options: baseOpts
-      }));
+      if (typeof window.Chart === 'function') {
+        const baseOpts = {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#8b95a5', font: { size: 9 } }, grid: { display: false } },
+            y: { min: 0, max: 100, ticks: { color: '#8b95a5', font: { size: 9 } }, grid: { color: 'rgba(148,163,184,0.1)' } }
+          }
+        };
+        const trend = s60.daily_trend || [];
+        activeCharts.push(new Chart(document.getElementById('chart-trend'), {
+          type: 'line',
+          data: { labels: trend.map(d => d.date.slice(5)), datasets: [{ data: trend.map(d => d.win_rate), borderColor: '#00d285', backgroundColor: 'rgba(0,210,133,0.12)', fill: true, tension: 0.35 }] },
+          options: baseOpts
+        }));
+        const lgKeys = Object.keys(s60.leagues || {});
+        activeCharts.push(new Chart(document.getElementById('chart-leagues'), {
+          type: 'bar',
+          data: { labels: lgKeys.length ? lgKeys : ['Pending'], datasets: [{ data: lgKeys.length ? lgKeys.map(k => s60.leagues[k].win_rate) : [0], backgroundColor: '#38bdf8', borderRadius: 6 }] },
+          options: baseOpts
+        }));
+      }
+    } else if (ownerTab === 'reports') {
+      if (!dailyRep) {
+        body.innerHTML = `${tabsHtml}<div class="proof-item warn">No daily agent reports generated yet. Run your GitHub Action once to create today's report.</div>`;
+        return;
+      }
+      const ha = dailyRep.app_health_audit || {};
+      const ci = dailyRep.competitor_intel || {};
+      body.innerHTML = `${tabsHtml}
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+          <label style="font-size:11px;font-weight:700;color:var(--text-muted);">Report Date:</label>
+          <select class="form-input" style="height:34px;flex:1;" onchange="selectOwnerReportDate(this.value)">
+            ${reportDates.map(d => `<option value="${d}" ${d === selectedReportDate ? 'selected' : ''}>${d}</option>`).join('')}
+          </select>
+        </div>
+
+        <div class="proof-item">
+          <strong style="color:var(--accent);">🧠 Chief Auditor Cross-Check</strong>
+          <div class="proof-sub">${dailyRep.chief_auditor_critique || ''}</div>
+        </div>
+
+        <div class="proof-item ${ha.status === 'HEALTHY' ? '' : 'warn'}">
+          <strong>🩺 App Health Audit: ${ha.status || 'OK'}</strong>
+          <ul style="margin:6px 0 0 16px;padding:0;font-size:11.5px;color:var(--text-muted);">
+            ${(ha.passed || []).map(x => `<li style="color:var(--accent);">✓ ${x}</li>`).join('')}
+            ${(ha.issues || []).map(x => `<li style="color:var(--amber);">⚠ ${x}</li>`).join('')}
+          </ul>
+        </div>
+
+        <div class="proof-item">
+          <strong style="color:var(--blue);">🕵️ Competitor Intelligence</strong>
+          ${(ci.competitors_tracked || []).map(c => `
+            <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:8px;">
+              <strong>${c.name}</strong>
+              <div class="proof-sub"><b>Doing:</b> ${c.what_they_do}</div>
+              <div class="proof-sub" style="color:var(--accent);"><b>AlignIQ Edge:</b> ${c.aligniq_edge}</div>
+              <div class="proof-sub" style="color:var(--blue);"><b>Opportunity:</b> ${c.gap_to_close}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } else {
+      const props = dailyRep?.pending_proposals || [];
+      body.innerHTML = `${tabsHtml}
+        <div class="proof-item arb-box" style="font-size:11.5px;">
+          <strong>🔒 Owner Approval Gate Active</strong> — No agent can modify AlignIQ without your explicit approval below.
+        </div>
+        ${props.length ? props.map(p => {
+          const st = approvalState[p.id] || {};
+          const badge = st.decision
+            ? `<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.decision === 'APPROVED' ? 'var(--accent-soft)' : 'rgba(245,158,11,0.18)'};color:${st.decision === 'APPROVED' ? 'var(--accent)' : 'var(--amber)'};">${st.decision}</span>`
+            : `<span style="font-size:10px;font-weight:800;color:var(--blue);">PENDING REVIEW</span>`;
+          return `
+            <div class="proof-item">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <strong>${p.title}</strong>
+                ${badge}
+              </div>
+              <div class="proof-sub" style="margin:4px 0 8px;">${p.description}</div>
+              <div style="font-size:10.5px;color:var(--text-dim);margin-bottom:8px;">Files: ${(p.files_affected || []).join(', ')} · Impact: ${p.expected_impact}</div>
+
+              <div style="font-size:10px;font-weight:800;color:var(--blue);margin-bottom:4px;">👁️ VISUAL PREVIEW</div>
+              <div style="margin-bottom:10px;">${p.visual_preview_html || ''}</div>
+
+              <input id="prop-note-${p.id}" class="form-input" style="height:34px;font-size:12px;margin-bottom:8px;" value="${st.notes || ''}" placeholder="Request changes (e.g. change color, move position)..." />
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+                <button class="icon-btn accent" onclick="setProposalDecision('${p.id}', 'APPROVED')">✓ Approve</button>
+                <button class="icon-btn" style="border-color:var(--amber);color:var(--amber);" onclick="setProposalDecision('${p.id}', 'CHANGES REQUESTED')">✎ Modify</button>
+                <button class="icon-btn" style="border-color:var(--danger);color:var(--danger);" onclick="setProposalDecision('${p.id}', 'REJECTED')">✕ Reject</button>
+              </div>
+            </div>
+          `;
+        }).join('') : '<div class="proof-item">No pending update proposals right now.</div>'}
+      `;
     }
-  };
+  }
 })();
