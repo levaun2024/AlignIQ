@@ -14,8 +14,12 @@
   };
 
   async function fetchFresh(file) {
-    const res = await fetch(`./${file}?t=${Date.now()}`, { cache: 'no-store' });
-    return res.ok ? res.json() : null;
+    try {
+      const res = await fetch(`./${file}?t=${Date.now()}`, { cache: 'no-store' });
+      return res.ok ? res.json() : null;
+    } catch {
+      return null;
+    }
   }
 
   function destroyCharts() {
@@ -25,6 +29,10 @@
 
   function clamp(v, lo = 0, hi = 100) {
     return Math.max(lo, Math.min(hi, Number(v) || 0));
+  }
+
+  function escapeAttr(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
   // Grades legacy history.json entries accurately even before GitHub Actions backfills them
@@ -77,7 +85,6 @@
       : (g.matchup || `Game #${gameId}`);
     const finalScore = (awayC && homeC) ? `${awayC.score ?? ''} - ${homeC.score ?? ''}` : (g.final_score || 'Final');
 
-    // Extract Team Boxscore Stats
     const boxTeams = espn?.boxscore?.teams || [];
     const statsHtml = boxTeams.length === 2
       ? (boxTeams[0].statistics || []).slice(0, 8).map((st, idx) => {
@@ -90,7 +97,6 @@
         }).join('')
       : '<div class="proof-sub">Detailed team boxscore not published by ESPN for this event.</div>';
 
-    // Extract Top Performers
     const leadersHtml = (espn?.leaders || []).flatMap((tl) =>
       (tl.leaders || []).slice(0, 2).map((cat) => {
         const top = cat.leaders?.[0];
@@ -220,11 +226,46 @@
   // --- 2. OWNER COMMAND CENTER ---
   window.switchOwnerTab = (tab) => { ownerTab = tab; renderOwnerModal(); };
   window.selectOwnerReportDate = (d) => { selectedReportDate = d; renderOwnerModal(); };
-  window.setProposalDecision = (propId, decision) => {
+
+  window.setProposalDecision = async (propId, decision, title = '') => {
     const noteEl = document.getElementById(`prop-note-${propId}`);
-    approvalState[propId] = { decision, notes: noteEl ? noteEl.value.trim() : '', updated_at: new Date().toISOString() };
+    const notes = noteEl ? noteEl.value.trim() : '';
+
+    approvalState[propId] = {
+      title: title || propId,
+      decision,
+      notes,
+      syncing: true,
+      syncedToGitHub: false,
+      updated_at: new Date().toISOString()
+    };
     localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
     renderOwnerModal();
+
+    if (typeof window.ownerWorkerCall === 'function') {
+      try {
+        const res = await window.ownerWorkerCall('/admin/approve', 'POST', {
+          proposalId: propId,
+          title: title || propId,
+          decision,
+          notes
+        });
+        approvalState[propId].syncing = false;
+        approvalState[propId].syncedToGitHub = Boolean(res && res.ok);
+        if (!res || !res.ok) approvalState[propId].syncError = res?.error || 'Sync failed';
+      } catch (err) {
+        approvalState[propId].syncing = false;
+        approvalState[propId].syncedToGitHub = false;
+        approvalState[propId].syncError = err?.message || 'Network error';
+      }
+      localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
+      renderOwnerModal();
+    } else {
+      approvalState[propId].syncing = false;
+      approvalState[propId].syncError = 'Missing window.ownerWorkerCall in security.js';
+      localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
+      renderOwnerModal();
+    }
   };
 
   window.openOwnerAnalyticsModal = async () => {
@@ -239,7 +280,22 @@
     destroyCharts();
     body.innerHTML = '<p style="font-size:12px;color:var(--text-muted);">Loading Owner Command Center...</p>';
 
-    const [rep, idx] = await Promise.all([fetchFresh('agent_report.json'), fetchFresh('daily_reports/index.json')]);
+    const [rep, idx, remoteApprovals] = await Promise.all([
+      fetchFresh('agent_report.json'),
+      fetchFresh('daily_reports/index.json'),
+      fetchFresh('owner_approvals.json')
+    ]);
+
+    if (remoteApprovals && typeof remoteApprovals === 'object') {
+      for (const [k, v] of Object.entries(remoteApprovals)) {
+        const local = approvalState[k];
+        if (!local || (!local.syncing && new Date(v.updated_at || 0) >= new Date(local.updated_at || 0))) {
+          approvalState[k] = { ...v, syncing: false, syncedToGitHub: true };
+        }
+      }
+      localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
+    }
+
     cachedReport = rep || {};
     const reportDates = idx?.dates || [];
     if (!selectedReportDate && reportDates.length) selectedReportDate = reportDates[0];
@@ -304,11 +360,38 @@
     } else {
       const props = dailyRep?.pending_proposals || [];
       body.innerHTML = `${tabsHtml}
-        <div class="proof-item arb-box" style="font-size:11.5px;"><strong>🔒 Owner Approval Gate Active</strong> — No agent can modify AlignIQ without your explicit approval below.</div>
+        <div class="proof-item arb-box" style="font-size:11.5px;"><strong>🔒 Owner Approval Gate Active</strong> — Decisions commit directly to <code>owner_approvals.json</code> on GitHub.</div>
         ${props.length ? props.map(p => {
           const st = approvalState[p.id] || {};
-          const badge = st.decision ? `<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.decision === 'APPROVED' ? 'var(--accent-soft)' : 'rgba(245,158,11,0.18)'};color:${st.decision === 'APPROVED' ? 'var(--accent)' : 'var(--amber)'};">${st.decision}</span>` : `<span style="font-size:10px;font-weight:800;color:var(--blue);">PENDING REVIEW</span>`;
-          return `<div class="proof-item"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;"><strong>${p.title}</strong>${badge}</div><div class="proof-sub" style="margin:4px 0 8px;">${p.description}</div><div style="font-size:10px;font-weight:800;color:var(--blue);margin-bottom:4px;">👁️ VISUAL PREVIEW</div><div style="margin-bottom:10px;">${p.visual_preview_html || ''}</div><input id="prop-note-${p.id}" class="form-input" style="height:34px;font-size:12px;margin-bottom:8px;" value="${st.notes || ''}" placeholder="Request changes (e.g. change color, move position)..." /><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;"><button class="icon-btn accent" onclick="setProposalDecision('${p.id}', 'APPROVED')">✓ Approve</button><button class="icon-btn" style="border-color:var(--amber);color:var(--amber);" onclick="setProposalDecision('${p.id}', 'CHANGES REQUESTED')">✎ Modify</button><button class="icon-btn" style="border-color:var(--danger);color:var(--danger);" onclick="setProposalDecision('${p.id}', 'REJECTED')">✕ Reject</button></div></div>`;
+          const safeTitle = escapeAttr(p.title);
+          const badge = st.decision
+            ? `<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.decision === 'APPROVED' ? 'var(--accent-soft)' : st.decision === 'REJECTED' ? 'rgba(239,68,68,0.18)' : 'rgba(245,158,11,0.18)'};color:${st.decision === 'APPROVED' ? 'var(--accent)' : st.decision === 'REJECTED' ? 'var(--danger)' : 'var(--amber)'};">${st.decision}</span>`
+            : `<span style="font-size:10px;font-weight:800;color:var(--blue);">PENDING REVIEW</span>`;
+          const syncTag = st.syncing
+            ? `<div style="font-size:10px;color:var(--blue);margin-top:4px;">⏳ Syncing to GitHub...</div>`
+            : st.syncedToGitHub
+            ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Synced to GitHub (owner_approvals.json)</div>`
+            : st.syncError
+            ? `<div style="font-size:10px;color:var(--danger);margin-top:4px;">⚠ Saved locally only: ${escapeAttr(st.syncError)}</div>`
+            : '';
+          return `
+            <div class="proof-item">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                <strong>${p.title}</strong>
+                ${badge}
+              </div>
+              ${syncTag}
+              <div class="proof-sub" style="margin:6px 0 8px;">${p.description}</div>
+              <div style="font-size:10px;font-weight:800;color:var(--blue);margin-bottom:4px;">👁️ VISUAL PREVIEW</div>
+              <div style="margin-bottom:10px;">${p.visual_preview_html || ''}</div>
+              <input id="prop-note-${p.id}" class="form-input" style="height:34px;font-size:12px;margin-bottom:8px;" value="${escapeAttr(st.notes || '')}" placeholder="Request changes (e.g. change color, move position)..." />
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+                <button class="icon-btn accent" onclick="setProposalDecision('${p.id}', 'APPROVED', '${safeTitle}')">✓ Approve</button>
+                <button class="icon-btn" style="border-color:var(--amber);color:var(--amber);" onclick="setProposalDecision('${p.id}', 'CHANGES REQUESTED', '${safeTitle}')">✎ Modify</button>
+                <button class="icon-btn" style="border-color:var(--danger);color:var(--danger);" onclick="setProposalDecision('${p.id}', 'REJECTED', '${safeTitle}')">✕ Reject</button>
+              </div>
+            </div>
+          `;
         }).join('') : '<div class="proof-item">No pending update proposals right now.</div>'}
       `;
     }
