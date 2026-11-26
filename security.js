@@ -230,6 +230,8 @@ async function adminCall(path, method = 'GET', body = null) {
   return res.json();
 }
 
+window.ownerWorkerCall = (path, method = 'POST', body = null) => adminCall(path, method, body);
+
 window.openAdminModal = async () => {
   if (!window.ALIGNIQ_IS_OWNER) return;
   const modal = document.getElementById('admin-modal');
