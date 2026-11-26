@@ -16482,6 +16482,2079 @@
           }
         }
       ]
+    },
+    "2026-11-25": {
+      "algo_version": "2026-11-phase4",
+      "weights_used": {
+        "gem": 10,
+        "h2h": 60,
+        "ros": 30
+      },
+      "locked": true,
+      "games": [
+        {
+          "id": "401909317",
+          "league": "NBA",
+          "matchup": "Heat @ 76ers",
+          "final_score": "104-111",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phi.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/mia.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "76ers",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Heat",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Heat Pts: G. Antetokounmpo (32)",
+            "Heat Reb: G. Antetokounmpo (14)",
+            "76ers Pts: T. Maxey (30)",
+            "76ers Reb: L. James (10)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Heat Pts: G. Antetokounmpo (32)",
+              "Heat Reb: G. Antetokounmpo (14)",
+              "76ers Pts: T. Maxey (30)",
+              "76ers Reb: L. James (10)"
+            ]
+          }
+        },
+        {
+          "id": "401909318",
+          "league": "NBA",
+          "matchup": "Bulls @ Hornets",
+          "final_score": "107-105",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cha.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/chi.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Hornets",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Bulls",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Bulls Pts: M. Buzelis (24)",
+            "Bulls Reb: J. Giddey (11)",
+            "Hornets Pts: B. Miller (35)",
+            "Hornets Reb: M. Diabate (14)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Bulls Pts: M. Buzelis (24)",
+              "Bulls Reb: J. Giddey (11)",
+              "Hornets Pts: B. Miller (35)",
+              "Hornets Reb: M. Diabate (14)"
+            ]
+          }
+        },
+        {
+          "id": "401909319",
+          "league": "NBA",
+          "matchup": "Cavaliers @ Knicks",
+          "final_score": "102-121",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/ny.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/cle.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Knicks",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Cavaliers",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Cavaliers Pts: D. Mitchell (30)",
+            "Cavaliers Reb: T. Bryant (8)",
+            "Knicks Pts: J. Alvarado (21)",
+            "Knicks Reb: K. Towns (10)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Cavaliers Pts: D. Mitchell (30)",
+              "Cavaliers Reb: T. Bryant (8)",
+              "Knicks Pts: J. Alvarado (21)",
+              "Knicks Reb: K. Towns (10)"
+            ]
+          }
+        },
+        {
+          "id": "401909320",
+          "league": "NBA",
+          "matchup": "Timberwolves @ Thunder",
+          "final_score": "113-106",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/okc.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/min.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Thunder",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Timberwolves",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Timberwolves Pts: J. McDaniels (32)",
+            "Timberwolves Reb: J. McDaniels (10)",
+            "Thunder Pts: S. Gilgeous-Alexander (32)",
+            "Thunder Reb: I. Hartenstein (16)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Timberwolves Pts: J. McDaniels (32)",
+              "Timberwolves Reb: J. McDaniels (10)",
+              "Thunder Pts: S. Gilgeous-Alexander (32)",
+              "Thunder Reb: I. Hartenstein (16)"
+            ]
+          }
+        },
+        {
+          "id": "401909321",
+          "league": "NBA",
+          "matchup": "Clippers @ Grizzlies",
+          "final_score": "97-115",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/mem.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/lac.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Grizzlies",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Clippers",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Clippers Pts: B. Ingram (18)",
+            "Clippers Reb: R. Hachimura (12)",
+            "Grizzlies Pts: J. Wells (19)",
+            "Grizzlies Reb: C. Coward (10)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Clippers Pts: B. Ingram (18)",
+              "Clippers Reb: R. Hachimura (12)",
+              "Grizzlies Pts: J. Wells (19)",
+              "Grizzlies Reb: C. Coward (10)"
+            ]
+          }
+        },
+        {
+          "id": "401909322",
+          "league": "NBA",
+          "matchup": "Nets @ Bucks",
+          "final_score": "104-97",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/mil.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/bkn.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Bucks",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Nets",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Nets Pts: J. Randle (28)",
+            "Nets Reb: D. Sharpe (14)",
+            "Bucks Pts: T. Herro (28)",
+            "Bucks Reb: K. Ware (14)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Nets Pts: J. Randle (28)",
+              "Nets Reb: D. Sharpe (14)",
+              "Bucks Pts: T. Herro (28)",
+              "Bucks Reb: K. Ware (14)"
+            ]
+          }
+        },
+        {
+          "id": "401909323",
+          "league": "NBA",
+          "matchup": "Suns @ Rockets",
+          "final_score": "104-116",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/hou.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/phx.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Rockets",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Suns",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Suns Pts: D. Booker (25)",
+            "Suns Reb: M. Bridges (8)",
+            "Rockets Pts: A. Sengun (23)",
+            "Rockets Reb: A. Sengun (11)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Suns Pts: D. Booker (25)",
+              "Suns Reb: M. Bridges (8)",
+              "Rockets Pts: A. Sengun (23)",
+              "Rockets Reb: A. Sengun (11)"
+            ]
+          }
+        },
+        {
+          "id": "401909324",
+          "league": "NBA",
+          "matchup": "Kings @ Warriors",
+          "final_score": "110-129",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/gs.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/sac.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Warriors",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Kings",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Kings Pts: D. Sabonis (27)",
+            "Kings Reb: D. Sabonis (10)",
+            "Warriors Pts: D. Melton (24)",
+            "Warriors Reb: Y. Lendeborg (8)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Kings Pts: D. Sabonis (27)",
+              "Kings Reb: D. Sabonis (10)",
+              "Warriors Pts: D. Melton (24)",
+              "Warriors Reb: Y. Lendeborg (8)"
+            ]
+          }
+        },
+        {
+          "id": "401909325",
+          "league": "NBA",
+          "matchup": "Spurs @ Trail Blazers",
+          "final_score": "111-116",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/por.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nba/500/scoreboard/sa.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Trail Blazers",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Spurs",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Spurs Pts: V. Wembanyama (44)",
+            "Spurs Reb: V. Wembanyama (16)",
+            "Trail Blazers Pts: D. Avdija (33)",
+            "Trail Blazers Reb: D. Avdija (12)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Spurs Pts: V. Wembanyama (44)",
+              "Spurs Reb: V. Wembanyama (16)",
+              "Trail Blazers Pts: D. Avdija (33)",
+              "Trail Blazers Reb: D. Avdija (12)"
+            ]
+          }
+        },
+        {
+          "id": "401873079",
+          "league": "NFL",
+          "matchup": "Packers @ Rams",
+          "final_score": "13-26",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/lar.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Rams",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Packers",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401892781",
+          "league": "NHL",
+          "matchup": "Jets @ Bruins",
+          "final_score": "4-2",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/bos.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/wpg.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Bruins",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Jets",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Jets Goals: K. Connor (1)",
+            "Jets Assists: K. Connor (2)",
+            "Bruins Goals: F. Minten (1)",
+            "Bruins Assists: H. Lindholm (1)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Jets Goals: K. Connor (1)",
+              "Jets Assists: K. Connor (2)",
+              "Bruins Goals: F. Minten (1)",
+              "Bruins Assists: H. Lindholm (1)"
+            ]
+          }
+        },
+        {
+          "id": "401892782",
+          "league": "NHL",
+          "matchup": "Rangers @ Sabres",
+          "final_score": "1-5",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/buf.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/nyr.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Sabres",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Rangers",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Rangers Goals: V. Gavrikov (1)",
+            "Rangers Assists: T. Raddysh (1)",
+            "Sabres Goals: R. Dahlin (1)",
+            "Sabres Assists: T. Thompson (2)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Rangers Goals: V. Gavrikov (1)",
+              "Rangers Assists: T. Raddysh (1)",
+              "Sabres Goals: R. Dahlin (1)",
+              "Sabres Assists: T. Thompson (2)"
+            ]
+          }
+        },
+        {
+          "id": "401892783",
+          "league": "NHL",
+          "matchup": "Hurricanes @ Lightning",
+          "final_score": "3-1",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/tb.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/car.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Lightning",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Hurricanes",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Hurricanes Goals: J. Slavin (1)",
+            "Hurricanes Assists: J. Slavin (1)",
+            "Lightning Goals: A. Cirelli (1)",
+            "Lightning Assists: J. Guentzel (1)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Hurricanes Goals: J. Slavin (1)",
+              "Hurricanes Assists: J. Slavin (1)",
+              "Lightning Goals: A. Cirelli (1)",
+              "Lightning Assists: J. Guentzel (1)"
+            ]
+          }
+        },
+        {
+          "id": "401892784",
+          "league": "NHL",
+          "matchup": "Senators @ Panthers",
+          "final_score": "3-5",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/fla.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/ott.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Panthers",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Senators",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Senators Goals: P. Tomasino (1)",
+            "Senators Assists: A. Zub (2)",
+            "Panthers Goals: N. Mikkola (1)",
+            "Panthers Assists: B. Marchand (3)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Senators Goals: P. Tomasino (1)",
+              "Senators Assists: A. Zub (2)",
+              "Panthers Goals: N. Mikkola (1)",
+              "Panthers Assists: B. Marchand (3)"
+            ]
+          }
+        },
+        {
+          "id": "401892785",
+          "league": "NHL",
+          "matchup": "Blues @ Islanders",
+          "final_score": "2-3",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/nyi.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/stl.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Islanders",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Blues",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Blues Goals: D. Holloway (1)",
+            "Blues Assists: L. Mailloux (1)",
+            "Islanders Goals: V. Eklund (1)",
+            "Islanders Assists: B. Schenn (1)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Blues Goals: D. Holloway (1)",
+              "Blues Assists: L. Mailloux (1)",
+              "Islanders Goals: V. Eklund (1)",
+              "Islanders Assists: B. Schenn (1)"
+            ]
+          }
+        },
+        {
+          "id": "401892786",
+          "league": "NHL",
+          "matchup": "Flames @ Penguins",
+          "final_score": "6-3",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/pit.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/cgy.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Penguins",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Flames",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Flames Goals: J. Farabee (1)",
+            "Flames Assists: Z. Whitecloud (2)",
+            "Penguins Goals: T. Novak (1)",
+            "Penguins Assists: T. Novak (1)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Flames Goals: J. Farabee (1)",
+              "Flames Assists: Z. Whitecloud (2)",
+              "Penguins Goals: T. Novak (1)",
+              "Penguins Assists: T. Novak (1)"
+            ]
+          }
+        },
+        {
+          "id": "401892787",
+          "league": "NHL",
+          "matchup": "Flyers @ Capitals",
+          "final_score": "3-7",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/wsh.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/phi.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Capitals",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Flyers",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Flyers Goals: T. Konecny (1)",
+            "Flyers Assists: T. Foerster (2)",
+            "Capitals Goals: A. Tuch (1)",
+            "Capitals Assists: A. Tuch (2)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Flyers Goals: T. Konecny (1)",
+              "Flyers Assists: T. Foerster (2)",
+              "Capitals Goals: A. Tuch (1)",
+              "Capitals Assists: A. Tuch (2)"
+            ]
+          }
+        },
+        {
+          "id": "401892788",
+          "league": "NHL",
+          "matchup": "Devils @ Blue Jackets",
+          "final_score": "3-2",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/cbj.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/nj.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Blue Jackets",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Devils",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Devils Goals: N. Hischier (1)",
+            "Devils Assists: J. Bratt (1)",
+            "Blue Jackets Goals: C. Sillinger (1)",
+            "Blue Jackets Assists: S. Monahan (1)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Devils Goals: N. Hischier (1)",
+              "Devils Assists: J. Bratt (1)",
+              "Blue Jackets Goals: C. Sillinger (1)",
+              "Blue Jackets Assists: S. Monahan (1)"
+            ]
+          }
+        },
+        {
+          "id": "401892789",
+          "league": "NHL",
+          "matchup": "Canucks @ Red Wings",
+          "final_score": "1-5",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/det.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/van.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Red Wings",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Canucks",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Canucks Goals: P. Cotter (1)",
+            "Canucks Assists: C. Reinhardt (1)",
+            "Red Wings Goals: E. Finnie (2)",
+            "Red Wings Assists: V. Arvidsson (2)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Canucks Goals: P. Cotter (1)",
+              "Canucks Assists: C. Reinhardt (1)",
+              "Red Wings Goals: E. Finnie (2)",
+              "Red Wings Assists: V. Arvidsson (2)"
+            ]
+          }
+        },
+        {
+          "id": "401892790",
+          "league": "NHL",
+          "matchup": "Predators @ Stars",
+          "final_score": "3-1",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/dal.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/nsh.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Stars",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Predators",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Predators Goals: J. Drury (1)",
+            "Predators Assists: R. O'Reilly (2)",
+            "Stars Goals: W. Johnston (1)",
+            "Stars Assists: T. Seguin (1)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Predators Goals: J. Drury (1)",
+              "Predators Assists: R. O'Reilly (2)",
+              "Stars Goals: W. Johnston (1)",
+              "Stars Assists: T. Seguin (1)"
+            ]
+          }
+        },
+        {
+          "id": "401892791",
+          "league": "NHL",
+          "matchup": "Mammoth @ Wild",
+          "final_score": "4-3",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/min.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/uta.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Wild",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Mammoth",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Mammoth Goals: D. Guenther (1)",
+            "Mammoth Assists: D. Guenther (1)",
+            "Wild Goals: B. Coleman (2)",
+            "Wild Assists: J. Brodin (1)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Mammoth Goals: D. Guenther (1)",
+              "Mammoth Assists: D. Guenther (1)",
+              "Wild Goals: B. Coleman (2)",
+              "Wild Assists: J. Brodin (1)"
+            ]
+          }
+        },
+        {
+          "id": "401892792",
+          "league": "NHL",
+          "matchup": "Canadiens @ Avalanche",
+          "final_score": "0-6",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/col.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/mtl.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Avalanche",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Canadiens",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Avalanche Goals: D. Toews (2)",
+            "Avalanche Assists: C. Makar (3)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Avalanche Goals: D. Toews (2)",
+              "Avalanche Assists: C. Makar (3)"
+            ]
+          }
+        },
+        {
+          "id": "401892794",
+          "league": "NHL",
+          "matchup": "Blackhawks @ Kraken",
+          "final_score": "3-1",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/sea.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/chi.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Kraken",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Blackhawks",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Blackhawks Goals: R. Kantserov (2)",
+            "Blackhawks Assists: J. Greenway (1)",
+            "Kraken Goals: J. Eberle (1)",
+            "Kraken Assists: M. Beniers (1)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Blackhawks Goals: R. Kantserov (2)",
+              "Blackhawks Assists: J. Greenway (1)",
+              "Kraken Goals: J. Eberle (1)",
+              "Kraken Assists: M. Beniers (1)"
+            ]
+          }
+        },
+        {
+          "id": "401892793",
+          "league": "NHL",
+          "matchup": "Sharks @ Ducks",
+          "final_score": "0-7",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/ana.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nhl/500/scoreboard/sj.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Ducks",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Sharks",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Ducks Goals: A. Killorn (2)",
+            "Ducks Assists: M. Granlund (3)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Ducks Goals: A. Killorn (2)",
+              "Ducks Assists: M. Granlund (3)"
+            ]
+          }
+        },
+        {
+          "id": "401920428",
+          "league": "NCAAB",
+          "matchup": "Virginia @ Marquette",
+          "final_score": "60-54",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/269.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/258.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Marquette",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Virginia",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Virginia Pts: J. Grunloh (14)",
+            "Virginia Reb: C. Mallory (12)",
+            "Marquette Pts: S. Fru (12)",
+            "Marquette Reb: S. Fru (9)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Virginia Pts: J. Grunloh (14)",
+              "Virginia Reb: C. Mallory (12)",
+              "Marquette Pts: S. Fru (12)",
+              "Marquette Reb: S. Fru (9)"
+            ]
+          }
+        },
+        {
+          "id": "401921715",
+          "league": "NCAAB",
+          "matchup": "Ole Miss @ Arizona",
+          "final_score": "73-84",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/12.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/145.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Arizona",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Ole Miss",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Ole Miss Pts: A. Clark (17)",
+            "Ole Miss Reb: B. Henshall (5)",
+            "Arizona Pts: M. Krivas (31)",
+            "Arizona Reb: M. Krivas (17)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Ole Miss Pts: A. Clark (17)",
+              "Ole Miss Reb: B. Henshall (5)",
+              "Arizona Pts: M. Krivas (31)",
+              "Arizona Reb: M. Krivas (17)"
+            ]
+          }
+        },
+        {
+          "id": "401909568",
+          "league": "NCAAB",
+          "matchup": "Duke @ UConn",
+          "final_score": "77-63",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/41.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/150.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "UConn",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Duke",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Duke Pts: J. Blackwell (25)",
+            "Duke Reb: P. Ngongba II (11)",
+            "UConn Pts: S. Demary Jr. (25)",
+            "UConn Reb: C. Landrew (7)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Duke Pts: J. Blackwell (25)",
+              "Duke Reb: P. Ngongba II (11)",
+              "UConn Pts: S. Demary Jr. (25)",
+              "UConn Reb: C. Landrew (7)"
+            ]
+          }
+        },
+        {
+          "id": "401921670",
+          "league": "NCAAB",
+          "matchup": "South Carolina @ USC",
+          "final_score": "69-71",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/30.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2579.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "USC",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "South Carolina",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "South Carolina Pts: A. Bieliauskas (18)",
+            "South Carolina Reb: A. Bieliauskas (12)",
+            "USC Pts: A. Arenas (25)",
+            "USC Reb: D. Ratliff (10)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "South Carolina Pts: A. Bieliauskas (18)",
+              "South Carolina Reb: A. Bieliauskas (12)",
+              "USC Pts: A. Arenas (25)",
+              "USC Reb: D. Ratliff (10)"
+            ]
+          }
+        },
+        {
+          "id": "401921716",
+          "league": "NCAAB",
+          "matchup": "BYU @ Providence",
+          "final_score": "85-82",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2507.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/252.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Providence",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "BYU",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "BYU Pts: C. Chandler (24)",
+            "BYU Reb: B. Branch III (6)",
+            "Providence Pts: A. Page (21)",
+            "Providence Reb: M. Byrd (7)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "BYU Pts: C. Chandler (24)",
+              "BYU Reb: B. Branch III (6)",
+              "Providence Pts: A. Page (21)",
+              "Providence Reb: M. Byrd (7)"
+            ]
+          }
+        },
+        {
+          "id": "401921669",
+          "league": "NCAAB",
+          "matchup": "LSU @ Arizona St",
+          "final_score": "94-92",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/9.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/99.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Arizona St",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "LSU",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "LSU Pts: D. Dent (20)",
+            "LSU Reb: M. Ruzic (11)",
+            "Arizona St Pts: P. Murauskas (27)",
+            "Arizona St Reb: D. Shaw (14)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "LSU Pts: D. Dent (20)",
+              "LSU Reb: M. Ruzic (11)",
+              "Arizona St Pts: P. Murauskas (27)",
+              "Arizona St Reb: D. Shaw (14)"
+            ]
+          }
+        },
+        {
+          "id": "401926065",
+          "league": "NCAAB",
+          "matchup": "Southern @ Nebraska",
+          "final_score": "72-101",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/158.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2582.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Nebraska",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Southern",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Southern Pts: S. Van Dorn Jr. (24)",
+            "Southern Reb: S. Van Dorn Jr. (10)",
+            "Nebraska Pts: P. Sandfort (20)",
+            "Nebraska Reb: D. Wilkinson (7)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Southern Pts: S. Van Dorn Jr. (24)",
+              "Southern Reb: S. Van Dorn Jr. (10)",
+              "Nebraska Pts: P. Sandfort (20)",
+              "Nebraska Reb: D. Wilkinson (7)"
+            ]
+          }
+        },
+        {
+          "id": "401917182",
+          "league": "NCAAB",
+          "matchup": "Memphis @ Penn State",
+          "final_score": "83-70",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/213.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/235.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Penn State",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Memphis",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Memphis Pts: J. Reid (32)",
+            "Memphis Reb: R. Vavers (6)",
+            "Penn State Pts: I. Juric (19)",
+            "Penn State Reb: I. Juric (11)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Memphis Pts: J. Reid (32)",
+              "Memphis Reb: R. Vavers (6)",
+              "Penn State Pts: I. Juric (19)",
+              "Penn State Reb: I. Juric (11)"
+            ]
+          }
+        },
+        {
+          "id": "401927070",
+          "league": "NCAAW",
+          "matchup": "Toledo @ Michigan",
+          "final_score": "56-102",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/130.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2649.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Michigan",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Toledo",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Toledo Pts: D. Robinson (9)",
+            "Toledo Reb: D. Robinson (4)",
+            "Michigan Pts: O. Olson (22)",
+            "Michigan Reb: S. Swords (9)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Toledo Pts: D. Robinson (9)",
+              "Toledo Reb: D. Robinson (4)",
+              "Michigan Pts: O. Olson (22)",
+              "Michigan Reb: S. Swords (9)"
+            ]
+          }
+        },
+        {
+          "id": "401918845",
+          "league": "NCAAW",
+          "matchup": "SE Louisiana @ Texas",
+          "final_score": "45-96",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2545.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Texas",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "SE Louisiana",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "SE Louisiana Pts: A. Collins (16)",
+            "SE Louisiana Reb: E. McKinzie (5)",
+            "Texas Pts: J. Clark (19)",
+            "Texas Reb: B. Cunningham (7)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "SE Louisiana Pts: A. Collins (16)",
+              "SE Louisiana Reb: E. McKinzie (5)",
+              "Texas Pts: J. Clark (19)",
+              "Texas Reb: B. Cunningham (7)"
+            ]
+          }
+        },
+        {
+          "id": "401921428",
+          "league": "NCAAW",
+          "matchup": "Navy @ Iowa",
+          "final_score": "48-104",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2294.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2426.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Iowa",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Navy",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Navy Pts: Z. Mesuch (19)",
+            "Navy Reb: J. Almeida (7)",
+            "Iowa Pts: D. Carnegie (19)",
+            "Iowa Reb: A. Heiden (12)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Navy Pts: Z. Mesuch (19)",
+              "Navy Reb: J. Almeida (7)",
+              "Iowa Pts: D. Carnegie (19)",
+              "Iowa Reb: A. Heiden (12)"
+            ]
+          }
+        },
+        {
+          "id": "401918832",
+          "league": "NCAAW",
+          "matchup": "Vanderbilt @ Oregon St",
+          "final_score": "71-60",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/204.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/238.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Oregon St",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Vanderbilt",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Vanderbilt Pts: M. Woolfolk (22)",
+            "Vanderbilt Reb: M. Woolfolk (8)",
+            "Oregon St Pts: J. Villa (17)",
+            "Oregon St Reb: E. Smith (6)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Vanderbilt Pts: M. Woolfolk (22)",
+              "Vanderbilt Reb: M. Woolfolk (8)",
+              "Oregon St Pts: J. Villa (17)",
+              "Oregon St Reb: E. Smith (6)"
+            ]
+          }
+        },
+        {
+          "id": "401915378",
+          "league": "UCL",
+          "matchup": "Barcelona @ Sabah",
+          "final_score": "4-1",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/21922.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/83.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Sabah",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Barcelona",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401915293",
+          "league": "UCL",
+          "matchup": "Villarreal @ Slavia Prague",
+          "final_score": "1-0",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/494.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/102.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Slavia Prague",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Villarreal",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401915291",
+          "league": "UCL",
+          "matchup": "Viking FK @ Atl\u00e9tico",
+          "final_score": "0-2",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/1068.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/510.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Atl\u00e9tico",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Viking FK",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401915292",
+          "league": "UCL",
+          "matchup": "Liverpool @ Club Brugge",
+          "final_score": "3-0",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/570.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/364.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Club Brugge",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Liverpool",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401915376",
+          "league": "UCL",
+          "matchup": "Stuttgart @ Inter Milan",
+          "final_score": "0-2",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/110.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/134.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Inter Milan",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Stuttgart",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401915377",
+          "league": "UCL",
+          "matchup": "Bayern @ Lille",
+          "final_score": "1-2",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/166.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/132.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Lille",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Bayern",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401915375",
+          "league": "UCL",
+          "matchup": "Fenerbahce @ Shakhtar",
+          "final_score": "1-0",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/493.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/soccer/500/436.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Shakhtar",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Fenerbahce",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 55,
+            "ros": 35
+          },
+          "pick": "home",
+          "confidence": 50.7,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": []
+          }
+        }
+      ]
     }
   }
 }
