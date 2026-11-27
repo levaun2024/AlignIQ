@@ -18555,6 +18555,827 @@
           }
         }
       ]
+    },
+    "2026-11-26": {
+      "algo_version": "2026-11-phase4",
+      "weights_used": {
+        "gem": 10,
+        "h2h": 60,
+        "ros": 30
+      },
+      "locked": true,
+      "games": [
+        {
+          "id": "401873081",
+          "league": "NFL",
+          "matchup": "Bears @ Lions",
+          "final_score": "39-35",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/det.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/chi.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Lions",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Bears",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401873080",
+          "league": "NFL",
+          "matchup": "Eagles @ Cowboys",
+          "final_score": "39-38",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/dal.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/phi.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Cowboys",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Eagles",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401873082",
+          "league": "NFL",
+          "matchup": "Chiefs @ Bills",
+          "final_score": "10-13",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/buf.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/kc.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Bills",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Chiefs",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 10,
+            "h2h": 60,
+            "ros": 30
+          },
+          "pick": "home",
+          "confidence": 50.6,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401856879",
+          "league": "NCAAF",
+          "matchup": "TCU @ Texas Tech",
+          "final_score": "27-48",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2628.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Texas Tech",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "TCU",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": []
+          }
+        },
+        {
+          "id": "401920531",
+          "league": "NCAAB",
+          "matchup": "Texas Tech @ Oregon",
+          "final_score": "62-59",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2483.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2641.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Oregon",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Texas Tech",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Texas Tech Pts: C. Davis (18)",
+            "Texas Tech Reb: J. Stillwell (11)",
+            "Oregon Pts: J. Johnson (18)",
+            "Oregon Reb: M. Ewin (8)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Texas Tech Pts: C. Davis (18)",
+              "Texas Tech Reb: J. Stillwell (11)",
+              "Oregon Pts: J. Johnson (18)",
+              "Oregon Reb: M. Ewin (8)"
+            ]
+          }
+        },
+        {
+          "id": "401917547",
+          "league": "NCAAB",
+          "matchup": "UCLA @ Saint Mary's",
+          "final_score": "70-85",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2608.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/26.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Saint Mary's",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "UCLA",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "UCLA Pts: J. Petty (15)",
+            "UCLA Reb: X. Booker (8)",
+            "Saint Mary's Pts: J. Dent-Smith (21)",
+            "Saint Mary's Reb: J. Dent-Smith (6)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "UCLA Pts: J. Petty (15)",
+              "UCLA Reb: X. Booker (8)",
+              "Saint Mary's Pts: J. Dent-Smith (21)",
+              "Saint Mary's Reb: J. Dent-Smith (6)"
+            ]
+          }
+        },
+        {
+          "id": "401906869",
+          "league": "NCAAB",
+          "matchup": "Georgetown @ Texas",
+          "final_score": "83-92",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/251.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/46.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Texas",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Georgetown",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Georgetown Pts: J. Lowe (21)",
+            "Georgetown Reb: K. Mulready (4)",
+            "Texas Pts: I. Johnson (26)",
+            "Texas Reb: D. Punch (10)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Georgetown Pts: J. Lowe (21)",
+              "Georgetown Reb: K. Mulready (4)",
+              "Texas Pts: I. Johnson (26)",
+              "Texas Reb: D. Punch (10)"
+            ]
+          }
+        },
+        {
+          "id": "401920529",
+          "league": "NCAAB",
+          "matchup": "Tennessee @ Iowa State",
+          "final_score": "75-64",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/66.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2633.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Iowa State",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Tennessee",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Tennessee Pts: D. Ames (19)",
+            "Tennessee Reb: D. Brown II (13)",
+            "Iowa State Pts: R. Prather Jr. (17)",
+            "Iowa State Reb: T. Singleton (8)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Tennessee Pts: D. Ames (19)",
+              "Tennessee Reb: D. Brown II (13)",
+              "Iowa State Pts: R. Prather Jr. (17)",
+              "Iowa State Reb: T. Singleton (8)"
+            ]
+          }
+        },
+        {
+          "id": "401925757",
+          "league": "NCAAB",
+          "matchup": "Arkansas @ Michigan St",
+          "final_score": "67-70",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/127.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/8.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Michigan St",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Arkansas",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Arkansas Pts: J. Smith Jr. (25)",
+            "Arkansas Reb: J. Smith Jr. (11)",
+            "Michigan St Pts: J. Fears Jr. (20)",
+            "Michigan St Reb: J. Scott (8)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Arkansas Pts: J. Smith Jr. (25)",
+              "Arkansas Reb: J. Smith Jr. (11)",
+              "Michigan St Pts: J. Fears Jr. (20)",
+              "Michigan St Reb: J. Scott (8)"
+            ]
+          }
+        },
+        {
+          "id": "401920530",
+          "league": "NCAAB",
+          "matchup": "Louisville @ St John's",
+          "final_score": "93-90",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2599.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/97.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "St John's",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Louisville",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Louisville Pts: S. Trimble (33)",
+            "Louisville Reb: F. Bidunga (9)",
+            "St John's Pts: I. Jackson (18)",
+            "St John's Reb: K. Hall (10)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Louisville Pts: S. Trimble (33)",
+              "Louisville Reb: F. Bidunga (9)",
+              "St John's Pts: I. Jackson (18)",
+              "St John's Reb: K. Hall (10)"
+            ]
+          }
+        },
+        {
+          "id": "401920539",
+          "league": "NCAAB",
+          "matchup": "Alabama @ Kansas St",
+          "final_score": "104-91",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2306.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/333.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Kansas St",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Alabama",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Alabama Pts: Q. Samuels (14)",
+            "Alabama Reb: A. Allen (7)",
+            "Kansas St Pts: B. Rechsteiner (27)",
+            "Kansas St Reb: B. Rechsteiner (8)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Alabama Pts: Q. Samuels (14)",
+              "Alabama Reb: A. Allen (7)",
+              "Kansas St Pts: B. Rechsteiner (27)",
+              "Kansas St Reb: B. Rechsteiner (8)"
+            ]
+          }
+        },
+        {
+          "id": "401920537",
+          "league": "NCAAB",
+          "matchup": "Miami @ Michigan",
+          "final_score": "97-70",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/130.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2390.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Michigan",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Miami",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Miami Pts: S. Henderson (25)",
+            "Miami Reb: S. Henderson (10)",
+            "Michigan Pts: J.P. Estrella (21)",
+            "Michigan Reb: J.P. Estrella (5)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Miami Pts: S. Henderson (25)",
+              "Miami Reb: S. Henderson (10)",
+              "Michigan Pts: J.P. Estrella (21)",
+              "Michigan Reb: J.P. Estrella (5)"
+            ]
+          }
+        },
+        {
+          "id": "401921673",
+          "league": "NCAAB",
+          "matchup": "USC @ Utah State",
+          "final_score": "74-78",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/328.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/30.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Utah State",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "USC",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "USC Pts: A. Arenas (33)",
+            "USC Reb: J. Jones (11)",
+            "Utah State Pts: M. Falslev (27)",
+            "Utah State Reb: K. Tosi (8)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "USC Pts: A. Arenas (33)",
+              "USC Reb: J. Jones (11)",
+              "Utah State Pts: M. Falslev (27)",
+              "Utah State Reb: K. Tosi (8)"
+            ]
+          }
+        },
+        {
+          "id": "401918972",
+          "league": "NCAAB",
+          "matchup": "LSU @ SMU",
+          "final_score": "95-86",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2567.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/99.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "SMU",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "LSU",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "LSU Pts: M. Dioubate (28)",
+            "LSU Reb: M. Dioubate (10)",
+            "SMU Pts: O. Sellers (25)",
+            "SMU Reb: J. Toombs (8)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "LSU Pts: M. Dioubate (28)",
+              "LSU Reb: M. Dioubate (10)",
+              "SMU Pts: O. Sellers (25)",
+              "SMU Reb: J. Toombs (8)"
+            ]
+          }
+        },
+        {
+          "id": "401920540",
+          "league": "NCAAB",
+          "matchup": "Baylor @ Gonzaga",
+          "final_score": "64-72",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2250.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/239.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Gonzaga",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Baylor",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Baylor Pts: I. Williams IV (20)",
+            "Baylor Reb: D. Mingo (9)",
+            "Gonzaga Pts: C. Wiggins (19)",
+            "Gonzaga Reb: M. Diop (7)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "Baylor Pts: I. Williams IV (20)",
+              "Baylor Reb: D. Mingo (9)",
+              "Gonzaga Pts: C. Wiggins (19)",
+              "Gonzaga Reb: M. Diop (7)"
+            ]
+          }
+        },
+        {
+          "id": "401923185",
+          "league": "NCAAW",
+          "matchup": "West Virginia @ Notre Dame",
+          "final_score": "64-78",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/87.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/277.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "home",
+          "home": {
+            "name": "Notre Dame",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "West Virginia",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "West Virginia Pts: G. Cooke (18)",
+            "West Virginia Reb: K. Ngodu (7)",
+            "Notre Dame Pts: H. Hidalgo (22)",
+            "Notre Dame Reb: J. Abii (12)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "W",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Market-anchored baseline delivered a clean win in a tighter spread spot.",
+            "in_game_stats": [
+              "West Virginia Pts: G. Cooke (18)",
+              "West Virginia Reb: K. Ngodu (7)",
+              "Notre Dame Pts: H. Hidalgo (22)",
+              "Notre Dame Reb: J. Abii (12)"
+            ]
+          }
+        },
+        {
+          "id": "401903570",
+          "league": "NCAAW",
+          "matchup": "Minnesota @ Missouri St",
+          "final_score": "89-54",
+          "home_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/2623.png",
+          "away_logo": "https://a.espncdn.com/i/teamlogos/ncaa/500/135.png",
+          "home_ml": null,
+          "away_ml": null,
+          "actual_winner": "away",
+          "home": {
+            "name": "Missouri St",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 52
+          },
+          "away": {
+            "name": "Minnesota",
+            "gem": 0,
+            "h2h": 50,
+            "ros": 48
+          },
+          "in_game_stats": [
+            "Minnesota Pts: M. Braun (20)",
+            "Minnesota Reb: T. Thomas (7)",
+            "Missouri St Pts: H. Linthacum (10)",
+            "Missouri St Reb: H. Linthacum (9)"
+          ],
+          "algo_version": "2026-11-phase4",
+          "weights_used": {
+            "gem": 8,
+            "h2h": 68,
+            "ros": 24
+          },
+          "pick": "home",
+          "confidence": 50.5,
+          "result": "L",
+          "autopsy": {
+            "determining_factors": [
+              "Form/Health edge (52 vs 48)"
+            ],
+            "lesson_learned": "Coin-flip variance loss \u2014 consider tightening sub-60% confidence filters.",
+            "in_game_stats": [
+              "Minnesota Pts: M. Braun (20)",
+              "Minnesota Reb: T. Thomas (7)",
+              "Missouri St Pts: H. Linthacum (10)",
+              "Missouri St Reb: H. Linthacum (9)"
+            ]
+          }
+        }
+      ]
     }
   }
 }

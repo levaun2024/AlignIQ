@@ -96,7 +96,7 @@
       ]
     }
   ],
-  "updated_at": "2026-11-26T14:18:25.660880+00:00",
+  "updated_at": "2026-11-27T08:54:48.304831+00:00",
   "rebalance_cadence": "monthly",
   "target_win_rate": 95.0,
   "weights": {
@@ -105,21 +105,21 @@
     "ros": 30
   },
   "summary_60d": {
-    "wins": 241,
-    "losses": 92,
-    "total": 333,
-    "win_rate": 72.4,
+    "wins": 249,
+    "losses": 101,
+    "total": 350,
+    "win_rate": 71.1,
     "graded_with_odds": 0,
     "net_units": null,
     "roi_pct": null,
-    "gap_to_target": 22.6,
+    "gap_to_target": 23.9,
     "underdogs": {
       "label": "Underdog Gate Picks",
       "wins": 1,
       "losses": 0,
       "total": 1,
       "win_rate": 100.0,
-      "lift_vs_avg": 27.6,
+      "lift_vs_avg": 28.9,
       "net_units": null,
       "roi_pct": null
     },
@@ -160,7 +160,7 @@
         "losses": 5,
         "total": 83,
         "win_rate": 94.0,
-        "lift_vs_avg": 21.6,
+        "lift_vs_avg": 22.9,
         "net_units": null,
         "roi_pct": null
       },
@@ -170,7 +170,7 @@
         "losses": 0,
         "total": 1,
         "win_rate": 100.0,
-        "lift_vs_avg": 27.6,
+        "lift_vs_avg": 28.9,
         "net_units": null,
         "roi_pct": null
       }
@@ -201,34 +201,34 @@
         "roi_pct": null
       },
       "NCAAB": {
-        "wins": 37,
-        "losses": 14,
-        "total": 51,
-        "win_rate": 72.5,
+        "wins": 42,
+        "losses": 20,
+        "total": 62,
+        "win_rate": 67.7,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAF": {
-        "wins": 57,
+        "wins": 58,
         "losses": 12,
-        "total": 69,
-        "win_rate": 82.6,
+        "total": 70,
+        "win_rate": 82.9,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAW": {
-        "wins": 41,
-        "losses": 12,
-        "total": 53,
-        "win_rate": 77.4,
+        "wins": 42,
+        "losses": 13,
+        "total": 55,
+        "win_rate": 76.4,
         "net_units": null,
         "roi_pct": null
       },
       "NFL": {
-        "wins": 13,
-        "losses": 1,
-        "total": 14,
-        "win_rate": 92.9,
+        "wins": 14,
+        "losses": 3,
+        "total": 17,
+        "win_rate": 82.4,
         "net_units": null,
         "roi_pct": null
       },
@@ -297,25 +297,31 @@
         "wins": 23,
         "total": 43,
         "win_rate": 53.5
+      },
+      {
+        "date": "2026-11-26",
+        "wins": 8,
+        "total": 17,
+        "win_rate": 47.1
       }
     ]
   },
   "summary_14d": {
-    "wins": 241,
-    "losses": 92,
-    "total": 333,
-    "win_rate": 72.4,
+    "wins": 249,
+    "losses": 101,
+    "total": 350,
+    "win_rate": 71.1,
     "graded_with_odds": 0,
     "net_units": null,
     "roi_pct": null,
-    "gap_to_target": 22.6,
+    "gap_to_target": 23.9,
     "underdogs": {
       "label": "Underdog Gate Picks",
       "wins": 1,
       "losses": 0,
       "total": 1,
       "win_rate": 100.0,
-      "lift_vs_avg": 27.6,
+      "lift_vs_avg": 28.9,
       "net_units": null,
       "roi_pct": null
     },
@@ -356,7 +362,7 @@
         "losses": 5,
         "total": 83,
         "win_rate": 94.0,
-        "lift_vs_avg": 21.6,
+        "lift_vs_avg": 22.9,
         "net_units": null,
         "roi_pct": null
       },
@@ -366,7 +372,7 @@
         "losses": 0,
         "total": 1,
         "win_rate": 100.0,
-        "lift_vs_avg": 27.6,
+        "lift_vs_avg": 28.9,
         "net_units": null,
         "roi_pct": null
       }
@@ -397,34 +403,34 @@
         "roi_pct": null
       },
       "NCAAB": {
-        "wins": 37,
-        "losses": 14,
-        "total": 51,
-        "win_rate": 72.5,
+        "wins": 42,
+        "losses": 20,
+        "total": 62,
+        "win_rate": 67.7,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAF": {
-        "wins": 57,
+        "wins": 58,
         "losses": 12,
-        "total": 69,
-        "win_rate": 82.6,
+        "total": 70,
+        "win_rate": 82.9,
         "net_units": null,
         "roi_pct": null
       },
       "NCAAW": {
-        "wins": 41,
-        "losses": 12,
-        "total": 53,
-        "win_rate": 77.4,
+        "wins": 42,
+        "losses": 13,
+        "total": 55,
+        "win_rate": 76.4,
         "net_units": null,
         "roi_pct": null
       },
       "NFL": {
-        "wins": 13,
-        "losses": 1,
-        "total": 14,
-        "win_rate": 92.9,
+        "wins": 14,
+        "losses": 3,
+        "total": 17,
+        "win_rate": 82.4,
         "net_units": null,
         "roi_pct": null
       },
@@ -493,21 +499,27 @@
         "wins": 23,
         "total": 43,
         "win_rate": 53.5
+      },
+      {
+        "date": "2026-11-26",
+        "wins": 8,
+        "total": 17,
+        "win_rate": 47.1
       }
     ]
   },
   "whats_working": [
-    "60-day model win rate is 72.4% (241-92).",
+    "60-day model win rate is 71.1% (249-101).",
     "ESPN post-game enrichment & per-game autopsy learning active."
   ],
   "whats_not_working": [
-    "Sample guardrail active (333/500 games) before auto-tuning unlocks."
+    "Sample guardrail active (350/500 games) before auto-tuning unlocks."
   ],
   "suggestions": [
     "Sample guardrail active: 186/500 total games logged before global auto-tuning unlocks.",
     "Log home_ml/away_ml on upcoming slates (0/50) to activate ROI-first tuning."
   ],
-  "last_rebalance_note": "Phase 4 active (10/60/30 + League Profiles + Post-Game Autopsy). Guardrail: 333/500 games.",
+  "last_rebalance_note": "Phase 4 active (10/60/30 + League Profiles + Post-Game Autopsy). Guardrail: 350/500 games.",
   "algo_version": "2026-11-phase4",
   "guardrails": {
     "min_global_games": 500,
