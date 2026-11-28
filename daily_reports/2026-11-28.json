@@ -1,6 +1,6 @@
 {
   "date": "2026-11-28",
-  "generated_at": "2026-11-28T06:24:53.329813+00:00",
+  "generated_at": "2026-11-28T07:24:30.887775+00:00",
   "algo_version": "phase5-baseline",
   "active_weights": {
     "gem": 10,
@@ -12,64 +12,78 @@
   },
   "investor_audit_score": 75,
   "plain_english_brief": {
-    "headline": "The model is rolling right now\u2014hitting 66.7% across 415 completed games over the last 60 days.",
-    "what_worked": "Our strongest signal lately is Market Fair Odds (85.0% WR, +18.3% vs avg).",
-    "watch_out": "Heads up: Pattern Signals (53.3% WR, -13.4% vs avg) has been over-confident on losses.",
-    "next_step": "I automatically applied 1 approved update(s) to your live config, and queued 3 new idea(s) in your Approvals tab."
+    "headline": "The model is in strong form\u2014hitting 78.5% across 186 verified games over the last 60 days.",
+    "what_worked": "Our strongest edge lately is Market Fair Odds (85.0% WR, +6.5% vs avg).",
+    "watch_out": "Heads up: Pattern Signals (Gematria) (53.3% WR, -25.2% vs avg) has been over-confident on losses.",
+    "next_step": "You have 3 suggestion(s) in Approvals\u2014auto-updates apply in 45s, and manual code ideas archive to your Dev Queue."
+  },
+  "data_integrity": {
+    "verified_games_60d": 186,
+    "pregame_locked_games": 0,
+    "gematria_logged_games": 28,
+    "quarantined_fallbacks": 231,
+    "moneylines_logged": 0
   },
   "execution_summary": {
     "agent1_status": "SUCCESS",
-    "agent1_ran_at": "2026-11-28T06:24:47.978654+00:00",
+    "agent1_ran_at": "2026-11-28T07:24:28.325657+00:00",
     "agent2_status": "SUCCESS",
-    "newly_executed_approvals": [
-      "prop_kelly_sizer_v1"
-    ]
+    "newly_executed_approvals": []
   },
   "performance_analysis": {
-    "completed_games_analyzed": 415,
-    "newly_analyzed_games": 415,
-    "win_rate_60d": 66.7,
-    "record_60d": "277-138",
+    "completed_games_analyzed": 186,
+    "newly_analyzed_games": 0,
+    "win_rate_60d": 78.5,
+    "record_60d": "146-40",
     "roi_pct_60d": null,
     "net_units_60d": null,
     "factor_attribution": {
       "gem": {
-        "label": "Pattern Signals",
+        "label": "Pattern Signals (Gematria)",
         "agree_w": 8,
         "agree_n": 15,
+        "solo_w": 10,
+        "solo_n": 27,
         "misled_losses": 7,
         "win_rate": 53.3,
-        "lift_vs_avg": -13.4
+        "solo_win_rate": 37.0,
+        "lift_vs_avg": -25.2
       },
       "h2h": {
         "label": "Market Fair Odds",
         "agree_w": 136,
         "agree_n": 160,
+        "solo_w": 141,
+        "solo_n": 166,
         "misled_losses": 24,
         "win_rate": 85.0,
-        "lift_vs_avg": 18.3
+        "solo_win_rate": 84.9,
+        "lift_vs_avg": 6.5
       },
       "ros": {
         "label": "Form, Rest & Health",
-        "agree_w": 251,
-        "agree_n": 386,
-        "misled_losses": 135,
-        "win_rate": 65.0,
-        "lift_vs_avg": -1.7
+        "agree_w": 120,
+        "agree_n": 157,
+        "solo_w": 127,
+        "solo_n": 182,
+        "misled_losses": 37,
+        "win_rate": 76.4,
+        "solo_win_rate": 69.8,
+        "lift_vs_avg": -2.1
       }
     },
     "overvalued_factors": [
-      "Pattern Signals (53.3% WR, -13.4% vs avg)"
+      "Pattern Signals (Gematria) (53.3% WR, -25.2% vs avg)"
     ],
     "undervalued_factors": [
-      "Market Fair Odds (85.0% WR, +18.3% vs avg)"
+      "Market Fair Odds (85.0% WR, +6.5% vs avg)"
     ],
     "recurring_weaknesses": [],
     "calibration": {
       "50-59%": {
-        "wins": 206,
-        "total": 335,
-        "win_rate": 61.5
+        "wins": 75,
+        "total": 106,
+        "win_rate": 70.8
       },
       "60-69%": {
         "wins": 52,
@@ -174,8 +188,8 @@
       "title": "Add Fractional Kelly Unit Sizer in Best Odds Tab",
       "applied_at": "2026-11-28T06:24:53.329813+00:00",
       "baseline_wr": 66.7,
-      "current_wr": 66.7,
-      "impact": "+0.0% (Neutral)"
+      "current_wr": 78.5,
+      "impact": "+11.8% (Improved)"
     }
   ],
   "implemented_adjustments": [
@@ -188,7 +202,7 @@
       "category": "VISUAL / UX",
       "priority": "MEDIUM",
       "title": "Turn On '+EDGE' Badges on Feed Cards",
-      "description": "Adds a clean blue pill right under CONF % whenever our model beats the Vegas no-vig consensus by 1.5%+, so you can spot value plays in 1 second.",
+      "description": "Adds a compact blue pill right under CONF % whenever our model beats the Vegas no-vig consensus by 1.5%+.",
       "change_spec": {
         "type": "enable_feature",
         "feature": "edge_badge_cards",
@@ -203,7 +217,7 @@
       "category": "STRUCTURAL / UI",
       "priority": "MEDIUM",
       "title": "Add Custom Bankroll Input Field in Settings Modal",
-      "description": "Right now the Kelly Sizer defaults to a $1,000 bankroll. Adding a simple Bankroll ($) input box in Settings lets every user plug in their real bankroll.",
+      "description": "Right now the Kelly Sizer defaults to $1,000. Adding a Bankroll ($) input box in Settings lets users plug in their real bankroll.",
       "change_spec": {
         "type": "manual_code",
         "target_files": [
@@ -213,20 +227,19 @@
       "visual_preview_html": "<div style='background:#0b1220;border:1px solid #f59e0b;border-radius:10px;padding:10px;font-size:11px;'><b>Settings \u2192 Bankroll:</b> <code>[ $ 1000 ]</code> \u2192 Updates Kelly dollar stakes live.</div>"
     },
     {
-      "id": "code_clv_tracker_v1",
+      "id": "code_freeze_past_feed_v1",
       "execution_type": "OWNER_CODE",
-      "category": "INFORMATIONAL",
+      "category": "DATA INTEGRITY",
       "priority": "HIGH",
-      "title": "Build Pre-Game Odds Snapshotter for Verified ROI & CLV",
-      "description": "Only 0/50 archived games have moneylines saved. Adding an evening pre-game GitHub Action run locks in closing odds before tip-off so we can prove real profit to investors.",
+      "title": "Load Frozen Archived Picks on Main Feed for Past Dates",
+      "description": "Prevents scrolling back to yesterday on the main feed from recalculating picks with today's new weights or updated records.",
       "change_spec": {
         "type": "manual_code",
         "target_files": [
-          ".github/workflows/daily_agents.yml",
-          "agent.py"
+          "app.js"
         ]
       },
-      "visual_preview_html": "<div style='background:#0b1220;border:1px solid #f59e0b;border-radius:10px;padding:10px;font-size:11px;'><b>Scheduled Pre-Game Capture:</b> Saves closing ML \u2192 unlocks verified <b>Net Units &amp; CLV %</b>.</div>"
+      "visual_preview_html": "<div style='background:#0b1220;border:1px solid #f59e0b;border-radius:10px;padding:10px;font-size:11px;'><b>Past Date View:</b> Reads locked picks directly from <code>history.json</code> so main feed matches Archive 100%.</div>"
     }
   ],
   "competitor_intel": {
@@ -235,26 +248,26 @@
         "name": "OddsJam / OddsShopper",
         "what_they_do": "Real-time +EV scanning, Kelly stake sizing, and closing line value (CLV) tracking.",
         "aligniq_edge": "Combines market consensus with proprietary Pattern + Form/Rest composite modeling.",
-        "gap_to_close": "Capture closing moneylines on every archived slate to publish verified CLV & ROI."
+        "gap_to_close": "Accumulate 50+ pre-game locked moneylines to publish verified CLV & ROI."
       },
       {
         "name": "Rithmm / Action Network",
         "what_they_do": "Displays instant Model % vs Market % edge pills and confidence tiers on the main feed.",
-        "aligniq_edge": "Transparent post-game autopsies and walk-forward self-auditing Agent Council.",
-        "gap_to_close": "Surface Edge Badges and live feature flags directly on feed cards."
+        "aligniq_edge": "Frozen pre-game audit trail with transparent post-game autopsies and walk-forward Agent Council.",
+        "gap_to_close": "Freeze past-date main feed views directly to history.json."
       }
     ]
   },
-  "chief_auditor_critique": "The model is rolling right now\u2014hitting 66.7% across 415 completed games over the last 60 days. I automatically applied 1 approved update(s) to your live config, and queued 3 new idea(s) in your Approvals tab.",
+  "chief_auditor_critique": "The model is in strong form\u2014hitting 78.5% across 186 verified games over the last 60 days. You have 3 suggestion(s) in Approvals\u2014auto-updates apply in 45s, and manual code ideas archive to your Dev Queue.",
   "app_health_audit": {
     "status": "ATTENTION NEEDED",
     "passed": [
       "Active config loaded (phase5-baseline)",
-      "Agent 1 & Agent 2 synced (2026-11-28 06:24 UTC)",
-      "Active live feature flags: 1"
+      "Clean verified dataset: 186 games (231 fallbacks quarantined)",
+      "Pre-game locked games: 0 \u00b7 Real Gematria games: 28/30"
     ],
     "issues": [
-      "Only 0/50 games have logged moneylines for ROI-first tuning.",
+      "Only 0/50 verified games have logged moneylines for ROI-first tuning.",
       "186 legacy archived games still use numeric IDs."
     ]
   }
