@@ -362,9 +362,11 @@
       const ha = dailyRep.app_health_audit || {};
       const pa = dailyRep.performance_analysis || {};
       const ba = dailyRep.before_and_after_performance || [];
-      const overList = pa.overvalued_factors || [];
-      const underList = pa.undervalued_factors || [];
-      const weakList = pa.recurring_weaknesses || [];
+      const ci = dailyRep.competitor_intel?.competitors_tracked || [];
+      const factors = Object.values(pa.factor_attribution || {});
+      const cal = Object.entries(pa.calibration || {});
+      const hits = pa.biggest_successes || [];
+      const misses = pa.biggest_failures || [];
 
       body.innerHTML = `${tabsHtml}
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
@@ -372,26 +374,72 @@
           <select class="form-input" style="height:34px;flex:1;" onchange="selectOwnerReportDate(this.value)">${reportDates.map(d => `<option value="${d}" ${d === selectedReportDate ? 'selected' : ''}>${d}</option>`).join('')}</select>
         </div>
 
-        <div class="proof-item">
-          <strong style="color:var(--accent);">🧠 Chief Auditor Cross-Check</strong>
-          <div class="proof-sub">${dailyRep.chief_auditor_critique || ''}</div>
-          <div class="proof-sub" style="margin-top:4px;font-size:10.5px;color:var(--text-dim);">Updated: ${dailyRep.generated_at ? new Date(dailyRep.generated_at).toLocaleString() : 'N/A'}</div>
+        <div class="proof-item arb-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="color:var(--accent);">🏛️ Investor Audit Score</strong>
+            <strong style="font-size:16px;">${dailyRep.investor_audit_score ?? '—'}/100</strong>
+          </div>
+          <div class="proof-sub" style="margin-top:4px;">${dailyRep.chief_auditor_critique || ''}</div>
+          <div class="proof-sub" style="font-size:10.5px;color:var(--text-dim);margin-top:4px;">
+            Config: <b>${dailyRep.algo_version || 'baseline'}</b> · Updated: ${dailyRep.generated_at ? new Date(dailyRep.generated_at).toLocaleString() : 'N/A'}
+          </div>
         </div>
 
         <div class="proof-item">
-          <strong style="color:var(--blue);">⚖️ Factor Bias &amp; Recurring Weaknesses</strong>
-          <div class="proof-sub"><b>Overvalued:</b> ${overList.length ? overList.join(', ') : 'None detected'}</div>
-          <div class="proof-sub"><b>Undervalued:</b> ${underList.length ? underList.join(', ') : 'None detected'}</div>
-          <div class="proof-sub" style="color:var(--amber);"><b>Weaknesses:</b> ${weakList.length ? weakList.join(' · ') : 'No systemic weaknesses flagged'}</div>
+          <strong style="color:var(--blue);">⚖️ Factor Attribution &amp; Bias</strong>
+          ${factors.length ? factors.map(f => `
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:11.5px;">
+              <span>${f.label}</span>
+              <span><b>${f.win_rate}%</b> (${f.agree_w}/${f.agree_n}) · <span style="color:${f.lift_vs_avg >= 0 ? 'var(--accent)' : 'var(--danger)'};">${f.lift_vs_avg >= 0 ? '+' : ''}${f.lift_vs_avg}%</span></span>
+            </div>
+          `).join('') : '<div class="proof-sub">Run daily_agents.yml to populate factor attribution.</div>'}
+          <div class="proof-sub" style="margin-top:6px;"><b>Overvalued:</b> ${(pa.overvalued_factors || []).join(', ') || 'None'}</div>
+          <div class="proof-sub"><b>Undervalued:</b> ${(pa.undervalued_factors || []).join(', ') || 'None'}</div>
         </div>
+
+        ${cal.length ? `
+          <div class="proof-item">
+            <strong style="color:var(--accent);">🎯 Confidence Calibration</strong>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;">
+              ${cal.map(([tier, m]) => `
+                <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px;text-align:center;">
+                  <div style="font-size:10px;color:var(--text-muted);">${tier}</div>
+                  <div style="font-size:14px;font-weight:800;color:var(--blue);">${m.win_rate}%</div>
+                  <div style="font-size:10px;color:var(--text-dim);">${m.wins}/${m.total}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        ${(hits.length || misses.length) ? `
+          <div class="proof-item">
+            <strong style="color:var(--blue);">🏆 Biggest Hits &amp; Misses</strong>
+            ${hits.slice(0, 3).map(h => `<div class="proof-sub" style="color:var(--accent);">✓ ${h.league} ${h.matchup} (${h.confidence}% conf · ${h.score})</div>`).join('')}
+            ${misses.slice(0, 3).map(m => `<div class="proof-sub" style="color:var(--danger);">✕ ${m.league} ${m.matchup} (${m.confidence}% conf · ${m.score})</div>`).join('')}
+          </div>
+        ` : ''}
 
         ${ba.length ? `
           <div class="proof-item">
-            <strong style="color:var(--accent);">📈 Before &amp; After Algorithm Impact</strong>
+            <strong style="color:var(--accent);">📈 Implemented Changes (Before &amp; After)</strong>
             ${ba.map(c => `
               <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;margin-top:6px;font-size:11px;">
-                <strong>${c.proposal_id}</strong> · <span style="color:var(--blue);">${c.impact}</span>
+                <strong>[${c.category || 'ALGO'}] ${c.title || c.proposal_id}</strong> · <span style="color:var(--blue);">${c.impact}</span>
                 <div class="proof-sub">Baseline: ${c.baseline_wr}% → Current: ${c.current_wr}%</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        ${ci.length ? `
+          <div class="proof-item">
+            <strong style="color:var(--blue);">🕵️ Competitor Intelligence</strong>
+            ${ci.map(c => `
+              <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;margin-top:6px;font-size:11px;">
+                <strong>${c.name}</strong>
+                <div class="proof-sub"><b>Edge:</b> ${c.aligniq_edge}</div>
+                <div class="proof-sub" style="color:var(--amber);"><b>Gap to Close:</b> ${c.gap_to_close}</div>
               </div>
             `).join('')}
           </div>
@@ -408,12 +456,13 @@
     } else {
       const props = dailyRep?.pending_proposals || [];
       body.innerHTML = `${tabsHtml}
-        <div class="proof-item arb-box" style="font-size:11.5px;"><strong>🔒 Owner Approval Gate Active</strong> — Approved weight changes execute via GitHub Actions automatically (~45s).</div>
+        <div class="proof-item arb-box" style="font-size:11.5px;"><strong>🔒 Owner Approval Gate Active</strong> — Approved weight &amp; feature changes execute via GitHub Actions automatically (~45s).</div>
         ${props.length ? props.map(p => {
           const st = approvalState[p.id] || {};
           const safeTitle = escapeAttr(p.title);
           const specB64 = btoa(JSON.stringify(p.change_spec || null));
           const displayStatus = st.status === 'IMPLEMENTED' ? 'IMPLEMENTED' : (st.decision || 'PENDING REVIEW');
+          const catTag = p.category ? `<span style="font-size:9.5px;font-weight:800;color:var(--blue);margin-right:6px;">[${p.category}]</span>` : '';
           const badge = st.decision
             ? `<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.decision === 'APPROVED' ? 'var(--accent-soft)' : st.decision === 'REJECTED' ? 'rgba(239,68,68,0.18)' : 'rgba(245,158,11,0.18)'};color:${st.decision === 'APPROVED' ? 'var(--accent)' : st.decision === 'REJECTED' ? 'var(--danger)' : 'var(--amber)'};">${displayStatus}</span>`
             : `<span style="font-size:10px;font-weight:800;color:var(--blue);">PENDING REVIEW</span>`;
@@ -431,7 +480,7 @@
           return `
             <div class="proof-item">
               <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                <strong>${p.title}</strong>
+                <strong>${catTag}${p.title}</strong>
                 ${badge}
               </div>
               ${syncTag}
