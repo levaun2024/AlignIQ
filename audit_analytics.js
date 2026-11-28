@@ -35,7 +35,6 @@
     return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // Grades legacy history.json entries accurately even before GitHub Actions backfills them
   function scoreHistoryGame(g, fallbackWeights) {
     const w = (g.weights_used && typeof g.weights_used.h2h === 'number')
       ? g.weights_used
@@ -59,7 +58,6 @@
     return { pick, confidence: Math.round(clamp(50 + Math.abs(hScore - aScore) * 0.5, 50, 99)), isUnderdog: Boolean(marketDog && pick === marketDog) };
   }
 
-  // Opens FULL ESPN post-game boxscore, team stats, leaders & autopsy when an archived game is tapped
   window.openArchivedGameDetail = async (league, gameId, dateStr) => {
     const body = document.getElementById('graded-audit-body');
     if (!body) return;
@@ -132,7 +130,6 @@
     `;
   };
 
-  // --- 1. GRADED PICKS & POST-GAME AUTOPSY MODAL ---
   window.openGradedAuditModal = async (overrideDate = null) => {
     const modal = document.getElementById('graded-audit-modal');
     const body = document.getElementById('graded-audit-body');
@@ -158,8 +155,8 @@
     let wins = 0;
     const cardsHtml = games.map((g) => {
       const actual = String(g.actual_winner || '').toLowerCase().trim();
-      let pickSide = String(g.pick || '').toLowerCase().trim();
-      let conf = g.confidence;
+      let pickSide = String(g.original_pick || g.pick || '').toLowerCase().trim();
+      let conf = g.original_confidence || g.confidence;
       let isWin = false;
 
       if (actual === 'home' || actual === 'away') {
@@ -223,17 +220,18 @@
     `;
   };
 
-  // --- 2. OWNER COMMAND CENTER ---
+  // --- OWNER COMMAND CENTER ---
   window.switchOwnerTab = (tab) => { ownerTab = tab; renderOwnerModal(); };
   window.selectOwnerReportDate = (d) => { selectedReportDate = d; renderOwnerModal(); };
 
-window.setProposalDecision = async (propId, decision, title = '', changeSpecB64 = '') => {
+  window.setProposalDecision = async (propId, decision, title = '', changeSpecB64 = '') => {
     const noteEl = document.getElementById(`prop-note-${propId}`);
     const notes = noteEl ? noteEl.value.trim() : '';
     let changeSpec = null;
     try { if (changeSpecB64) changeSpec = JSON.parse(atob(changeSpecB64)); } catch {}
 
     approvalState[propId] = {
+      ...(approvalState[propId] || {}),
       title: title || propId,
       decision,
       notes,
@@ -241,6 +239,7 @@ window.setProposalDecision = async (propId, decision, title = '', changeSpecB64 
       syncing: true,
       syncedToGitHub: false,
       workflowTriggered: false,
+      syncError: null,
       updated_at: new Date().toISOString()
     };
     localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
@@ -258,15 +257,24 @@ window.setProposalDecision = async (propId, decision, title = '', changeSpecB64 
         approvalState[propId].syncing = false;
         approvalState[propId].syncedToGitHub = Boolean(res && res.ok);
         approvalState[propId].workflowTriggered = Boolean(res && res.workflowTriggered);
-        if (!res || !res.ok) approvalState[propId].syncError = res?.error || 'Sync failed';
-        else if (res.workflowTriggered) {
-          // Auto-refresh Daily Reports once GitHub Actions finishes executing (~45s)
-          setTimeout(() => { if (document.getElementById('owner-analytics-modal')?.classList.contains('open')) renderOwnerModal(); }, 45000);
+        if (!res || !res.ok) {
+          approvalState[propId].syncError = res?.error || 'Sync failed';
+        } else if (res.workflowTriggered) {
+          setTimeout(() => {
+            if (document.getElementById('owner-analytics-modal')?.classList.contains('open')) {
+              renderOwnerModal();
+            }
+          }, 45000);
         }
       } catch (err) {
         approvalState[propId].syncing = false;
         approvalState[propId].syncError = err?.message || 'Network error';
       }
+      localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
+      renderOwnerModal();
+    } else {
+      approvalState[propId].syncing = false;
+      approvalState[propId].syncError = 'Missing window.ownerWorkerCall in security.js';
       localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
       renderOwnerModal();
     }
@@ -351,28 +359,70 @@ window.setProposalDecision = async (propId, decision, title = '', changeSpecB64 
       }
     } else if (ownerTab === 'reports') {
       if (!dailyRep) { body.innerHTML = `${tabsHtml}<div class="proof-item warn">Run your GitHub Action once to generate today's report.</div>`; return; }
-      const ha = dailyRep.app_health_audit || {}, ci = dailyRep.competitor_intel || {};
+      const ha = dailyRep.app_health_audit || {};
+      const pa = dailyRep.performance_analysis || {};
+      const ba = dailyRep.before_and_after_performance || [];
+      const overList = pa.overvalued_factors || [];
+      const underList = pa.undervalued_factors || [];
+      const weakList = pa.recurring_weaknesses || [];
+
       body.innerHTML = `${tabsHtml}
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
           <label style="font-size:11px;font-weight:700;color:var(--text-muted);">Report Date:</label>
           <select class="form-input" style="height:34px;flex:1;" onchange="selectOwnerReportDate(this.value)">${reportDates.map(d => `<option value="${d}" ${d === selectedReportDate ? 'selected' : ''}>${d}</option>`).join('')}</select>
         </div>
-        <div class="proof-item"><strong style="color:var(--accent);">🧠 Chief Auditor Cross-Check</strong><div class="proof-sub">${dailyRep.chief_auditor_critique || ''}</div></div>
-        <div class="proof-item ${ha.status === 'HEALTHY' ? '' : 'warn'}"><strong>🩺 App Health Audit: ${ha.status || 'OK'}</strong><ul style="margin:6px 0 0 16px;padding:0;font-size:11.5px;color:var(--text-muted);">${(ha.passed || []).map(x => `<li style="color:var(--accent);">✓ ${x}</li>`).join('')}${(ha.issues || []).map(x => `<li style="color:var(--amber);">⚠ ${x}</li>`).join('')}</ul></div>
-        <div class="proof-item"><strong style="color:var(--blue);">🕵️ Competitor Intelligence</strong>${(ci.competitors_tracked || []).map(c => `<div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:8px;"><strong>${c.name}</strong><div class="proof-sub"><b>Doing:</b> ${c.what_they_do}</div><div class="proof-sub" style="color:var(--accent);"><b>AlignIQ Edge:</b> ${c.aligniq_edge}</div><div class="proof-sub" style="color:var(--blue);"><b>Opportunity:</b> ${c.gap_to_close}</div></div>`).join('')}</div>
+
+        <div class="proof-item">
+          <strong style="color:var(--accent);">🧠 Chief Auditor Cross-Check</strong>
+          <div class="proof-sub">${dailyRep.chief_auditor_critique || ''}</div>
+          <div class="proof-sub" style="margin-top:4px;font-size:10.5px;color:var(--text-dim);">Updated: ${dailyRep.generated_at ? new Date(dailyRep.generated_at).toLocaleString() : 'N/A'}</div>
+        </div>
+
+        <div class="proof-item">
+          <strong style="color:var(--blue);">⚖️ Factor Bias &amp; Recurring Weaknesses</strong>
+          <div class="proof-sub"><b>Overvalued:</b> ${overList.length ? overList.join(', ') : 'None detected'}</div>
+          <div class="proof-sub"><b>Undervalued:</b> ${underList.length ? underList.join(', ') : 'None detected'}</div>
+          <div class="proof-sub" style="color:var(--amber);"><b>Weaknesses:</b> ${weakList.length ? weakList.join(' · ') : 'No systemic weaknesses flagged'}</div>
+        </div>
+
+        ${ba.length ? `
+          <div class="proof-item">
+            <strong style="color:var(--accent);">📈 Before &amp; After Algorithm Impact</strong>
+            ${ba.map(c => `
+              <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;margin-top:6px;font-size:11px;">
+                <strong>${c.proposal_id}</strong> · <span style="color:var(--blue);">${c.impact}</span>
+                <div class="proof-sub">Baseline: ${c.baseline_wr}% → Current: ${c.current_wr}%</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        <div class="proof-item ${ha.status === 'HEALTHY' ? '' : 'warn'}">
+          <strong>🩺 App Health Audit: ${ha.status || 'OK'}</strong>
+          <ul style="margin:6px 0 0 16px;padding:0;font-size:11.5px;color:var(--text-muted);">
+            ${(ha.passed || []).map(x => `<li style="color:var(--accent);">✓ ${x}</li>`).join('')}
+            ${(ha.issues || []).map(x => `<li style="color:var(--amber);">⚠ ${x}</li>`).join('')}
+          </ul>
+        </div>
       `;
     } else {
       const props = dailyRep?.pending_proposals || [];
       body.innerHTML = `${tabsHtml}
-        <div class="proof-item arb-box" style="font-size:11.5px;"><strong>🔒 Owner Approval Gate Active</strong> — Decisions commit directly to <code>owner_approvals.json</code> on GitHub.</div>
+        <div class="proof-item arb-box" style="font-size:11.5px;"><strong>🔒 Owner Approval Gate Active</strong> — Approved weight changes execute via GitHub Actions automatically (~45s).</div>
         ${props.length ? props.map(p => {
           const st = approvalState[p.id] || {};
           const safeTitle = escapeAttr(p.title);
+          const specB64 = btoa(JSON.stringify(p.change_spec || null));
+          const displayStatus = st.status === 'IMPLEMENTED' ? 'IMPLEMENTED' : (st.decision || 'PENDING REVIEW');
           const badge = st.decision
-            ? `<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.decision === 'APPROVED' ? 'var(--accent-soft)' : st.decision === 'REJECTED' ? 'rgba(239,68,68,0.18)' : 'rgba(245,158,11,0.18)'};color:${st.decision === 'APPROVED' ? 'var(--accent)' : st.decision === 'REJECTED' ? 'var(--danger)' : 'var(--amber)'};">${st.decision}</span>`
+            ? `<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.decision === 'APPROVED' ? 'var(--accent-soft)' : st.decision === 'REJECTED' ? 'rgba(239,68,68,0.18)' : 'rgba(245,158,11,0.18)'};color:${st.decision === 'APPROVED' ? 'var(--accent)' : st.decision === 'REJECTED' ? 'var(--danger)' : 'var(--amber)'};">${displayStatus}</span>`
             : `<span style="font-size:10px;font-weight:800;color:var(--blue);">PENDING REVIEW</span>`;
           const syncTag = st.syncing
-            ? `<div style="font-size:10px;color:var(--blue);margin-top:4px;">⏳ Syncing to GitHub...</div>`
+            ? `<div style="font-size:10px;color:var(--blue);margin-top:4px;">⏳ Syncing to GitHub &amp; triggering agents...</div>`
+            : st.status === 'IMPLEMENTED'
+            ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Executed &amp; persisted to algo_config.json</div>`
+            : st.workflowTriggered
+            ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Synced &amp; GitHub Action triggered (refreshing in ~45s)</div>`
             : st.syncedToGitHub
             ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Synced to GitHub (owner_approvals.json)</div>`
             : st.syncError
@@ -390,9 +440,9 @@ window.setProposalDecision = async (propId, decision, title = '', changeSpecB64 
               <div style="margin-bottom:10px;">${p.visual_preview_html || ''}</div>
               <input id="prop-note-${p.id}" class="form-input" style="height:34px;font-size:12px;margin-bottom:8px;" value="${escapeAttr(st.notes || '')}" placeholder="Request changes (e.g. change color, move position)..." />
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
-                <button class="icon-btn accent" onclick="setProposalDecision('${p.id}', 'APPROVED', '${safeTitle}')">✓ Approve</button>
-                <button class="icon-btn" style="border-color:var(--amber);color:var(--amber);" onclick="setProposalDecision('${p.id}', 'CHANGES REQUESTED', '${safeTitle}')">✎ Modify</button>
-                <button class="icon-btn" style="border-color:var(--danger);color:var(--danger);" onclick="setProposalDecision('${p.id}', 'REJECTED', '${safeTitle}')">✕ Reject</button>
+                <button class="icon-btn accent" onclick="setProposalDecision('${p.id}', 'APPROVED', '${safeTitle}', '${specB64}')">✓ Approve</button>
+                <button class="icon-btn" style="border-color:var(--amber);color:var(--amber);" onclick="setProposalDecision('${p.id}', 'CHANGES REQUESTED', '${safeTitle}', '${specB64}')">✎ Modify</button>
+                <button class="icon-btn" style="border-color:var(--danger);color:var(--danger);" onclick="setProposalDecision('${p.id}', 'REJECTED', '${safeTitle}', '${specB64}')">✕ Reject</button>
               </div>
             </div>
           `;
