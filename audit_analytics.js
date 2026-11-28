@@ -227,16 +227,20 @@
   window.switchOwnerTab = (tab) => { ownerTab = tab; renderOwnerModal(); };
   window.selectOwnerReportDate = (d) => { selectedReportDate = d; renderOwnerModal(); };
 
-  window.setProposalDecision = async (propId, decision, title = '') => {
+window.setProposalDecision = async (propId, decision, title = '', changeSpecB64 = '') => {
     const noteEl = document.getElementById(`prop-note-${propId}`);
     const notes = noteEl ? noteEl.value.trim() : '';
+    let changeSpec = null;
+    try { if (changeSpecB64) changeSpec = JSON.parse(atob(changeSpecB64)); } catch {}
 
     approvalState[propId] = {
       title: title || propId,
       decision,
       notes,
+      change_spec: changeSpec,
       syncing: true,
       syncedToGitHub: false,
+      workflowTriggered: false,
       updated_at: new Date().toISOString()
     };
     localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
@@ -248,21 +252,21 @@
           proposalId: propId,
           title: title || propId,
           decision,
-          notes
+          notes,
+          changeSpec
         });
         approvalState[propId].syncing = false;
         approvalState[propId].syncedToGitHub = Boolean(res && res.ok);
+        approvalState[propId].workflowTriggered = Boolean(res && res.workflowTriggered);
         if (!res || !res.ok) approvalState[propId].syncError = res?.error || 'Sync failed';
+        else if (res.workflowTriggered) {
+          // Auto-refresh Daily Reports once GitHub Actions finishes executing (~45s)
+          setTimeout(() => { if (document.getElementById('owner-analytics-modal')?.classList.contains('open')) renderOwnerModal(); }, 45000);
+        }
       } catch (err) {
         approvalState[propId].syncing = false;
-        approvalState[propId].syncedToGitHub = false;
         approvalState[propId].syncError = err?.message || 'Network error';
       }
-      localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
-      renderOwnerModal();
-    } else {
-      approvalState[propId].syncing = false;
-      approvalState[propId].syncError = 'Missing window.ownerWorkerCall in security.js';
       localStorage.setItem('aligniq_owner_approvals', JSON.stringify(approvalState));
       renderOwnerModal();
     }

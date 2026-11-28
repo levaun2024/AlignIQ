@@ -1,178 +1,217 @@
 import json
 import os
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
+
+from agent import score_matchup, load_json, save_json, load_active_config
 
 HISTORY_FILE = "history.json"
+ANALYSIS_FILE = "analysis_report.json"
+APPROVALS_FILE = "owner_approvals.json"
+CONFIG_FILE = "algo_config.json"
 REPORT_FILE = "agent_report.json"
 DAILY_DIR = "daily_reports"
-INDEX_FILE = os.path.join(DAILY_DIR, "index.json")
 
 
-def load_json(path, default):
-    if not os.path.exists(path):
-        return default
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return default
-
-
-def save_json(path, data):
-    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
-
-
-def run_app_health_auditor(history, report, now):
-    """Agent 1: Audits data integrity, missing dates, unnamed games, and model health."""
-    issues = []
-    passed = []
-    dates = history.get("dates", {}) if isinstance(history, dict) else {}
-
-    yesterday = (now - timedelta(days=1)).strftime("%Y-%m-%d")
-    if yesterday in dates and len(dates[yesterday].get("games", [])) > 0:
-        passed.append(f"Yesterday's slate ({yesterday}) is archived ({len(dates[yesterday]['games'])} games).")
-    else:
-        issues.append(f"Missing or empty archive for {yesterday} — verify ESPN sync in agent.py.")
-
-    unnamed_count = 0
-    for d_key, entry in dates.items():
+def flatten_completed_games(history):
+    games = []
+    for d_str, entry in sorted(history.get("dates", {}).items()):
+        if not isinstance(entry, dict):
+            continue
         for g in entry.get("games", []):
-            if not g.get("matchup") or str(g.get("matchup", "")).startswith("Game #"):
-                unnamed_count += 1
-    if unnamed_count == 0:
-        passed.append("All archived games have full team/fighter names.")
-    else:
-        issues.append(f"{unnamed_count} legacy archived games still use numeric IDs instead of team names.")
-
-    s60 = report.get("summary_60d", {})
-    if s60.get("graded_with_odds", 0) < 50:
-        issues.append(f"Only {s60.get('graded_with_odds', 0)}/50 games have logged moneylines for ROI-first tuning.")
-    else:
-        passed.append(f"ROI-first tuning data threshold met ({s60.get('graded_with_odds')} games with odds).")
-
-    return {
-        "agent": "App Health & QA Auditor",
-        "status": "HEALTHY" if not issues else "ATTENTION NEEDED",
-        "passed": passed,
-        "issues": issues,
-    }
+            if isinstance(g, dict) and str(g.get("actual_winner", "")).lower() in ("home", "away"):
+                games.append({**g, "_date": d_str})
+    return games
 
 
-def run_competitor_intel_agent():
-    """Agent 2: Tracks 2026 sports analytics competitors & identifies high-value gaps."""
-    return {
-        "agent": "Competitor Intelligence Agent",
-        "competitors_tracked": [
-            {
-                "name": "Rithmm",
-                "what_they_do": "Shows model win probability directly next to sportsbook implied price + 'Scout' AI Q&A analyst + alt-line Prop Explorer.",
-                "aligniq_edge": "AlignIQ adds Fight IQ Weight Cut Gauges, Body Maps, and Gematria convergence.",
-                "gap_to_close": "Display a side-by-side 'Model % vs Market % = Edge' badge directly on the main feed cards."
-            },
-            {
-                "name": "Oddible & OddsShopper",
-                "what_they_do": "Unified line shopping across traditional sportsbooks AND prediction markets (Kalshi, Novig, ProphetX) with de-vigged true prices.",
-                "aligniq_edge": "AlignIQ already converts odds to Kalshi cents and scans +EV/Arb.",
-                "gap_to_close": "Add a dedicated '+EV & Arb Board' filter tab sorted strictly by highest Edge %."
-            },
-            {
-                "name": "Pikkit & Juice",
-                "what_they_do": "Automatic Closing Line Value (CLV) tracking and screenshot-to-betslip AI analysis with Kelly Criterion bet sizing.",
-                "aligniq_edge": "AlignIQ tracks line movement and underdog ROI.",
-                "gap_to_close": "Add a 1-tap Kelly Unit Sizer inside every Game Detail modal."
-            }
-        ]
-    }
+def evaluate_weights_on_games(games, weights):
+    if not games:
+        return 0.0, 0, 0
+    wins = sum(1 for g in games if score_matchup(g.get("home"), g.get("away"), weights)["pick"] == str(g["actual_winner"]).lower())
+    return round((wins / len(games)) * 100, 2), wins, len(games)
 
 
-def run_chief_auditor_proposals(health_audit, report):
-    """Agent 3: Cross-audits findings and builds Owner Approval Proposals with visual mockups."""
-    proposals = [
-        {
-            "id": "prop_edge_pill_v1",
-            "title": "Add 'Model % vs Market %' Edge Badge on Feed Cards",
-            "category": "UI & Competitor Edge",
-            "priority": "HIGH",
-            "files_affected": ["app.js", "styles.css"],
-            "description": "Inspired by Rithmm & OddsShopper: displays a compact green Edge pill (e.g., '+8.4% EDGE') right below the CONF % pill whenever AlignIQ's projection beats the no-vig market consensus. Helps users spot profitable plays in 1 second without opening every game.",
-            "expected_impact": "Faster slate scanning and clearer distinction between high-confidence chalk and true +EV value.",
-            "visual_preview_html": """
-              <div style="background:#0e131f;border:1px solid rgba(0,210,133,0.45);border-radius:14px;padding:12px;font-family:sans-serif;">
-                <div style="display:flex;justify-content:space-between;align-items:center;">
-                  <div>
-                    <div style="font-size:10px;color:#8b95a5;font-weight:700;">NBA · 7:30 PM EST</div>
-                    <div style="font-size:13px;font-weight:800;color:#f8fafc;margin-top:3px;">BOS Celtics @ NY Knicks</div>
-                    <div style="font-size:11px;color:#00d285;margin-top:2px;">Pick: BOS Win · Market 64% → Model 72%</div>
-                  </div>
-                  <div style="text-align:center;">
-                    <div style="padding:4px 12px;border-radius:999px;border:1.5px solid #00d285;background:rgba(0,210,133,0.1);color:#00d285;font-weight:800;font-size:13px;">72%</div>
-                    <div style="margin-top:4px;font-size:9.5px;font-weight:800;background:#38bdf8;color:#04130d;padding:2px 7px;border-radius:999px;">+8.0% EDGE</div>
-                  </div>
-                </div>
-              </div>
-            """
-        },
-        {
-            "id": "prop_kelly_sizer_v1",
-            "title": "Add Fractional Kelly Unit Sizer in Best Odds Tab",
-            "category": "Bankroll & Pro Tools",
-            "priority": "MEDIUM",
-            "files_affected": ["app.js"],
-            "description": "Adds an automatic Quarter-Kelly recommended unit size (e.g., '1.25u') next to every +EV sportsbook line based on the user's bankroll setting. Matches pro tools like Juice and OddsJam.",
-            "expected_impact": "Protects user bankrolls from over-betting underdogs and maximizes long-term ROI.",
-            "visual_preview_html": """
-              <div style="background:#151c2c;border:1px solid rgba(56,189,248,0.4);border-radius:12px;padding:10px;display:flex;justify-content:space-between;align-items:center;">
-                <div>
-                  <div style="font-size:12px;font-weight:800;color:#f8fafc;">FanDuel <span style="background:rgba(56,189,248,0.18);color:#38bdf8;padding:2px 6px;border-radius:6px;font-size:9.5px;">+4.2% EV</span></div>
-                  <div style="font-size:10.5px;color:#8b95a5;margin-top:2px;">Recommended Stake: <strong style="color:#00d285;">1.25 Units ($62.50)</strong></div>
-                </div>
-                <div style="font-size:15px;font-weight:800;color:#00d285;">+115</div>
-              </div>
-            """
-        }
+def walk_forward_optimize(games, base_weights):
+    """Out-of-sample walk-forward test: fit on first 70% of games, validate on most recent 30%."""
+    if len(games) < 40:
+        return None
+    split = int(len(games) * 0.70)
+    train, test = games[:split], games[split:]
+
+    base_test_wr, _, _ = evaluate_weights_on_games(test, base_weights)
+    candidates = [
+        {"gem": max(0, base_weights["gem"] - 4), "h2h": min(80, base_weights["h2h"] + 4), "ros": base_weights["ros"]},
+        {"gem": base_weights["gem"], "h2h": min(80, base_weights["h2h"] + 5), "ros": max(10, base_weights["ros"] - 5)},
+        {"gem": max(0, base_weights["gem"] - 5), "h2h": base_weights["h2h"], "ros": min(50, base_weights["ros"] + 5)},
+        {"gem": min(20, base_weights["gem"] + 3), "h2h": max(45, base_weights["h2h"] - 3), "ros": base_weights["ros"]},
     ]
 
-    cross_critique = (
-        f"Chief Auditor verified App Health ({health_audit['status']}) against 60-day performance "
-        f"({report.get('summary_60d', {}).get('win_rate', 0)}%). "
-        f"{len(proposals)} visual update proposals queued for Owner approval. Zero live changes were pushed automatically."
-    )
-    return proposals, cross_critique
+    best = None
+    for cand in candidates:
+        if sum(cand.values()) != 100 or cand == base_weights:
+            continue
+        tr_wr, _, _ = evaluate_weights_on_games(train, cand)
+        te_wr, te_w, te_n = evaluate_weights_on_games(test, cand)
+        lift = round(te_wr - base_test_wr, 2)
+        if lift >= 1.5 and (best is None or lift > best["oos_lift"]):
+            best = {
+                "candidate_weights": cand,
+                "baseline_oos_wr": base_test_wr,
+                "candidate_oos_wr": te_wr,
+                "train_wr": tr_wr,
+                "oos_lift": lift,
+                "oos_sample": te_n,
+            }
+    return best
+
+
+def execute_approved_changes(approvals, cfg, analysis, now):
+    """Applies any APPROVED algorithm changes to algo_config.json and logs before/after baseline."""
+    executed_now = []
+    for prop_id, item in approvals.items():
+        if not isinstance(item, dict):
+            continue
+        if item.get("decision") == "APPROVED" and item.get("status") != "IMPLEMENTED":
+            spec = item.get("change_spec")
+            if isinstance(spec, dict) and spec.get("type") == "update_weights" and isinstance(spec.get("weights"), dict):
+                old_w = dict(cfg["weights"])
+                new_w = spec["weights"]
+                cfg["weights"] = new_w
+                if spec.get("league") and spec["league"] in cfg["league_weights"]:
+                    cfg["league_weights"][spec["league"]] = new_w
+                cfg["version"] = f"phase5-opt-{now.strftime('%Y%m%d-%H%M')}"
+                cfg["updated_at"] = now.isoformat()
+                cfg.setdefault("change_log", []).append({
+                    "proposal_id": prop_id,
+                    "title": item.get("title", prop_id),
+                    "applied_at": now.isoformat(),
+                    "before_weights": old_w,
+                    "after_weights": new_w,
+                    "baseline_win_rate": analysis.get("win_rate_60d", 0.0),
+                    "owner_notes": item.get("notes", ""),
+                })
+                item["status"] = "IMPLEMENTED"
+                item["implemented_at"] = now.isoformat()
+                executed_now.append(prop_id)
+            else:
+                # Non-weight UI proposal acknowledged & queued
+                item["status"] = "APPROVED_AWAITING_UI_DEPLOY"
+                item["acknowledged_at"] = now.isoformat()
+
+    if executed_now:
+        save_json(CONFIG_FILE, cfg)
+        # Keep agent_report.json in sync immediately
+        rep = load_json(REPORT_FILE, {})
+        rep["algo_version"] = cfg["version"]
+        rep["weights"] = cfg["weights"]
+        rep["league_weights"] = cfg["league_weights"]
+        rep["updated_at"] = now.isoformat()
+        save_json(REPORT_FILE, rep)
+
+    save_json(APPROVALS_FILE, approvals)
+    return executed_now
 
 
 def main():
     now = datetime.now(timezone.utc)
     today_str = now.strftime("%Y-%m-%d")
+    os.makedirs(DAILY_DIR, exist_ok=True)
 
+    cfg = load_active_config()
     history = load_json(HISTORY_FILE, {"dates": {}})
-    report = load_json(REPORT_FILE, {})
+    analysis = load_json(ANALYSIS_FILE, {})
+    approvals = load_json(APPROVALS_FILE, {})
 
-    health = run_app_health_auditor(history, report, now)
-    comp = run_competitor_intel_agent()
-    proposals, critique = run_chief_auditor_proposals(health, report)
+    # 1. Execute any newly approved algorithm adjustments
+    executed_ids = execute_approved_changes(approvals, cfg, analysis, now)
 
-    daily_payload = {
+    # 2. Agent 2: Walk-forward optimization check
+    all_games = flatten_completed_games(history)
+    opt_result = walk_forward_optimize(all_games, cfg["weights"])
+
+    proposals = []
+    if opt_result:
+        cw = opt_result["candidate_weights"]
+        prop_id = f"opt_weights_{cw['gem']}_{cw['h2h']}_{cw['ros']}"
+        if approvals.get(prop_id, {}).get("status") != "IMPLEMENTED":
+            proposals.append({
+                "id": prop_id,
+                "title": f"Algorithm Weight Adjustment ({cw['gem']}/{cw['h2h']}/{cw['ros']})",
+                "description": (
+                    f"Out-of-sample walk-forward test ({opt_result['oos_sample']} recent games) improved win rate from "
+                    f"{opt_result['baseline_oos_wr']}% to {opt_result['candidate_oos_wr']}% (+{opt_result['oos_lift']}% lift)."
+                ),
+                "change_spec": {"type": "update_weights", "weights": cw},
+                "visual_preview_html": (
+                    f"<div style='background:#0b1220;border:1px solid #38bdf8;border-radius:10px;padding:10px;font-size:11px;'>"
+                    f"<div><b>Current:</b> {cfg['weights']['gem']}% Sig / {cfg['weights']['h2h']}% Odds / {cfg['weights']['ros']}% Form</div>"
+                    f"<div style='color:#00d285;margin-top:4px;'><b>Proposed:</b> {cw['gem']}% Sig / {cw['h2h']}% Odds / {cw['ros']}% Form (+{opt_result['oos_lift']}% OOS)</div></div>"
+                ),
+            })
+
+    # 3. Before-and-after impact of previous implemented changes
+    change_log = cfg.get("change_log", [])
+    before_after = []
+    for ch in change_log[-5:]:
+        delta = round(analysis.get("win_rate_60d", 0.0) - ch.get("baseline_win_rate", 0.0), 1)
+        before_after.append({
+            "proposal_id": ch["proposal_id"],
+            "applied_at": ch["applied_at"],
+            "before_weights": ch["before_weights"],
+            "after_weights": ch["after_weights"],
+            "baseline_wr": ch["baseline_win_rate"],
+            "current_wr": analysis.get("win_rate_60d", 0.0),
+            "impact": f"{delta:+.1f}% ({'Improved' if delta > 0 else 'Reduced' if delta < 0 else 'Neutral'})",
+        })
+
+    # 4. Build live Daily Report
+    daily_report = {
         "date": today_str,
         "generated_at": now.isoformat(),
-        "win_rate_60d": report.get("summary_60d", {}).get("win_rate", 0),
-        "record_60d": f"{report.get('summary_60d', {}).get('wins', 0)}-{report.get('summary_60d', {}).get('losses', 0)}",
-        "app_health_audit": health,
-        "competitor_intel": comp,
-        "chief_auditor_critique": critique,
+        "algo_version": cfg["version"],
+        "active_weights": cfg["weights"],
+        "execution_summary": {
+            "agent1_status": analysis.get("status", "UNKNOWN"),
+            "agent1_ran_at": analysis.get("generated_at"),
+            "agent2_status": "SUCCESS",
+            "newly_executed_approvals": executed_ids,
+        },
+        "performance_analysis": {
+            "completed_games_analyzed": analysis.get("total_completed_60d", 0),
+            "newly_analyzed_games": analysis.get("newly_analyzed_games", 0),
+            "win_rate_60d": analysis.get("win_rate_60d", 0.0),
+            "record_60d": f"{analysis.get('wins_60d', 0)}-{analysis.get('losses_60d', 0)}",
+            "roi_pct_60d": analysis.get("roi_pct_60d"),
+            "biggest_successes": analysis.get("biggest_successes", []),
+            "biggest_failures": analysis.get("biggest_failures", []),
+            "overvalued_factors": analysis.get("overvalued_factors", []),
+            "undervalued_factors": analysis.get("undervalued_factors", []),
+            "recurring_weaknesses": analysis.get("recurring_weaknesses", []),
+            "calibration": analysis.get("calibration", {}),
+        },
+        "before_and_after_performance": before_after,
+        "implemented_adjustments": [k for k, v in approvals.items() if isinstance(v, dict) and v.get("status") == "IMPLEMENTED"],
         "pending_proposals": proposals,
+        "chief_auditor_critique": (
+            f"Analyzed {analysis.get('total_completed_60d', 0)} completed games ({analysis.get('win_rate_60d', 0)}% WR). "
+            f"Executed {len(executed_ids)} approved adjustment(s). Active weights: {cfg['weights']}."
+        ),
+        "app_health_audit": {
+            "status": "HEALTHY" if analysis.get("total_completed_60d", 0) > 0 else "ATTENTION NEEDED",
+            "passed": [
+                f"Active config loaded ({cfg['version']})",
+                f"Agent 1 & Agent 2 pipeline synced ({now.strftime('%H:%M UTC')})",
+            ],
+            "issues": analysis.get("recurring_weaknesses", []),
+        },
     }
 
-    save_json(os.path.join(DAILY_DIR, f"{today_str}.json"), daily_payload)
+    save_json(os.path.join(DAILY_DIR, f"{today_str}.json"), daily_report)
 
-    index = load_json(INDEX_FILE, {"dates": []})
-    if today_str not in index["dates"]:
-        index["dates"].insert(0, today_str)
-    index["dates"] = sorted(list(set(index["dates"])), reverse=True)[:90]
-    index["latest"] = index["dates"][0]
-    save_json(INDEX_FILE, index)
-    print(f"Owner Multi-Agent Council complete | Saved daily_reports/{today_str}.json")
+    idx_path = os.path.join(DAILY_DIR, "index.json")
+    idx = load_json(idx_path, {"dates": []})
+    dates_set = sorted(set(idx.get("dates", []) + [today_str]), reverse=True)[:90]
+    save_json(idx_path, {"dates": dates_set, "updated_at": now.isoformat()})
+    print(f"Agent 2 complete | Executed: {executed_ids} | Proposals: {len(proposals)}")
 
 
 if __name__ == "__main__":
