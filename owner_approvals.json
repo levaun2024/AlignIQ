@@ -11,5 +11,18 @@
     },
     "status": "IMPLEMENTED",
     "implemented_at": "2026-11-28T06:24:53.329813+00:00"
+  },
+  "prop_edge_badge_v1": {
+    "title": "Turn On '+EDGE' Badges on Feed Cards",
+    "decision": "APPROVED",
+    "notes": "",
+    "change_spec": {
+      "type": "enable_feature",
+      "feature": "edge_badge_cards",
+      "enabled": true,
+      "category": "VISUAL / UX"
+    },
+    "status": "QUEUED_FOR_EXECUTION",
+    "updated_at": "2026-11-28T08:05:33.350Z"
   }
 }
