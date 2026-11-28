@@ -35,8 +35,24 @@
     return String(str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  function isFallbackRow(g) {
+    if (!g || g.data_quality === 'postgame_fallback') return true;
+    const h = g.home || {}, a = g.away || {};
+    const hh2h = Number(h.h2h ?? 50), ah2h = Number(a.h2h ?? 50);
+    return (
+      Number(h.gem || 0) === 0 &&
+      Number(a.gem || 0) === 0 &&
+      [45, 50, 55].includes(hh2h) &&
+      [45, 50, 55].includes(ah2h) &&
+      Number(h.ros ?? 50) === 52 &&
+      Number(a.ros ?? 50) === 48
+    );
+  }
+
   function scoreHistoryGame(g, fallbackWeights) {
-    const w = (g.weights_used && typeof g.weights_used.h2h === 'number')
+    const w = (g.original_weights && typeof g.original_weights.h2h === 'number')
+      ? g.original_weights
+      : (g.weights_used && typeof g.weights_used.h2h === 'number')
       ? g.weights_used
       : (fallbackWeights || { gem: 10, h2h: 60, ros: 30 });
     const h = g.home || {}, a = g.away || {};
@@ -69,6 +85,7 @@
     if (!cachedHistory) cachedHistory = await fetchFresh('history.json');
     const snap = cachedHistory?.dates?.[dateStr];
     const g = (snap?.games || []).find((x) => String(x.id) === String(gameId)) || {};
+    const gw = g.original_weights || g.weights_used || snap?.weights_used || { gem: 10, h2h: 60, ros: 30 };
     const path = ESPN_PATHS[String(league || '').toUpperCase()];
     let espn = null;
     if (path && gameId) {
@@ -114,6 +131,7 @@
         <div style="font-size:10px;color:var(--accent);font-weight:800;">${league} · ${dateStr}</div>
         <div style="font-size:15px;font-weight:800;margin:4px 0;">${matchupTitle}</div>
         <div style="font-size:18px;font-weight:800;color:var(--text);">Final: ${finalScore}</div>
+        <div class="proof-sub" style="margin-top:4px;">⚖️ Frozen Weights at Pick: <b>${gw.gem ?? 10}% Sig · ${gw.h2h ?? 60}% Odds · ${gw.ros ?? 30}% Form</b></div>
       </div>
 
       <div class="proof-item">
@@ -156,30 +174,44 @@
     const w = snap.weights_used || { gem: 10, h2h: 60, ros: 30 };
     const games = (snap.games || []).filter((g) => g.result || g.actual_winner);
 
-    let wins = 0;
+    let verifiedWins = 0, verifiedTotal = 0, fallbackCount = 0;
     const cardsHtml = games.map((g) => {
+      const isFallback = isFallbackRow(g);
+      const gw = g.original_weights || g.weights_used || w;
       const actual = String(g.actual_winner || '').toLowerCase().trim();
       let pickSide = String(g.original_pick || g.pick || '').toLowerCase().trim();
       let conf = g.original_confidence || g.confidence;
       let isWin = false;
 
       if (actual === 'home' || actual === 'away') {
-        const scored = scoreHistoryGame(g, w);
+        const scored = scoreHistoryGame(g, gw);
         if (pickSide !== 'home' && pickSide !== 'away') pickSide = scored.pick;
         if (!conf) conf = scored.confidence;
         isWin = pickSide === actual;
       } else {
         isWin = ['W', 'WIN'].includes(String(g.result || '').toUpperCase());
       }
-      if (isWin) wins++;
+
+      if (isFallback) {
+        fallbackCount++;
+      } else {
+        verifiedTotal++;
+        if (isWin) verifiedWins++;
+      }
 
       const autopsy = g.autopsy || {};
       const detFactors = autopsy.determining_factors || [];
-      const lesson = autopsy.lesson_learned || 'Tap card to inspect full ESPN post-game boxscore & stats.';
+      const lesson = isFallback
+        ? 'Captured post-game without pre-game odds/Gematria — excluded from AI weight tuning.'
+        : (autopsy.lesson_learned || 'Tap card to inspect full ESPN post-game boxscore & stats.');
       const pickName = pickSide === 'home' ? (g.home?.name || 'Home') : (g.away?.name || 'Away');
+      const weightLine = `Weights at Pick: ${gw.gem ?? 10}% Sig · ${gw.h2h ?? 60}% Odds · ${gw.ros ?? 30}% Form`;
+      const qualityBadge = isFallback
+        ? `<span style="font-size:9.5px;font-weight:800;color:var(--amber);margin-left:6px;">⚠ FALLBACK (EXCLUDED)</span>`
+        : `<span style="font-size:9.5px;font-weight:800;color:var(--accent);margin-left:6px;">🔒 FROZEN</span>`;
 
       return `
-        <div class="game-card" onclick="openArchivedGameDetail('${g.league || ''}', '${g.id || ''}', '${targetDate}')" style="cursor:pointer;border-color:${isWin ? 'rgba(0,210,133,0.4)' : 'rgba(239,68,68,0.4)'};">
+        <div class="game-card" onclick="openArchivedGameDetail('${g.league || ''}', '${g.id || ''}', '${targetDate}')" style="cursor:pointer;opacity:${isFallback ? '0.68' : '1'};border-color:${isWin ? 'rgba(0,210,133,0.4)' : 'rgba(239,68,68,0.4)'};">
           <div class="card-top">
             <div class="card-meta">
               <span class="league-tag">${g.league || 'SPORT'}</span>
@@ -188,21 +220,27 @@
             </div>
             <span style="font-size:12px;font-weight:800;color:var(--blue);">${conf || 55}% CONF</span>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
             <strong style="font-size:14px;">${g.matchup || `Game #${g.id}`}</strong>
             <span style="font-size:11px;color:var(--blue);font-weight:700;">Full Boxscore ›</span>
           </div>
-          <div style="font-size:12px;margin-bottom:8px;">Pick: <strong style="color:var(--accent);">${pickName}</strong></div>
+          <div style="font-size:12px;margin-bottom:4px;">Pick: <strong style="color:var(--accent);">${pickName}</strong>${qualityBadge}</div>
+          <div style="font-size:10.5px;color:var(--text-dim);margin-bottom:8px;">⚖️ ${weightLine}</div>
           <div style="background:var(--surface-2);border-radius:10px;padding:8px;font-size:11px;">
-            <strong style="color:var(--accent);">🧠 Autopsy:</strong> <span style="color:var(--text-muted);">${detFactors.length ? detFactors[0] + ' · ' : ''}${lesson}</span>
+            <strong style="color:var(--accent);">🧠 Autopsy:</strong> <span style="color:var(--text-muted);">${detFactors.length && !isFallback ? detFactors[0] + ' · ' : ''}${lesson}</span>
           </div>
         </div>
       `;
     }).join('');
 
-    const pct = games.length ? ((wins / games.length) * 100).toFixed(1) : '0.0';
+    const pct = verifiedTotal ? ((verifiedWins / verifiedTotal) * 100).toFixed(1) : '0.0';
+    const recordHeader = verifiedTotal
+      ? `${verifiedWins}-${verifiedTotal - verifiedWins} (${pct}%)`
+      : `Quarantined (${fallbackCount} Fallbacks)`;
     const notice = (!hasExact && pickerVal)
       ? `<div class="proof-item warn" style="font-size:11px;">Run your GitHub Action once to archive <strong>${pickerVal}</strong>. Showing latest archived slate (<strong>${targetDate}</strong>).</div>`
+      : (fallbackCount > 0 && verifiedTotal === 0)
+      ? `<div class="proof-item warn" style="font-size:11px;">⚠ This slate was captured post-game before pre-game locking was enabled. All ${fallbackCount} rows are quarantined so they never skew weight tuning.</div>`
       : '';
 
     body.innerHTML = `
@@ -216,9 +254,9 @@
       <div class="proof-item arb-box">
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <strong>🔒 Frozen Slate: ${targetDate}</strong>
-          <strong style="font-size:15px;">${wins}-${games.length - wins} (${pct}%)</strong>
+          <strong style="font-size:15px;">${recordHeader}</strong>
         </div>
-        <div class="proof-sub">Tap any game below for full ESPN boxscore &amp; post-game stats</div>
+        <div class="proof-sub">Default Slate Weights: ${w.gem ?? 10}% Sig · ${w.h2h ?? 60}% Odds · ${w.ros ?? 30}% Form</div>
       </div>
       ${cardsHtml || '<p class="proof-sub">No completed games archived for this date.</p>'}
     `;
@@ -318,7 +356,6 @@
     if (!selectedReportDate && reportDates.length) selectedReportDate = reportDates[0];
     const dailyRep = selectedReportDate ? await fetchFresh(`daily_reports/${selectedReportDate}.json`) : null;
 
-    // Count items waiting in Owner's manual Dev Queue
     const devQueueEntries = Object.entries(approvalState).filter(([, v]) =>
       v && (v.status === 'AWAITING_OWNER_CODE' || v.change_spec?.type === 'manual_code' || v.status === 'COMPLETED')
     );
@@ -336,13 +373,15 @@
     if (ownerTab === 'overview') {
       const s60 = cachedReport.summary_60d || { wins: 0, losses: 0, total: 0, win_rate: 0, underdogs: { wins: 0, losses: 0, win_rate: 0 }, leagues: {}, daily_trend: [] };
       const dog = s60.underdogs || { wins: 0, losses: 0, win_rate: 0 };
+      const dogWins = dog.wins ?? dog.w ?? 0;
+      const dogLosses = dog.losses ?? Math.max(0, (dog.n ?? 0) - dogWins);
       const gr = cachedReport.guardrails || { min_global_games: 500 };
       const samplePct = Math.min(100, Math.round((s60.total / gr.min_global_games) * 100));
       const w = cachedReport.weights || { gem: 10, h2h: 60, ros: 30 };
 
       const friendNote = s60.total === 0
-        ? "We haven't graded any completed games yet—run your daily workflow once to start tracking."
-        : `Over the last 60 days, AlignIQ is hitting <b>${s60.win_rate}%</b> (${s60.wins} wins, ${s60.losses} losses). Our Underdog Gate is holding underdogs to <b>${dog.win_rate}%</b> (${dog.wins}-${dog.losses}), and we're <b>${samplePct}%</b> of the way to our ${gr.min_global_games}-game statistical guardrail.`;
+        ? "We haven't graded any verified games yet—run your daily workflow once to start tracking."
+        : `Across <b>${s60.total} verified games</b> in the last 60 days (excluding quarantined post-game fallbacks), AlignIQ is hitting <b>${s60.win_rate}%</b> (${s60.wins}-${s60.losses}). Underdogs are <b>${dogWins}-${dogLosses} (${dog.win_rate}%)</b>, and we're <b>${samplePct}%</b> of the way to our ${gr.min_global_games}-game guardrail.`;
 
       body.innerHTML = `${tabsHtml}
         <div style="display:flex;flex-direction:column;gap:12px;font-size:12px;">
@@ -353,9 +392,9 @@
 
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             <div class="proof-item" style="margin:0;">
-              <div style="font-size:10px;color:var(--text-muted);font-weight:700;">60-DAY RECORD</div>
+              <div style="font-size:10px;color:var(--text-muted);font-weight:700;">VERIFIED 60-DAY RECORD</div>
               <div style="font-size:20px;font-weight:800;color:var(--accent);">${s60.win_rate}%</div>
-              <div class="proof-sub">${s60.wins}-${s60.losses} (${s60.total} games)</div>
+              <div class="proof-sub">${s60.wins}-${s60.losses} (${s60.total} clean games)</div>
             </div>
             <div class="proof-item" style="margin:0;">
               <div style="font-size:10px;color:var(--text-muted);font-weight:700;">NET UNITS / ROI</div>
@@ -379,11 +418,11 @@
           <div class="proof-item" style="margin:0;border-color:rgba(245,158,11,0.4);">
             <div style="display:flex;justify-content:space-between;"><strong style="color:var(--amber);">🐶 Underdog Gate &amp; Sample Scale</strong><strong>${samplePct}% Ready</strong></div>
             <div style="height:6px;background:var(--bg);border-radius:999px;overflow:hidden;margin:6px 0;"><div style="height:100%;width:${samplePct}%;background:var(--amber);"></div></div>
-            <div class="proof-sub">Underdogs: ${dog.wins}-${dog.losses} (${dog.win_rate}%) · Sample: ${s60.total}/${gr.min_global_games} games</div>
+            <div class="proof-sub">Underdogs: ${dogWins}-${dogLosses} (${dog.win_rate}%) · Clean Sample: ${s60.total}/${gr.min_global_games} games</div>
           </div>
 
-          <div class="proof-item" style="margin:0;"><strong style="color:var(--blue);">📈 30-Day Win Rate Trend</strong><canvas id="chart-trend" height="145" style="margin-top:8px;"></canvas></div>
-          <div class="proof-item" style="margin:0;"><strong style="color:var(--accent);">🏆 Win Rate by League</strong><canvas id="chart-leagues" height="145" style="margin-top:8px;"></canvas></div>
+          <div class="proof-item" style="margin:0;"><strong style="color:var(--blue);">📈 30-Day Verified Win Rate Trend</strong><canvas id="chart-trend" height="145" style="margin-top:8px;"></canvas></div>
+          <div class="proof-item" style="margin:0;"><strong style="color:var(--accent);">🏆 Verified Win Rate by League</strong><canvas id="chart-leagues" height="145" style="margin-top:8px;"></canvas></div>
         </div>
       `;
 
@@ -401,6 +440,7 @@
       const ba = dailyRep.before_and_after_performance || [];
       const ci = dailyRep.competitor_intel?.competitors_tracked || [];
       const pb = dailyRep.plain_english_brief || {};
+      const di = dailyRep.data_integrity || {};
       const factors = Object.values(pa.factor_attribution || {});
       const cal = Object.entries(pa.calibration || {});
       const hits = pa.biggest_successes || [];
@@ -426,19 +466,19 @@
           ${pb.what_worked ? `<div class="proof-sub" style="margin-top:4px;color:var(--accent);"><b>What Worked:</b> ${pb.what_worked}</div>` : ''}
           ${pb.watch_out ? `<div class="proof-sub" style="margin-top:4px;color:var(--amber);"><b>Watch Out For:</b> ${pb.watch_out}</div>` : ''}
           <div class="proof-sub" style="font-size:10px;color:var(--text-dim);margin-top:6px;">
-            Config: <b>${dailyRep.algo_version || 'baseline'}</b> · Updated: ${dailyRep.generated_at ? new Date(dailyRep.generated_at).toLocaleString() : 'N/A'}
+            Config: <b>${dailyRep.algo_version || 'baseline'}</b> · Clean: ${di.verified_games_60d ?? pa.completed_games_analyzed ?? 0} · Quarantined: ${di.quarantined_fallbacks ?? 0} · Updated: ${dailyRep.generated_at ? new Date(dailyRep.generated_at).toLocaleString() : 'N/A'}
           </div>
         </div>
 
         <div class="proof-item">
           <strong style="color:var(--blue);">⚖️ What Actually Drove Wins (Factor Scale)</strong>
-          <div class="proof-sub" style="margin-bottom:8px;">Shows how often each pillar won when it leaned toward our pick, compared to our overall average.</div>
+          <div class="proof-sub" style="margin-bottom:8px;">Shows how often each pillar won when it backed our pick (and its solo accuracy on its own).</div>
           ${factors.length ? `<canvas id="chart-daily-factors" height="125" style="margin-bottom:8px;"></canvas>` : ''}
           ${factors.length ? factors.map(f => `
             <div style="margin-bottom:6px;">
               <div style="display:flex;justify-content:space-between;font-size:11px;">
                 <span>${f.label}</span>
-                <span><b>${f.win_rate}%</b> (${f.agree_w}/${f.agree_n}) · <span style="color:${f.lift_vs_avg >= 0 ? 'var(--accent)' : 'var(--danger)'};">${f.lift_vs_avg >= 0 ? '+' : ''}${f.lift_vs_avg}%</span></span>
+                <span><b>${f.win_rate}%</b> (${f.agree_w}/${f.agree_n}) · Solo: ${f.solo_win_rate ?? 0}%</span>
               </div>
               <div style="height:5px;background:var(--bg);border-radius:999px;overflow:hidden;margin-top:2px;">
                 <div style="height:100%;width:${clamp(f.win_rate)}%;background:${f.lift_vs_avg >= 0 ? 'var(--accent)' : 'var(--amber)'};"></div>
@@ -449,7 +489,7 @@
 
         ${cal.length ? `
           <div class="proof-item">
-            <strong style="color:var(--accent);">🎯 Confidence Calibration (Is High Conf Actually Winning More?)</strong>
+            <strong style="color:var(--accent);">🎯 Confidence Calibration (Is High Conf Winning More?)</strong>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;">
               ${cal.map(([tier, m]) => `
                 <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px;text-align:center;">
@@ -565,7 +605,6 @@
         }).join('') : '<div class="proof-item">All caught up! No pending proposals right now.</div>'}
       `;
     } else {
-      // --- DEV QUEUE / MANUAL CODE CHECKLIST TAB ---
       const activeItems = devQueueEntries.filter(([, v]) => v.status !== 'COMPLETED' && v.decision === 'APPROVED');
       const doneItems = devQueueEntries.filter(([, v]) => v.status === 'COMPLETED');
 

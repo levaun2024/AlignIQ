@@ -3,6 +3,7 @@ name: AlignIQ Daily Multi-Agent Council
 on:
   schedule:
     - cron: '0 13 * * *'
+    - cron: '0 17 * * *'
   workflow_dispatch:
 
 permissions:
@@ -20,7 +21,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run Learning & Post-Game Autopsy Agent
+      - name: Run Learning & Pre-Game Locking Agent
         run: python agent.py
 
       - name: Run Owner Audit & Optimization Council
@@ -31,5 +32,5 @@ jobs:
           git config user.name "AlignIQ Agent"
           git config user.email "agent@aligniq.local"
           git add history.json agent_report.json algo_config.json analysis_report.json owner_approvals.json daily_reports/
-          git diff --staged --quiet || git commit -m "Daily Multi-Agent Audit, Approvals & Post-Game Learning"
+          git diff --staged --quiet || git commit -m "Daily Multi-Agent Audit, Pre-Game Lock & Post-Game Learning"
           git push
