@@ -303,7 +303,7 @@ function computeWeightCutGauge(fighterObj, manualCutPen = 0) {
 }
 
 // --- AGENT & DATA LOADERS ---
-async function loadAgentReport() {
+async function loadAgentReport(skipRender = false) {
   await loadAlgoConfig();
   try {
     const res = await fetch(`./agent_report.json?t=${Date.now()}`, { cache: 'no-store' });
@@ -317,7 +317,7 @@ async function loadAgentReport() {
     }
   } catch {}
   try { const fres = await fetch(`./fighters.json?t=${Date.now()}`); if (fres.ok) fightersDb = await fres.json(); } catch {}
-  if (allGames.length) renderFeed();
+  if (!skipRender && allGames.length) renderFeed();
 }
 function syncSlidersToWeights() {
   document.getElementById('w-gem').value = weights.gem; document.getElementById('w-h2h').value = weights.h2h; document.getElementById('w-ros').value = weights.ros;
@@ -330,7 +330,9 @@ function renderAgentStatusBox() {
   const winRate = s60 ? s60.win_rate : (agentReport.overall_win_rate ?? 0);
   const record = s60 ? `${s60.wins}-${s60.losses}` : (agentReport.overall_record || '0-0');
   const totalGraded = s60 ? s60.total : (agentReport.total_games_graded || 0);
-  const dogStr = s60?.underdogs ? ` · Dogs: ${s60.underdogs.wins}-${s60.underdogs.losses} (${s60.underdogs.win_rate}%)` : '';
+  const dogWins = s60?.underdogs ? (s60.underdogs.wins ?? s60.underdogs.w ?? 0) : 0;
+  const dogLosses = s60?.underdogs ? (s60.underdogs.losses ?? Math.max(0, (s60.underdogs.n ?? 0) - dogWins)) : 0;
+  const dogStr = s60?.underdogs ? ` · Dogs: ${dogWins}-${dogLosses} (${s60.underdogs.win_rate ?? 0}%)` : '';
   const roiStr = s60?.roi_pct != null ? ` · ${s60.roi_pct >= 0 ? '+' : ''}${s60.roi_pct}% ROI` : '';
   const note = agentReport.last_rebalance_note || agentReport.adjustment_reason || 'Phase 5 Investor Council active.';
   const updated = agentReport.updated_at ? new Date(agentReport.updated_at).toLocaleDateString() : (agentReport.last_updated || 'Today');
@@ -687,7 +689,7 @@ async function loadSlate(silent = false) {
       } catch { return []; }
     })),
     fetchYesterdayB2B(currentDate),
-    loadAlgoConfig()
+    loadAgentReport(true)
   ]);
 
   let fightGames = [];
