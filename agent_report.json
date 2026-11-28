@@ -1,6 +1,6 @@
 {
   "algo_version": "phase5-baseline",
-  "updated_at": "2026-11-28T07:24:28.325657+00:00",
+  "updated_at": "2026-11-28T08:05:45.183328+00:00",
   "weights": {
     "gem": 10,
     "h2h": 60,
@@ -69,7 +69,8 @@
     }
   },
   "active_features": {
-    "kelly_unit_sizer": true
+    "kelly_unit_sizer": true,
+    "edge_badge_cards": true
   },
   "guardrails": {
     "min_global_games": 500,

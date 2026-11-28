@@ -1,6 +1,6 @@
 {
   "date": "2026-11-28",
-  "generated_at": "2026-11-28T07:24:30.887775+00:00",
+  "generated_at": "2026-11-28T08:05:45.183328+00:00",
   "algo_version": "phase5-baseline",
   "active_weights": {
     "gem": 10,
@@ -8,14 +8,15 @@
     "ros": 30
   },
   "active_features": {
-    "kelly_unit_sizer": true
+    "kelly_unit_sizer": true,
+    "edge_badge_cards": true
   },
   "investor_audit_score": 75,
   "plain_english_brief": {
     "headline": "The model is in strong form\u2014hitting 78.5% across 186 verified games over the last 60 days.",
     "what_worked": "Our strongest edge lately is Market Fair Odds (85.0% WR, +6.5% vs avg).",
     "watch_out": "Heads up: Pattern Signals (Gematria) (53.3% WR, -25.2% vs avg) has been over-confident on losses.",
-    "next_step": "You have 3 suggestion(s) in Approvals\u2014auto-updates apply in 45s, and manual code ideas archive to your Dev Queue."
+    "next_step": "Automatically applied 1 approved update(s) to algo_config.json, with 2 item(s) waiting in Approvals."
   },
   "data_integrity": {
     "verified_games_60d": 186,
@@ -26,9 +27,11 @@
   },
   "execution_summary": {
     "agent1_status": "SUCCESS",
-    "agent1_ran_at": "2026-11-28T07:24:28.325657+00:00",
+    "agent1_ran_at": "2026-11-28T08:05:42.320689+00:00",
     "agent2_status": "SUCCESS",
-    "newly_executed_approvals": []
+    "newly_executed_approvals": [
+      "prop_edge_badge_v1"
+    ]
   },
   "performance_analysis": {
     "completed_games_analyzed": 186,
@@ -190,27 +193,22 @@
       "baseline_wr": 66.7,
       "current_wr": 78.5,
       "impact": "+11.8% (Improved)"
+    },
+    {
+      "proposal_id": "prop_edge_badge_v1",
+      "category": "VISUAL / UX",
+      "title": "Turn On '+EDGE' Badges on Feed Cards",
+      "applied_at": "2026-11-28T08:05:45.183328+00:00",
+      "baseline_wr": 78.5,
+      "current_wr": 78.5,
+      "impact": "+0.0% (Neutral)"
     }
   ],
   "implemented_adjustments": [
-    "prop_kelly_sizer_v1"
+    "prop_kelly_sizer_v1",
+    "prop_edge_badge_v1"
   ],
   "pending_proposals": [
-    {
-      "id": "prop_edge_badge_v1",
-      "execution_type": "AGENT_AUTO",
-      "category": "VISUAL / UX",
-      "priority": "MEDIUM",
-      "title": "Turn On '+EDGE' Badges on Feed Cards",
-      "description": "Adds a compact blue pill right under CONF % whenever our model beats the Vegas no-vig consensus by 1.5%+.",
-      "change_spec": {
-        "type": "enable_feature",
-        "feature": "edge_badge_cards",
-        "enabled": true,
-        "category": "VISUAL / UX"
-      },
-      "visual_preview_html": "<div style='background:#0b1220;border:1px solid #38bdf8;border-radius:10px;padding:10px;font-size:11px;'><b>BOS Celtics @ NY Knicks</b> \u00b7 <span style='color:#00d285;'>72% CONF</span> \u00b7 <span style='background:#38bdf8;color:#000;padding:1px 6px;border-radius:99px;font-weight:800;'>+8.0% EDGE</span></div>"
-    },
     {
       "id": "code_bankroll_settings_v1",
       "execution_type": "OWNER_CODE",
@@ -258,7 +256,7 @@
       }
     ]
   },
-  "chief_auditor_critique": "The model is in strong form\u2014hitting 78.5% across 186 verified games over the last 60 days. You have 3 suggestion(s) in Approvals\u2014auto-updates apply in 45s, and manual code ideas archive to your Dev Queue.",
+  "chief_auditor_critique": "The model is in strong form\u2014hitting 78.5% across 186 verified games over the last 60 days. Automatically applied 1 approved update(s) to algo_config.json, with 2 item(s) waiting in Approvals.",
   "app_health_audit": {
     "status": "ATTENTION NEEDED",
     "passed": [
