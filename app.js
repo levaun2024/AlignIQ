@@ -17,22 +17,42 @@ const FIGHT_LEAGUES = new Set(['UFC', 'BOXING', 'BKFC']);
 const B2B_LEAGUES = new Set(['NBA', 'NHL']);
 const WORKER_BASE_URL = 'https://alighiq-gate.levaun2024.workers.dev';
 
+// 20 bookmakers = 2 regions: ALL 7 US exchanges + top 13 US sportsbooks
+const ALL_EXCHANGES_AND_BOOKS = [
+  'kalshi', 'novig', 'prophetx', 'polymarket', 'polymarket_us', 'betopenly', 'limitless',
+  'draftkings', 'fanduel', 'betmgm', 'williamhill_us', 'fanatics', 'espnbet',
+  'betrivers', 'hardrockbet', 'fliff', 'rebet', 'bovada', 'betonlineag', 'betus'
+].join(',');
+
+// 10 bookmakers = 1 region: cuts Player Props & DFS credit cost in half
+const TOP_10_PROP_BOOKS = [
+  'draftkings', 'fanduel', 'betmgm', 'williamhill_us', 'fanatics', 'espnbet',
+  'prizepicks', 'underdog', 'parlayplay', 'pick6'
+].join(',');
+
 const SPORTSBOOK_LINKS = {
   draftkings: { name: 'DraftKings', pkg: 'com.draftkings.sportsbook', ios: 'https://apps.apple.com/us/app/draftkings-sports-casino/id1375031369', web: 'https://sportsbook.draftkings.com' },
   fanduel: { name: 'FanDuel', pkg: 'com.fanduel.android.self', ios: 'https://apps.apple.com/us/app/fanduel-sportsbook-casino/id1413721906', web: 'https://sportsbook.fanduel.com' },
   betmgm: { name: 'BetMGM', pkg: 'com.playmgm.nj.sports', ios: 'https://apps.apple.com/us/app/betmgm-sportsbook-casino/id1430875409', web: 'https://sports.betmgm.com' },
   williamhill_us: { name: 'Caesars', pkg: 'com.williamhill.us.nj.sports', ios: 'https://apps.apple.com/us/app/caesars-sportsbook-casino/id1413099571', web: 'https://www.caesars.com/sportsbook-and-casino' },
-  espnbet: { name: 'ESPN BET', pkg: 'com.penn.espnbet', ios: 'https://espnbet.com', web: 'https://espnbet.com' },
+  espnbet: { name: 'theScore Bet', pkg: 'com.penn.espnbet', ios: 'https://thescore.bet', web: 'https://thescore.bet' },
   fanatics: { name: 'Fanatics', pkg: 'com.betfanatics.sportsbook.android', ios: 'https://apps.apple.com/us/app/fanatics-sports-casino/id1616738407', web: 'https://sportsbook.fanatics.com' },
   betrivers: { name: 'BetRivers', pkg: 'com.rushstreetinteractive.betrivers', ios: 'https://apps.apple.com/us/app/betrivers-casino-sportsbook/id1635357259', web: 'https://www.betrivers.com' },
   hardrockbet: { name: 'Hard Rock Bet', pkg: 'com.hardrock.sportsbook', ios: 'https://apps.apple.com/us/app/hard-rock-bet-sportsbook/id1572525917', web: 'https://www.hardrock.bet' },
   kalshi: { name: 'Kalshi', pkg: 'com.kalshi.mobile', ios: 'https://apps.apple.com/us/app/kalshi-trade-events-sports/id1632713844', web: 'https://kalshi.com/markets/sports' },
   novig: { name: 'Novig', pkg: 'us.novig.app', ios: 'https://apps.apple.com/us/app/novig-prediction-market/id6443958997', web: 'https://www.novig.us' },
   prophetx: { name: 'ProphetX', pkg: 'com.prophetxsweepstake', ios: 'https://apps.apple.com/us/app/prophetx-prediction-market/id6504584166', web: 'https://www.prophetx.co' },
+  polymarket: { name: 'Polymarket', pkg: '', ios: '', web: 'https://polymarket.com/sports' },
+  polymarket_us: { name: 'Polymarket (US)', pkg: '', ios: '', web: 'https://polymarket.com/sports' },
+  betopenly: { name: 'BetOpenly', pkg: '', ios: '', web: 'https://www.betopenly.com' },
+  limitless: { name: 'Limitless Exchange', pkg: '', ios: '', web: 'https://limitless.exchange' },
   fliff: { name: 'Fliff', pkg: 'com.fliff.sports', ios: 'https://apps.apple.com/us/app/fliff-sportsbook-casino/id1489145500', web: 'https://www.getfliff.com' },
+  rebet: { name: 'ReBet', pkg: '', ios: '', web: 'https://rebet.app' },
   prizepicks: { name: 'PrizePicks', pkg: 'com.prizepicks.app', ios: 'https://apps.apple.com/us/app/prizepicks-daily-fantasy/id1407493120', web: 'https://app.prizepicks.com' },
   underdog: { name: 'Underdog', pkg: 'com.underdogsports.android', ios: 'https://apps.apple.com/us/app/underdog-fantasy-sports/id1514665962', web: 'https://underdogfantasy.com' },
   parlayplay: { name: 'ParlayPlay', pkg: 'io.parlayplay.app', ios: 'https://apps.apple.com/us/app/parlayplay-fantasy-sports/id1566037258', web: 'https://parlayplay.io' },
+  pick6: { name: 'DraftKings Pick6', pkg: 'com.draftkings.pick6', ios: 'https://pick6.draftkings.com', web: 'https://pick6.draftkings.com' },
+  dabble_us_dfs: { name: 'Dabble', pkg: '', ios: '', web: 'https://dabble.com' },
   bovada: { name: 'Bovada', pkg: '', ios: '', web: 'https://www.bovada.lv/sports' },
   betonlineag: { name: 'BetOnline', pkg: '', ios: '', web: 'https://www.betonline.ag/sportsbook' },
   betus: { name: 'BetUS', pkg: '', ios: '', web: 'https://www.betus.com.pa/sportsbook/' }
@@ -59,6 +79,7 @@ const PHASE4_LEAGUE_WEIGHTS = {
 
 let currentDate = new Date(), allGames = [], summaryCache = {}, scheduleCache = {}, leagueNewsCache = {}, oddsSportCache = {}, propsEventCache = {}, fightersDb = {}, prevConfMap = {};
 let yesterdayTeamsSet = new Set();
+let boxingLoaded = false, boxingGamesCache = [];
 let activeSport = 'All', filterMode = 'all', agentReport = null, weights = { ...PHASE4_DEFAULT_WEIGHTS }, leagueWeights = { ...PHASE4_LEAGUE_WEIGHTS };
 let algoConfig = { active_features: {} };
 window.ALIGNIQ_CONFIG = algoConfig;
@@ -189,7 +210,7 @@ function setTheme(t) { applyTheme(t); renderSettingsTab(); }
 function getHelpAnswer(q) {
   const s = (q || '').toLowerCase();
   if (/conf|weight|score|calculat|formula|pillar/.test(s)) return 'CONF % uses league-specific normalized weights, B2B rest fatigue (NBA/NHL), Home/Road splits, sharp line movement, and the Underdog Agreement Gate.';
-  if (/\+ev|ev|value|arb|arbitrage/.test(s)) return '+EV% shows when a sportsbook is paying more than the No-Vig Fair Consensus probability. Arbitrage (⚡) appears when two books disagree enough that betting both sides guarantees a profit. Neither alters CONF %.';
+  if (/\+ev|ev|value|arb|arbitrage/.test(s)) return '+EV% shows when a sportsbook or exchange is paying more than the No-Vig Fair Consensus probability. Arbitrage (⚡) appears when two books disagree enough that betting both sides guarantees a profit. Neither alters CONF %.';
   if (/weight cut|cut|gauge|ufc|fight|boxing|bkfc/.test(s)) return 'In Fight IQ, each fighter’s Weight Cut Gauge compares their current weight against their career lowest weight (Biggest Cut) and highest weight (Lowest Cut), automatically weighing cut stress and striking defense/reach into CONF %.';
   if (/body|weak|red|dot|map|injur/.test(s)) return 'Red pulsing dots on the Body Outline highlight fighter target/defense weak points or injured body zones on team sports. Tap any red dot to open ESPN reports, X/Twitter posts, Google News, and YouTube clips.';
   if (/source|link|box|hover|proof/.test(s)) return 'Every reference has verified source links. If there is 1 source, tapping opens it directly; if there are 2+ sources, a floating scrollable box pops up so you can choose which one to visit.';
@@ -361,8 +382,9 @@ function analyzeOddsEvent(oddsEv, homeTeam, awayTeam) {
       const ih = americanToImplied(hOut.price), ia = americanToImplied(aOut.price);
       if (ih + ia > 0) { sumFairHome += ih / (ih + ia); fairPairs++; }
     }
-    if (hOut && typeof hOut.price === 'number') homeRows.push({ key: bm.key, title: bm.title, price: hOut.price, dec: americanToDecimal(hOut.price), profit100: americanToProfit100(hOut.price), cents: americanToCents(hOut.price), link: hOut.link || h2h.link || bm.link || '' });
-    if (aOut && typeof aOut.price === 'number') awayRows.push({ key: bm.key, title: bm.title, price: aOut.price, dec: americanToDecimal(aOut.price), profit100: americanToProfit100(aOut.price), cents: americanToCents(aOut.price), link: aOut.link || h2h.link || bm.link || '' });
+    const label = SPORTSBOOK_LINKS[bm.key]?.name || bm.title;
+    if (hOut && typeof hOut.price === 'number') homeRows.push({ key: bm.key, title: label, price: hOut.price, dec: americanToDecimal(hOut.price), profit100: americanToProfit100(hOut.price), cents: americanToCents(hOut.price), link: hOut.link || h2h.link || bm.link || '' });
+    if (aOut && typeof aOut.price === 'number') awayRows.push({ key: bm.key, title: label, price: aOut.price, dec: americanToDecimal(aOut.price), profit100: americanToProfit100(aOut.price), cents: americanToCents(aOut.price), link: aOut.link || h2h.link || bm.link || '' });
   });
 
   const fairHome = fairPairs ? (sumFairHome / fairPairs) : 0.5, fairAway = 1 - fairHome;
@@ -598,24 +620,65 @@ function openAppStore(e, bookKey) {
 }
 function updateCreditsHeader(res) { const rem = res.headers.get('x-requests-remaining'); if (rem !== null) { const el = document.getElementById('credits-badge'); if (el) el.textContent = `(${rem} credits left)`; } }
 
-async function fetchOddsForSport(sportKey) {
+async function fetchOddsForSport(sportKey, forceRefresh = false) {
   if (!oddsApiKey || !sportKey) return [];
-  const cached = oddsSportCache[sportKey]; if (cached && (Date.now() - cached.ts < 600000)) return cached.data;
+  const cached = oddsSportCache[sportKey];
+  if (!forceRefresh && cached && (Date.now() - cached.ts < 900000)) return cached.data; // 15-min browser cache
   try {
-    const res = await fetch(`https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${encodeURIComponent(oddsApiKey)}&regions=us,us2,us_ex&markets=h2h&oddsFormat=american&includeLinks=true`);
+    const bypass = forceRefresh ? '&nocache=1' : '';
+    const res = await fetch(`https://api.the-odds-api.com/v4/sports/${sportKey}/odds/?apiKey=${encodeURIComponent(oddsApiKey)}&bookmakers=${ALL_EXCHANGES_AND_BOOKS}&markets=h2h&oddsFormat=american&includeLinks=true${bypass}`);
     updateCreditsHeader(res); if (!res.ok) return [];
-    const data = await res.json(); oddsSportCache[sportKey] = { ts: Date.now(), data: Array.isArray(data) ? data : [] }; return oddsSportCache[sportKey].data;
+    const data = await res.json();
+    oddsSportCache[sportKey] = { ts: Date.now(), data: Array.isArray(data) ? data : [] };
+    return oddsSportCache[sportKey].data;
   } catch { return []; }
 }
+
+async function forceRefreshSelectedOdds() {
+  const g = allGames.find(x => x.id === selectedGameId);
+  if (!g || !g.oddsKey) return;
+  document.getElementById('detail-body').innerHTML = '<div class="empty-state">Pulling live sportsbook &amp; exchange prices...</div>';
+  await fetchOddsForSport(g.oddsKey, true);
+  if (selectedGameId === g.id) { renderFeed(); renderDetailTab(); }
+}
+window.forceRefreshSelectedOdds = forceRefreshSelectedOdds;
+
+async function loadBoxingOnDemand() {
+  if (!oddsApiKey) return;
+  document.getElementById('live-count-badge').textContent = 'Loading Boxing...';
+  const raw = (await fetchOddsForSport('boxing_boxing')).slice(0, 12);
+  boxingGamesCache = raw.map(ev => {
+    const dt = new Date(ev.commence_time);
+    return {
+      id: `odds_${ev.id}`, league: /bkfc|bare knuckle/i.test(ev.sport_title || '') ? 'BKFC' : 'BOXING', path: null, oddsKey: 'boxing_boxing',
+      oddsEventDirect: ev, state: 'pre', time: dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' + dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
+      venue: ev.sport_title || 'Fight Card', venueCity: '', broadcast: 'PPV / Live', eventNote: ev.sport_title || '',
+      oddsText: `${ev.bookmakers?.length || 0} Sportsbooks Live`, oddsFav: null, homeML: null, awayML: null, leaders: [],
+      home: { id: '', name: ev.home_team, short: ev.home_team, location: '', mascot: ev.home_team, logo: '', headshot: '', score: '', record: '', homeRecord: '' },
+      away: { id: '', name: ev.away_team, short: ev.away_team, location: '', mascot: ev.away_team, logo: '', headshot: '', score: '', record: '', roadRecord: '' }
+    };
+  });
+  boxingLoaded = true;
+  const dm = getDateMath(currentDate);
+  const existingIds = new Set(allGames.map(g => g.id));
+  const newFights = boxingGamesCache.filter(g => !existingIds.has(g.id)).map(g => evaluateGame(g, dm));
+  allGames = [...allGames, ...newFights];
+  window.allGames = allGames;
+  activeSport = boxingGamesCache.some(g => g.league === 'BOXING') ? 'BOXING' : (boxingGamesCache.some(g => g.league === 'BKFC') ? 'BKFC' : 'All');
+  renderSportsBar();
+  renderFeed();
+}
+window.loadBoxingOnDemand = loadBoxingOnDemand;
+
 async function loadPropsForSelectedGame() {
   const g = allGames.find(x => x.id === selectedGameId); if (!g) return;
   const markets = LEAGUES.find(l => l.key === g.league)?.propMarkets; if (!markets) return;
   if (!oddsApiKey) { propsEventCache[g.id] = { error: 'Live Player Props require an active Odds proxy session.' }; renderDetailTab(); return; }
   const oddsEv = g.oddsEventDirect || matchGameInOdds(g, oddsSportCache[g.oddsKey]?.data || await fetchOddsForSport(g.oddsKey));
   if (!oddsEv?.id) { propsEventCache[g.id] = { error: 'No matching live sportsbook event found for player props.' }; renderDetailTab(); return; }
-  document.getElementById('detail-body').innerHTML = '<div class="empty-state">Fetching live Player Props &amp; DFS (PrizePicks / Underdog)...</div>';
+  document.getElementById('detail-body').innerHTML = '<div class="empty-state">Fetching live Player Props &amp; DFS (PrizePicks / Underdog / Pick6)...</div>';
   try {
-    const res = await fetch(`https://api.the-odds-api.com/v4/sports/${g.oddsKey}/events/${oddsEv.id}/odds?apiKey=${encodeURIComponent(oddsApiKey)}&regions=us,us_dfs&markets=${markets}&oddsFormat=american&includeLinks=true`);
+    const res = await fetch(`https://api.the-odds-api.com/v4/sports/${g.oddsKey}/events/${oddsEv.id}/odds?apiKey=${encodeURIComponent(oddsApiKey)}&bookmakers=${TOP_10_PROP_BOOKS}&markets=${markets}&oddsFormat=american&includeLinks=true`);
     updateCreditsHeader(res); propsEventCache[g.id] = res.ok ? { data: await res.json() } : { error: 'Player props are not posted yet for this matchup.' };
   } catch { propsEventCache[g.id] = { error: 'Could not connect to Player Props feed.' }; }
   if (selectedGameId === g.id) renderDetailTab();
@@ -692,20 +755,8 @@ async function loadSlate(silent = false) {
     loadAgentReport(true)
   ]);
 
-  let fightGames = [];
-  if (oddsApiKey && isSameDay(currentDate, new Date())) {
-    fightGames = (await fetchOddsForSport('boxing_boxing')).slice(0, 12).map(ev => {
-      const dt = new Date(ev.commence_time);
-      return {
-        id: `odds_${ev.id}`, league: /bkfc|bare knuckle/i.test(ev.sport_title || '') ? 'BKFC' : 'BOXING', path: null, oddsKey: 'boxing_boxing',
-        oddsEventDirect: ev, state: 'pre', time: dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' + dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }),
-        venue: ev.sport_title || 'Fight Card', venueCity: '', broadcast: 'PPV / Live', eventNote: ev.sport_title || '',
-        oddsText: `${ev.bookmakers?.length || 0} Sportsbooks Live`, oddsFav: null, homeML: null, awayML: null, leaders: [],
-        home: { id: '', name: ev.home_team, short: ev.home_team, location: '', mascot: ev.home_team, logo: '', headshot: '', score: '', record: '', homeRecord: '' },
-        away: { id: '', name: ev.away_team, short: ev.away_team, location: '', mascot: ev.away_team, logo: '', headshot: '', score: '', record: '', roadRecord: '' }
-      };
-    });
-  }
+  // Boxing/BKFC loads strictly on-demand via loadBoxingOnDemand() (0 Odds API credits on boot/poll)
+  const fightGames = (boxingLoaded && isSameDay(currentDate, new Date())) ? boxingGamesCache : [];
 
   const espnFlat = espnResults.flat();
   if (silent && espnFlat.length === 0 && allGames.length > 0) return;
@@ -780,7 +831,10 @@ function updateDateUI() {
 function renderSportsBar() {
   const counts = {}; allGames.forEach(g => { counts[g.league] = (counts[g.league] || 0) + 1; });
   const activeLeagues = Object.keys(counts); if (activeSport !== 'All' && !counts[activeSport]) activeSport = 'All';
-  document.getElementById('sports-bar').innerHTML = `<button class="sport-pill ${activeSport === 'All' ? 'active' : ''}" onclick="setSport('All')">All <span class="sport-count">${allGames.length}</span></button>` + activeLeagues.map(lg => `<button class="sport-pill ${activeSport === lg ? 'active' : ''}" onclick="setSport('${lg}')">${lg} <span class="sport-count">${counts[lg]}</span></button>`).join('');
+  const boxingPill = (!boxingLoaded && oddsApiKey && isSameDay(currentDate, new Date()))
+    ? `<button class="sport-pill" onclick="loadBoxingOnDemand()">🥊 Boxing</button>`
+    : '';
+  document.getElementById('sports-bar').innerHTML = `<button class="sport-pill ${activeSport === 'All' ? 'active' : ''}" onclick="setSport('All')">All <span class="sport-count">${allGames.length}</span></button>` + activeLeagues.map(lg => `<button class="sport-pill ${activeSport === lg ? 'active' : ''}" onclick="setSport('${lg}')">${lg} <span class="sport-count">${counts[lg]}</span></button>`).join('') + boxingPill;
   document.getElementById('live-count-badge').textContent = `${allGames.length} Games · ${activeLeagues.length} Sports`;
 }
 function renderUnderdogEmblem(g) {
@@ -956,6 +1010,7 @@ function renderDetailTab() {
     const showHome = (oddsViewSide === 'pick' && g.pickSide === 'home') || (oddsViewSide === 'opp' && oppSide === 'home');
     const rows = showHome ? oddsAnalysis.homeRows : oddsAnalysis.awayRows, fairProb = Math.round((showHome ? oddsAnalysis.fairHome : oddsAnalysis.fairAway) * 100);
     const openedPrice = oddsAnalysis.opened ? (showHome ? oddsAnalysis.opened.home : oddsAnalysis.opened.away) : null;
+    const refreshBtn = (window.ALIGNIQ_IS_OWNER && g.oddsKey) ? `<button class="odds-side-btn" style="flex:0 0 auto;padding:0 10px;border-color:rgba(56,189,248,0.45);color:var(--blue);" onclick="forceRefreshSelectedOdds()" title="Bypass 15m cache for live prices">↻ Live</button>` : '';
     const arbHtml = oddsAnalysis.arb ? `<div class="proof-item arb-box"><strong>⚡ ARBITRAGE FOUND (+${oddsAnalysis.arb.roi.toFixed(2)}% Guaranteed ROI)</strong><div class="proof-sub">Bet $${oddsAnalysis.arb.stakeHome.toFixed(0)} on ${g.home.short} (${oddsAnalysis.arb.homeBook} ${oddsAnalysis.arb.homePrice > 0 ? '+' : ''}${oddsAnalysis.arb.homePrice}) &amp; $${oddsAnalysis.arb.stakeAway.toFixed(0)} on ${g.away.short} (${oddsAnalysis.arb.awayBook} ${oddsAnalysis.arb.awayPrice > 0 ? '+' : ''}${oddsAnalysis.arb.awayPrice}) → +$${oddsAnalysis.arb.profit100.toFixed(2)} guaranteed profit.</div></div>` : '';
     const emptyMsg = `<div class="proof-item warn"><strong>No Live Multi-Book Lines Found Yet</strong><div class="proof-sub">This game may be finished or off the board.</div></div>`;
     const listHtml = rows.length ? rows.map((r, idx) => {
@@ -966,15 +1021,15 @@ function renderDetailTab() {
       const kellyHtml = r.ev >= 0.5 ? renderKellySizer(fairProb, r.price) : '';
       return `<div class="book-row ${idx === 0 ? 'best' : ''}" onclick="openSportsbook('${r.key}', '${safeLink}')"><div class="book-left"><div class="book-name">${r.title}${idx === 0 ? '<span class="best-badge">BEST PAYOUT</span>' : ''}${evBadge}${moveBadge}</div><div class="book-sub">${subHtml}</div>${kellyHtml}</div><div class="book-right"><div class="book-odds">${r.price > 0 ? '+' + r.price : r.price}</div><div class="book-payout">+$${r.profit100.toFixed(0)} on $100</div></div></div>`;
     }).join('') : emptyMsg;
-    body.innerHTML = `<div class="odds-toggle"><button class="odds-side-btn ${oddsViewSide === 'pick' ? 'active' : ''}" onclick="setOddsSide('pick')">Pick: ${g.pickedTeam.short}</button><button class="odds-side-btn ${oddsViewSide === 'opp' ? 'active' : ''}" onclick="setOddsSide('opp')">Opp: ${oppTeam.short}</button></div>${arbHtml}${listHtml}`;
+    body.innerHTML = `<div class="odds-toggle"><button class="odds-side-btn ${oddsViewSide === 'pick' ? 'active' : ''}" onclick="setOddsSide('pick')">Pick: ${g.pickedTeam.short}</button><button class="odds-side-btn ${oddsViewSide === 'opp' ? 'active' : ''}" onclick="setOddsSide('opp')">Opp: ${oppTeam.short}</button>${refreshBtn}</div>${arbHtml}${listHtml}`;
   } else if (currentTab === 'props') {
     if (!LEAGUES.find(l => l.key === g.league)?.propMarkets) { body.innerHTML = `<div class="proof-item warn"><strong>Player Props Not Available for ${g.league}</strong><div class="proof-sub">On-demand Player Props &amp; DFS are supported for NBA, NFL, NHL, MLB, NCAAF, NCAAB &amp; WNBA.</div></div>`; return; }
     const cached = propsEventCache[g.id];
-    if (!cached) { body.innerHTML = `<div class="proof-item"><strong>On-Demand Player Props &amp; DFS</strong><div class="proof-sub">Pulls live player lines from DraftKings, FanDuel, BetMGM, PrizePicks, Underdog &amp; ParlayPlay on demand.</div></div><button class="primary-btn" onclick="loadPropsForSelectedGame()">Load Live Player Props &amp; DFS</button>`; return; }
+    if (!cached) { body.innerHTML = `<div class="proof-item"><strong>On-Demand Player Props &amp; DFS</strong><div class="proof-sub">Pulls live player lines from DraftKings, FanDuel, BetMGM, Caesars, Fanatics, theScore Bet, PrizePicks, Underdog, ParlayPlay &amp; Pick6.</div></div><button class="primary-btn" onclick="loadPropsForSelectedGame()">Load Live Player Props &amp; DFS</button>`; return; }
     if (cached.error) { body.innerHTML = `<div class="proof-item warn"><strong>${cached.error}</strong></div><button class="secondary-btn" onclick="delete propsEventCache['${g.id}']; loadPropsForSelectedGame();">Retry</button>`; return; }
     const propRows = [];
     (cached.data?.bookmakers || []).forEach(bm => (bm.markets || []).forEach(mkt => (mkt.outcomes || []).forEach(out => {
-      if (out.name === 'Over' || out.name === 'Yes') propRows.push({ player: out.description || 'Player', market: mkt.key.replace(/^player_|^batter_|^pitcher_/, '').replace(/_/g, ' ').toUpperCase(), point: out.point ?? '', side: out.name, price: out.price, profit100: americanToProfit100(out.price), bookKey: bm.key, bookTitle: bm.title, link: out.link || mkt.link || bm.link || '' });
+      if (out.name === 'Over' || out.name === 'Yes') propRows.push({ player: out.description || 'Player', market: mkt.key.replace(/^player_|^batter_|^pitcher_/, '').replace(/_/g, ' ').toUpperCase(), point: out.point ?? '', side: out.name, price: out.price, profit100: americanToProfit100(out.price), bookKey: bm.key, bookTitle: SPORTSBOOK_LINKS[bm.key]?.name || bm.title, link: out.link || mkt.link || bm.link || '' });
     })));
     propRows.sort((a, b) => b.profit100 - a.profit100);
     body.innerHTML = propRows.length ? propRows.slice(0, 35).map(p => {
@@ -1127,7 +1182,7 @@ function openDateMathModal() {
   document.getElementById('dm-modal').classList.add('open');
 }
 
-function saveOddsKey(val) { if (!window.ALIGNIQ_IS_OWNER) return; oddsApiKey = val.trim(); localStorage.setItem('aligniq_odds_key', oddsApiKey); oddsSportCache = {}; loadSlate(false); }
+function saveOddsKey(val) { if (!window.ALIGNIQ_IS_OWNER) return; oddsApiKey = val.trim(); localStorage.setItem('aligniq_odds_key', oddsApiKey); oddsSportCache = {}; boxingLoaded = false; boxingGamesCache = []; loadSlate(false); }
 function toggleSave(e, id) { e.stopPropagation(); if (savedIds.has(id)) savedIds.delete(id); else savedIds.add(id); localStorage.setItem('aligniq_saved', JSON.stringify(Array.from(savedIds))); document.getElementById('saved-count').textContent = savedIds.size; renderFeed(); }
 function setFilterMode(m) { filterMode = m; ['all', 'high', 'gem', 'live', 'upcoming'].forEach(k => document.getElementById(`mode-${k}`).classList.toggle('active', k === m)); renderFeed(); }
 function setSport(s) { activeSport = s; renderSportsBar(); renderFeed(); }
