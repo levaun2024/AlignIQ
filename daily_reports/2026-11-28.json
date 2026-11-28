@@ -1,6 +1,6 @@
 {
   "date": "2026-11-28",
-  "generated_at": "2026-11-28T08:05:45.183328+00:00",
+  "generated_at": "2026-11-28T13:58:52.015826+00:00",
   "algo_version": "phase5-baseline",
   "active_weights": {
     "gem": 10,
@@ -16,7 +16,7 @@
     "headline": "The model is in strong form\u2014hitting 78.5% across 186 verified games over the last 60 days.",
     "what_worked": "Our strongest edge lately is Market Fair Odds (85.0% WR, +6.5% vs avg).",
     "watch_out": "Heads up: Pattern Signals (Gematria) (53.3% WR, -25.2% vs avg) has been over-confident on losses.",
-    "next_step": "Automatically applied 1 approved update(s) to algo_config.json, with 2 item(s) waiting in Approvals."
+    "next_step": "You have 2 suggestion(s) in Approvals\u2014auto-updates apply in 45s, and manual code ideas archive to your Dev Queue."
   },
   "data_integrity": {
     "verified_games_60d": 186,
@@ -27,11 +27,9 @@
   },
   "execution_summary": {
     "agent1_status": "SUCCESS",
-    "agent1_ran_at": "2026-11-28T08:05:42.320689+00:00",
+    "agent1_ran_at": "2026-11-28T13:58:47.000165+00:00",
     "agent2_status": "SUCCESS",
-    "newly_executed_approvals": [
-      "prop_edge_badge_v1"
-    ]
+    "newly_executed_approvals": []
   },
   "performance_analysis": {
     "completed_games_analyzed": 186,
@@ -256,7 +254,7 @@
       }
     ]
   },
-  "chief_auditor_critique": "The model is in strong form\u2014hitting 78.5% across 186 verified games over the last 60 days. Automatically applied 1 approved update(s) to algo_config.json, with 2 item(s) waiting in Approvals.",
+  "chief_auditor_critique": "The model is in strong form\u2014hitting 78.5% across 186 verified games over the last 60 days. You have 2 suggestion(s) in Approvals\u2014auto-updates apply in 45s, and manual code ideas archive to your Dev Queue.",
   "app_health_audit": {
     "status": "ATTENTION NEEDED",
     "passed": [
