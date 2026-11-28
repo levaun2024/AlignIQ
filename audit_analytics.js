@@ -58,11 +58,15 @@
     return { pick, confidence: Math.round(clamp(50 + Math.abs(hScore - aScore) * 0.5, 50, 99)), isUnderdog: Boolean(marketDog && pick === marketDog) };
   }
 
+  // --- 1. GRADED PICKS & POST-GAME AUTOPSY ---
   window.openArchivedGameDetail = async (league, gameId, dateStr) => {
+    const modal = document.getElementById('graded-audit-modal');
     const body = document.getElementById('graded-audit-body');
-    if (!body) return;
+    if (!modal || !body) return;
+    modal.classList.add('open');
     body.innerHTML = `<p style="font-size:12px;color:var(--text-muted);">Pulling full post-game boxscore &amp; analytics from ESPN...</p>`;
 
+    if (!cachedHistory) cachedHistory = await fetchFresh('history.json');
     const snap = cachedHistory?.dates?.[dateStr];
     const g = (snap?.games || []).find((x) => String(x.id) === String(gameId)) || {};
     const path = ESPN_PATHS[String(league || '').toUpperCase()];
@@ -220,20 +224,21 @@
     `;
   };
 
-  // --- OWNER COMMAND CENTER ---
+  // --- 2. OWNER COMMAND CENTER ---
   window.switchOwnerTab = (tab) => { ownerTab = tab; renderOwnerModal(); };
   window.selectOwnerReportDate = (d) => { selectedReportDate = d; renderOwnerModal(); };
 
   window.setProposalDecision = async (propId, decision, title = '', changeSpecB64 = '') => {
     const noteEl = document.getElementById(`prop-note-${propId}`);
-    const notes = noteEl ? noteEl.value.trim() : '';
-    let changeSpec = null;
+    const notes = noteEl ? noteEl.value.trim() : (decision === 'COMPLETED' ? 'Completed by Owner' : '');
+    let changeSpec = approvalState[propId]?.change_spec || null;
     try { if (changeSpecB64) changeSpec = JSON.parse(atob(changeSpecB64)); } catch {}
 
     approvalState[propId] = {
       ...(approvalState[propId] || {}),
-      title: title || propId,
+      title: title || approvalState[propId]?.title || propId,
       decision,
+      status: decision === 'COMPLETED' ? 'COMPLETED' : (decision === 'APPROVED' ? 'QUEUED_FOR_EXECUTION' : decision),
       notes,
       change_spec: changeSpec,
       syncing: true,
@@ -249,7 +254,7 @@
       try {
         const res = await window.ownerWorkerCall('/admin/approve', 'POST', {
           proposalId: propId,
-          title: title || propId,
+          title: approvalState[propId].title,
           decision,
           notes,
           changeSpec
@@ -313,22 +318,39 @@
     if (!selectedReportDate && reportDates.length) selectedReportDate = reportDates[0];
     const dailyRep = selectedReportDate ? await fetchFresh(`daily_reports/${selectedReportDate}.json`) : null;
 
+    // Count items waiting in Owner's manual Dev Queue
+    const devQueueEntries = Object.entries(approvalState).filter(([, v]) =>
+      v && (v.status === 'AWAITING_OWNER_CODE' || v.change_spec?.type === 'manual_code' || v.status === 'COMPLETED')
+    );
+    const openDevCount = devQueueEntries.filter(([, v]) => v.status !== 'COMPLETED' && v.decision === 'APPROVED').length;
+
     const tabsHtml = `
-      <div class="tabs-row" style="margin-bottom:12px;">
-        <button class="tab-btn ${ownerTab === 'overview' ? 'active' : ''}" onclick="switchOwnerTab('overview')">📊 Overview &amp; ROI</button>
-        <button class="tab-btn ${ownerTab === 'reports' ? 'active' : ''}" onclick="switchOwnerTab('reports')">📁 Daily Reports</button>
-        <button class="tab-btn ${ownerTab === 'approvals' ? 'active' : ''}" onclick="switchOwnerTab('approvals')">✅ Approvals (${(dailyRep?.pending_proposals || []).length})</button>
+      <div class="tabs-row" style="margin-bottom:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;">
+        <button class="tab-btn ${ownerTab === 'overview' ? 'active' : ''}" style="font-size:10.5px;padding:6px 4px;" onclick="switchOwnerTab('overview')">📊 Overview</button>
+        <button class="tab-btn ${ownerTab === 'reports' ? 'active' : ''}" style="font-size:10.5px;padding:6px 4px;" onclick="switchOwnerTab('reports')">📁 Reports</button>
+        <button class="tab-btn ${ownerTab === 'approvals' ? 'active' : ''}" style="font-size:10.5px;padding:6px 4px;" onclick="switchOwnerTab('approvals')">✅ Approve (${(dailyRep?.pending_proposals || []).length})</button>
+        <button class="tab-btn ${ownerTab === 'devqueue' ? 'active' : ''}" style="font-size:10.5px;padding:6px 4px;" onclick="switchOwnerTab('devqueue')">📋 Dev (${openDevCount})</button>
       </div>
     `;
 
     if (ownerTab === 'overview') {
       const s60 = cachedReport.summary_60d || { wins: 0, losses: 0, total: 0, win_rate: 0, underdogs: { wins: 0, losses: 0, win_rate: 0 }, leagues: {}, daily_trend: [] };
-      const dog = s60.underdogs || { wins: 0, losses: 0, win_rate: 0, roi_pct: null };
+      const dog = s60.underdogs || { wins: 0, losses: 0, win_rate: 0 };
       const gr = cachedReport.guardrails || { min_global_games: 500 };
       const samplePct = Math.min(100, Math.round((s60.total / gr.min_global_games) * 100));
+      const w = cachedReport.weights || { gem: 10, h2h: 60, ros: 30 };
+
+      const friendNote = s60.total === 0
+        ? "We haven't graded any completed games yet—run your daily workflow once to start tracking."
+        : `Over the last 60 days, AlignIQ is hitting <b>${s60.win_rate}%</b> (${s60.wins} wins, ${s60.losses} losses). Our Underdog Gate is holding underdogs to <b>${dog.win_rate}%</b> (${dog.wins}-${dog.losses}), and we're <b>${samplePct}%</b> of the way to our ${gr.min_global_games}-game statistical guardrail.`;
 
       body.innerHTML = `${tabsHtml}
         <div style="display:flex;flex-direction:column;gap:12px;font-size:12px;">
+          <div class="proof-item arb-box" style="margin:0;">
+            <strong style="color:var(--accent);">💬 Plain-English Snapshot</strong>
+            <div class="proof-sub" style="margin-top:4px;line-height:1.45;">${friendNote}</div>
+          </div>
+
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             <div class="proof-item" style="margin:0;">
               <div style="font-size:10px;color:var(--text-muted);font-weight:700;">60-DAY RECORD</div>
@@ -338,15 +360,30 @@
             <div class="proof-item" style="margin:0;">
               <div style="font-size:10px;color:var(--text-muted);font-weight:700;">NET UNITS / ROI</div>
               <div style="font-size:20px;font-weight:800;color:var(--blue);">${s60.roi_pct != null ? (s60.roi_pct >= 0 ? '+' : '') + s60.roi_pct + '%' : 'Pending ML'}</div>
-              <div class="proof-sub">${s60.net_units != null ? (s60.net_units >= 0 ? '+' : '') + s60.net_units + 'u' : 'Log moneylines'}</div>
+              <div class="proof-sub">${s60.net_units != null ? (s60.net_units >= 0 ? '+' : '') + s60.net_units + 'u' : 'Needs closing odds'}</div>
             </div>
           </div>
-          <div class="proof-item" style="margin:0;border-color:rgba(245,158,11,0.4);">
-            <div style="display:flex;justify-content:space-between;"><strong style="color:var(--amber);">🐶 Underdog Gate</strong><strong>${dog.wins}-${dog.losses} (${dog.win_rate}%)</strong></div>
-            <div class="proof-sub">Guardrail: ${s60.total}/${gr.min_global_games} games (${samplePct}%)</div>
+
+          <div class="proof-item" style="margin:0;">
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:6px;">
+              <strong>⚖️ Active Model Mix</strong>
+              <span style="color:var(--text-muted);">${w.gem}% Signals · ${w.h2h}% Odds · ${w.ros}% Form</span>
+            </div>
+            <div style="display:flex;height:8px;border-radius:999px;overflow:hidden;background:var(--bg);">
+              <div style="width:${w.gem}%;background:#a78bfa;"></div>
+              <div style="width:${w.h2h}%;background:#38bdf8;"></div>
+              <div style="width:${w.ros}%;background:#00d285;"></div>
+            </div>
           </div>
+
+          <div class="proof-item" style="margin:0;border-color:rgba(245,158,11,0.4);">
+            <div style="display:flex;justify-content:space-between;"><strong style="color:var(--amber);">🐶 Underdog Gate &amp; Sample Scale</strong><strong>${samplePct}% Ready</strong></div>
+            <div style="height:6px;background:var(--bg);border-radius:999px;overflow:hidden;margin:6px 0;"><div style="height:100%;width:${samplePct}%;background:var(--amber);"></div></div>
+            <div class="proof-sub">Underdogs: ${dog.wins}-${dog.losses} (${dog.win_rate}%) · Sample: ${s60.total}/${gr.min_global_games} games</div>
+          </div>
+
           <div class="proof-item" style="margin:0;"><strong style="color:var(--blue);">📈 30-Day Win Rate Trend</strong><canvas id="chart-trend" height="145" style="margin-top:8px;"></canvas></div>
-          <div class="proof-item" style="margin:0;"><strong style="color:var(--accent);">🏆 League Win Rates</strong><canvas id="chart-leagues" height="145" style="margin-top:8px;"></canvas></div>
+          <div class="proof-item" style="margin:0;"><strong style="color:var(--accent);">🏆 Win Rate by League</strong><canvas id="chart-leagues" height="145" style="margin-top:8px;"></canvas></div>
         </div>
       `;
 
@@ -363,43 +400,56 @@
       const pa = dailyRep.performance_analysis || {};
       const ba = dailyRep.before_and_after_performance || [];
       const ci = dailyRep.competitor_intel?.competitors_tracked || [];
+      const pb = dailyRep.plain_english_brief || {};
       const factors = Object.values(pa.factor_attribution || {});
       const cal = Object.entries(pa.calibration || {});
       const hits = pa.biggest_successes || [];
       const misses = pa.biggest_failures || [];
+      const score = dailyRep.investor_audit_score ?? 80;
+      const scoreColor = score >= 85 ? 'var(--accent)' : score >= 65 ? 'var(--amber)' : 'var(--danger)';
 
       body.innerHTML = `${tabsHtml}
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
-          <label style="font-size:11px;font-weight:700;color:var(--text-muted);">Report Date:</label>
+          <label style="font-size:11px;font-weight:700;color:var(--text-muted);">Archived Date (${reportDates.length}):</label>
           <select class="form-input" style="height:34px;flex:1;" onchange="selectOwnerReportDate(this.value)">${reportDates.map(d => `<option value="${d}" ${d === selectedReportDate ? 'selected' : ''}>${d}</option>`).join('')}</select>
         </div>
 
         <div class="proof-item arb-box">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <strong style="color:var(--accent);">🏛️ Investor Audit Score</strong>
-            <strong style="font-size:16px;">${dailyRep.investor_audit_score ?? '—'}/100</strong>
+            <strong style="font-size:16px;color:${scoreColor};">${score}/100</strong>
           </div>
-          <div class="proof-sub" style="margin-top:4px;">${dailyRep.chief_auditor_critique || ''}</div>
-          <div class="proof-sub" style="font-size:10.5px;color:var(--text-dim);margin-top:4px;">
+          <div style="height:7px;background:var(--bg);border-radius:999px;overflow:hidden;margin:6px 0 8px;">
+            <div style="height:100%;width:${score}%;background:${scoreColor};"></div>
+          </div>
+          <div class="proof-sub" style="line-height:1.45;"><b>The Bottom Line:</b> ${pb.headline || dailyRep.chief_auditor_critique || ''}</div>
+          ${pb.what_worked ? `<div class="proof-sub" style="margin-top:4px;color:var(--accent);"><b>What Worked:</b> ${pb.what_worked}</div>` : ''}
+          ${pb.watch_out ? `<div class="proof-sub" style="margin-top:4px;color:var(--amber);"><b>Watch Out For:</b> ${pb.watch_out}</div>` : ''}
+          <div class="proof-sub" style="font-size:10px;color:var(--text-dim);margin-top:6px;">
             Config: <b>${dailyRep.algo_version || 'baseline'}</b> · Updated: ${dailyRep.generated_at ? new Date(dailyRep.generated_at).toLocaleString() : 'N/A'}
           </div>
         </div>
 
         <div class="proof-item">
-          <strong style="color:var(--blue);">⚖️ Factor Attribution &amp; Bias</strong>
+          <strong style="color:var(--blue);">⚖️ What Actually Drove Wins (Factor Scale)</strong>
+          <div class="proof-sub" style="margin-bottom:8px;">Shows how often each pillar won when it leaned toward our pick, compared to our overall average.</div>
+          ${factors.length ? `<canvas id="chart-daily-factors" height="125" style="margin-bottom:8px;"></canvas>` : ''}
           ${factors.length ? factors.map(f => `
-            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);font-size:11.5px;">
-              <span>${f.label}</span>
-              <span><b>${f.win_rate}%</b> (${f.agree_w}/${f.agree_n}) · <span style="color:${f.lift_vs_avg >= 0 ? 'var(--accent)' : 'var(--danger)'};">${f.lift_vs_avg >= 0 ? '+' : ''}${f.lift_vs_avg}%</span></span>
+            <div style="margin-bottom:6px;">
+              <div style="display:flex;justify-content:space-between;font-size:11px;">
+                <span>${f.label}</span>
+                <span><b>${f.win_rate}%</b> (${f.agree_w}/${f.agree_n}) · <span style="color:${f.lift_vs_avg >= 0 ? 'var(--accent)' : 'var(--danger)'};">${f.lift_vs_avg >= 0 ? '+' : ''}${f.lift_vs_avg}%</span></span>
+              </div>
+              <div style="height:5px;background:var(--bg);border-radius:999px;overflow:hidden;margin-top:2px;">
+                <div style="height:100%;width:${clamp(f.win_rate)}%;background:${f.lift_vs_avg >= 0 ? 'var(--accent)' : 'var(--amber)'};"></div>
+              </div>
             </div>
           `).join('') : '<div class="proof-sub">Run daily_agents.yml to populate factor attribution.</div>'}
-          <div class="proof-sub" style="margin-top:6px;"><b>Overvalued:</b> ${(pa.overvalued_factors || []).join(', ') || 'None'}</div>
-          <div class="proof-sub"><b>Undervalued:</b> ${(pa.undervalued_factors || []).join(', ') || 'None'}</div>
         </div>
 
         ${cal.length ? `
           <div class="proof-item">
-            <strong style="color:var(--accent);">🎯 Confidence Calibration</strong>
+            <strong style="color:var(--accent);">🎯 Confidence Calibration (Is High Conf Actually Winning More?)</strong>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px;">
               ${cal.map(([tier, m]) => `
                 <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px;text-align:center;">
@@ -414,9 +464,9 @@
 
         ${(hits.length || misses.length) ? `
           <div class="proof-item">
-            <strong style="color:var(--blue);">🏆 Biggest Hits &amp; Misses</strong>
-            ${hits.slice(0, 3).map(h => `<div class="proof-sub" style="color:var(--accent);">✓ ${h.league} ${h.matchup} (${h.confidence}% conf · ${h.score})</div>`).join('')}
-            ${misses.slice(0, 3).map(m => `<div class="proof-sub" style="color:var(--danger);">✕ ${m.league} ${m.matchup} (${m.confidence}% conf · ${m.score})</div>`).join('')}
+            <strong style="color:var(--blue);">🏆 Biggest Hits &amp; Misses (Tap for Full ESPN Boxscore)</strong>
+            ${hits.slice(0, 3).map(h => `<div class="proof-sub" style="color:var(--accent);cursor:pointer;padding:3px 0;" onclick="closeModal('owner-analytics-modal'); openGradedAuditModal('${h.date}')">✓ ${h.league} ${h.matchup} (${h.confidence}% conf · ${h.score}) ↗</div>`).join('')}
+            ${misses.slice(0, 3).map(m => `<div class="proof-sub" style="color:var(--danger);cursor:pointer;padding:3px 0;" onclick="closeModal('owner-analytics-modal'); openGradedAuditModal('${m.date}')">✕ ${m.league} ${m.matchup} (${m.confidence}% conf · ${m.score}) ↗</div>`).join('')}
           </div>
         ` : ''}
 
@@ -438,7 +488,7 @@
             ${ci.map(c => `
               <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px;margin-top:6px;font-size:11px;">
                 <strong>${c.name}</strong>
-                <div class="proof-sub"><b>Edge:</b> ${c.aligniq_edge}</div>
+                <div class="proof-sub"><b>Our Edge:</b> ${c.aligniq_edge}</div>
                 <div class="proof-sub" style="color:var(--amber);"><b>Gap to Close:</b> ${c.gap_to_close}</div>
               </div>
             `).join('')}
@@ -453,41 +503,58 @@
           </ul>
         </div>
       `;
-    } else {
+
+      if (factors.length && typeof window.Chart === 'function') {
+        activeCharts.push(new Chart(document.getElementById('chart-daily-factors'), {
+          type: 'bar',
+          data: {
+            labels: factors.map(f => f.label),
+            datasets: [{ data: factors.map(f => f.win_rate), backgroundColor: ['#a78bfa', '#38bdf8', '#00d285'], borderRadius: 6 }]
+          },
+          options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: '#8b95a5', font: { size: 9 } }, grid: { display: false } }, y: { min: 0, max: 100, ticks: { color: '#8b95a5', font: { size: 9 } }, grid: { color: 'rgba(148,163,184,0.1)' } } } }
+        }));
+      }
+    } else if (ownerTab === 'approvals') {
       const props = dailyRep?.pending_proposals || [];
       body.innerHTML = `${tabsHtml}
-        <div class="proof-item arb-box" style="font-size:11.5px;"><strong>🔒 Owner Approval Gate Active</strong> — Approved weight &amp; feature changes execute via GitHub Actions automatically (~45s).</div>
+        <div class="proof-item arb-box" style="font-size:11.5px;">
+          <strong>🔒 Owner Approval Gate</strong><br/>
+          <span style="color:var(--accent);">🤖 AGENT AUTO</span> updates go live in ~45s. <span style="color:var(--amber);">🛠️ YOUR CODE</span> updates archive to your <b>📋 Dev</b> tab so you can build &amp; check them off.
+        </div>
         ${props.length ? props.map(p => {
           const st = approvalState[p.id] || {};
           const safeTitle = escapeAttr(p.title);
           const specB64 = btoa(JSON.stringify(p.change_spec || null));
-          const displayStatus = st.status === 'IMPLEMENTED' ? 'IMPLEMENTED' : (st.decision || 'PENDING REVIEW');
-          const catTag = p.category ? `<span style="font-size:9.5px;font-weight:800;color:var(--blue);margin-right:6px;">[${p.category}]</span>` : '';
-          const badge = st.decision
-            ? `<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;background:${st.decision === 'APPROVED' ? 'var(--accent-soft)' : st.decision === 'REJECTED' ? 'rgba(239,68,68,0.18)' : 'rgba(245,158,11,0.18)'};color:${st.decision === 'APPROVED' ? 'var(--accent)' : st.decision === 'REJECTED' ? 'var(--danger)' : 'var(--amber)'};">${displayStatus}</span>`
-            : `<span style="font-size:10px;font-weight:800;color:var(--blue);">PENDING REVIEW</span>`;
+          const isManual = p.execution_type === 'OWNER_CODE' || p.change_spec?.type === 'manual_code';
+          const execBadge = isManual
+            ? `<span style="font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(245,158,11,0.18);color:var(--amber);border:1px solid rgba(245,158,11,0.4);">🛠️ REQUIRES YOUR CODE</span>`
+            : `<span style="font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:999px;background:rgba(0,210,133,0.15);color:var(--accent);border:1px solid rgba(0,210,133,0.4);">🤖 AGENT AUTO-APPLIES</span>`;
+          const displayStatus = st.status === 'IMPLEMENTED' ? 'IMPLEMENTED' : st.status === 'AWAITING_OWNER_CODE' ? 'IN DEV QUEUE' : (st.decision || 'PENDING');
+          const statusBadge = st.decision
+            ? `<span style="font-size:10px;font-weight:800;color:${st.decision === 'APPROVED' ? 'var(--accent)' : st.decision === 'REJECTED' ? 'var(--danger)' : 'var(--amber)'};">${displayStatus}</span>`
+            : `<span style="font-size:10px;font-weight:800;color:var(--blue);">PENDING</span>`;
           const syncTag = st.syncing
-            ? `<div style="font-size:10px;color:var(--blue);margin-top:4px;">⏳ Syncing to GitHub &amp; triggering agents...</div>`
+            ? `<div style="font-size:10px;color:var(--blue);margin-top:4px;">⏳ Syncing to GitHub...</div>`
             : st.status === 'IMPLEMENTED'
-            ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Executed &amp; persisted to algo_config.json</div>`
+            ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Live in algo_config.json</div>`
+            : st.status === 'AWAITING_OWNER_CODE'
+            ? `<div style="font-size:10px;color:var(--amber);margin-top:4px;">📋 Archived in your Dev Queue tab</div>`
             : st.workflowTriggered
-            ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Synced &amp; GitHub Action triggered (refreshing in ~45s)</div>`
-            : st.syncedToGitHub
-            ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Synced to GitHub (owner_approvals.json)</div>`
+            ? `<div style="font-size:10px;color:var(--accent);margin-top:4px;">✓ Synced &amp; Agent running (~45s)</div>`
             : st.syncError
-            ? `<div style="font-size:10px;color:var(--danger);margin-top:4px;">⚠ Saved locally only: ${escapeAttr(st.syncError)}</div>`
+            ? `<div style="font-size:10px;color:var(--danger);margin-top:4px;">⚠ ${escapeAttr(st.syncError)}</div>`
             : '';
           return `
             <div class="proof-item">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
-                <strong>${catTag}${p.title}</strong>
-                ${badge}
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                ${execBadge}
+                ${statusBadge}
               </div>
+              <strong style="font-size:13px;">${p.category ? `[${p.category}] ` : ''}${p.title}</strong>
               ${syncTag}
-              <div class="proof-sub" style="margin:6px 0 8px;">${p.description}</div>
-              <div style="font-size:10px;font-weight:800;color:var(--blue);margin-bottom:4px;">👁️ VISUAL PREVIEW</div>
+              <div class="proof-sub" style="margin:6px 0 8px;line-height:1.4;">${p.description}</div>
               <div style="margin-bottom:10px;">${p.visual_preview_html || ''}</div>
-              <input id="prop-note-${p.id}" class="form-input" style="height:34px;font-size:12px;margin-bottom:8px;" value="${escapeAttr(st.notes || '')}" placeholder="Request changes (e.g. change color, move position)..." />
+              <input id="prop-note-${p.id}" class="form-input" style="height:34px;font-size:12px;margin-bottom:8px;" value="${escapeAttr(st.notes || '')}" placeholder="Add your notes or requested tweaks..." />
               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
                 <button class="icon-btn accent" onclick="setProposalDecision('${p.id}', 'APPROVED', '${safeTitle}', '${specB64}')">✓ Approve</button>
                 <button class="icon-btn" style="border-color:var(--amber);color:var(--amber);" onclick="setProposalDecision('${p.id}', 'CHANGES REQUESTED', '${safeTitle}', '${specB64}')">✎ Modify</button>
@@ -495,7 +562,45 @@
               </div>
             </div>
           `;
-        }).join('') : '<div class="proof-item">No pending update proposals right now.</div>'}
+        }).join('') : '<div class="proof-item">All caught up! No pending proposals right now.</div>'}
+      `;
+    } else {
+      // --- DEV QUEUE / MANUAL CODE CHECKLIST TAB ---
+      const activeItems = devQueueEntries.filter(([, v]) => v.status !== 'COMPLETED' && v.decision === 'APPROVED');
+      const doneItems = devQueueEntries.filter(([, v]) => v.status === 'COMPLETED');
+
+      body.innerHTML = `${tabsHtml}
+        <div class="proof-item arb-box" style="font-size:11.5px;">
+          <strong>📋 Your Code Update Checklist</strong><br/>
+          Approved updates that require manual repo edits are archived here. Once you push the code, tap <b>✓ Mark Completed</b> to check them off.
+        </div>
+
+        <strong style="font-size:11px;color:var(--amber);display:block;margin:8px 0 6px;">🛠️ TO BUILD (${activeItems.length})</strong>
+        ${activeItems.length ? activeItems.map(([id, v]) => `
+          <div class="proof-item" style="border-color:rgba(245,158,11,0.45);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+              <strong>${v.title || id}</strong>
+              <span style="font-size:9.5px;color:var(--amber);font-weight:800;">OPEN</span>
+            </div>
+            ${v.change_spec?.target_files ? `<div class="proof-sub" style="color:var(--blue);margin-top:4px;">Files: <code>${v.change_spec.target_files.join(', ')}</code></div>` : ''}
+            ${v.notes ? `<div class="proof-sub" style="margin-top:4px;"><b>Your Note:</b> ${escapeAttr(v.notes)}</div>` : ''}
+            <div class="proof-sub" style="font-size:10px;color:var(--text-dim);margin:4px 0 8px;">Approved: ${v.updated_at ? new Date(v.updated_at).toLocaleDateString() : 'Recently'}</div>
+            <button class="icon-btn accent" style="width:100%;" onclick="setProposalDecision('${id}', 'COMPLETED', '${escapeAttr(v.title || id)}')">✓ Mark Completed</button>
+          </div>
+        `).join('') : '<div class="proof-item"><div class="proof-sub">No open code tasks—you’re all caught up!</div></div>'}
+
+        ${doneItems.length ? `
+          <strong style="font-size:11px;color:var(--accent);display:block;margin:12px 0 6px;">✅ COMPLETED (${doneItems.length})</strong>
+          ${doneItems.map(([id, v]) => `
+            <div class="proof-item" style="opacity:0.7;">
+              <div style="display:flex;justify-content:space-between;">
+                <strong style="text-decoration:line-through;">${v.title || id}</strong>
+                <span style="font-size:10px;color:var(--accent);font-weight:800;">DONE ✓</span>
+              </div>
+              <div class="proof-sub" style="font-size:10px;">Checked off: ${v.updated_at ? new Date(v.updated_at).toLocaleDateString() : ''}</div>
+            </div>
+          `).join('')}
+        ` : ''}
       `;
     }
   }

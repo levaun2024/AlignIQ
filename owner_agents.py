@@ -68,11 +68,10 @@ def walk_forward_optimize(games, base_weights):
 
 
 def execute_approved_changes(approvals, cfg, analysis, now):
-    """Executes APPROVED weight changes AND live feature flags into algo_config.json."""
+    """Executes AGENT_AUTO approvals into algo_config.json and routes OWNER_CODE approvals to the Dev Queue."""
     executed_now = []
     cfg.setdefault("active_features", {})
 
-    # Map known legacy/UI proposal IDs to live feature flags automatically
     LEGACY_FEATURE_MAP = {
         "prop_kelly_sizer_v1": "kelly_unit_sizer",
         "prop_edge_badge_v1": "edge_badge_cards",
@@ -83,10 +82,13 @@ def execute_approved_changes(approvals, cfg, analysis, now):
     for prop_id, item in approvals.items():
         if not isinstance(item, dict):
             continue
-        if item.get("decision") == "APPROVED" and item.get("status") != "IMPLEMENTED":
+        if item.get("decision") == "COMPLETED" or item.get("status") == "COMPLETED":
+            item["status"] = "COMPLETED"
+            continue
+
+        if item.get("decision") == "APPROVED" and item.get("status") not in ("IMPLEMENTED", "AWAITING_OWNER_CODE"):
             spec = item.get("change_spec")
 
-            # Fallback for previously approved proposals that had change_spec: null
             if not spec and prop_id in LEGACY_FEATURE_MAP:
                 spec = {"type": "enable_feature", "feature": LEGACY_FEATURE_MAP[prop_id], "enabled": True}
                 item["change_spec"] = spec
@@ -130,6 +132,11 @@ def execute_approved_changes(approvals, cfg, analysis, now):
                 item["implemented_at"] = now.isoformat()
                 executed_now.append(prop_id)
 
+            else:
+                # Owner manual code change -> archive into Dev Queue
+                item["status"] = "AWAITING_OWNER_CODE"
+                item["queued_at"] = now.isoformat()
+
     if executed_now:
         save_json(CONFIG_FILE, cfg)
         rep = load_json(REPORT_FILE, {})
@@ -145,89 +152,126 @@ def execute_approved_changes(approvals, cfg, analysis, now):
 
 
 def build_council_proposals(cfg, analysis, opt_result, approvals, all_games):
-    """Investor-grade council: proposes Algorithmic, Structural, Risk, Informational & Visual upgrades."""
+    """Generates both AGENT_AUTO (instant) and OWNER_CODE (manual repo edit) proposals."""
     proposals = []
     active_feats = cfg.get("active_features", {})
 
     def is_done(pid):
-        return approvals.get(pid, {}).get("status") == "IMPLEMENTED"
+        return approvals.get(pid, {}).get("status") in ("IMPLEMENTED", "COMPLETED", "AWAITING_OWNER_CODE")
 
-    # 1. ALGORITHMIC (Walk-forward evidence-backed weight adjustment)
+    # 1. AGENT_AUTO: Algorithmic Weight Rebalance
     if opt_result:
         cw = opt_result["candidate_weights"]
         pid = f"opt_weights_{cw['gem']}_{cw['h2h']}_{cw['ros']}"
         if not is_done(pid):
             proposals.append({
                 "id": pid,
+                "execution_type": "AGENT_AUTO",
                 "category": "ALGORITHMIC",
                 "priority": "HIGH",
                 "title": f"Rebalance Model Weights ({cw['gem']}/{cw['h2h']}/{cw['ros']})",
                 "description": (
-                    f"Walk-forward out-of-sample test ({opt_result['oos_sample']} recent games) lifted win rate from "
-                    f"{opt_result['baseline_oos_wr']}% to {opt_result['candidate_oos_wr']}% (+{opt_result['oos_lift']}% edge)."
+                    f"We tested these new weights on the {opt_result['oos_sample']} most recent games the model hadn't seen yet, "
+                    f"and accuracy jumped from {opt_result['baseline_oos_wr']}% to {opt_result['candidate_oos_wr']}% (+{opt_result['oos_lift']}%)."
                 ),
                 "change_spec": {"type": "update_weights", "weights": cw},
                 "visual_preview_html": (
                     f"<div style='background:#0b1220;border:1px solid #38bdf8;border-radius:10px;padding:10px;font-size:11px;'>"
-                    f"<div><b>Current:</b> {cfg['weights']['gem']}% Sig / {cfg['weights']['h2h']}% Odds / {cfg['weights']['ros']}% Form</div>"
-                    f"<div style='color:#00d285;margin-top:4px;'><b>Proposed:</b> {cw['gem']}% Sig / {cw['h2h']}% Odds / {cw['ros']}% Form (+{opt_result['oos_lift']}% OOS)</div></div>"
+                    f"<div><b>Current:</b> {cfg['weights']['gem']}% Signals / {cfg['weights']['h2h']}% Odds / {cfg['weights']['ros']}% Form</div>"
+                    f"<div style='color:#00d285;margin-top:4px;'><b>Proposed:</b> {cw['gem']}% Signals / {cw['h2h']}% Odds / {cw['ros']}% Form (+{opt_result['oos_lift']}% lift)</div></div>"
                 ),
             })
 
-    # 2. STRUCTURAL / DATA INTEGRITY (Moneyline capture for true ROI tracking)
-    ml_logged = sum(1 for g in all_games if g.get("home_ml") is not None and g.get("away_ml") is not None)
-    if ml_logged < 50 and not active_feats.get("auto_moneyline_logging") and not is_done("prop_ml_capture_v1"):
-        proposals.append({
-            "id": "prop_ml_capture_v1",
-            "category": "STRUCTURAL",
-            "priority": "HIGH",
-            "title": "Enable Automated Closing Moneyline Capture",
-            "description": (
-                f"Investor Audit flagged only {ml_logged}/50 completed games with logged moneylines. "
-                "Enabling this flag locks closing odds into history.json so ROI and Net Units compute accurately."
-            ),
-            "change_spec": {"type": "enable_feature", "feature": "auto_moneyline_logging", "enabled": True, "category": "STRUCTURAL"},
-            "visual_preview_html": "<div style='background:#0b1220;border:1px solid #f59e0b;border-radius:10px;padding:10px;font-size:11px;'><b>Data Pipeline Upgrade:</b> Captures closing Home/Away ML on every archived slate → unlocks true Net Units &amp; ROI%.</div>",
-        })
-
-    # 3. RISK / BANKROLL (Fractional Kelly Sizer)
-    if not active_feats.get("kelly_unit_sizer") and not is_done("prop_kelly_sizer_v1"):
-        proposals.append({
-            "id": "prop_kelly_sizer_v1",
-            "category": "RISK & BANKROLL",
-            "priority": "MEDIUM",
-            "title": "Activate Fractional Kelly Unit Sizer in Best Odds Tab",
-            "description": "Displays an automatic Quarter-Kelly recommended stake (e.g., 1.25u) next to every +EV line to prevent over-betting.",
-            "change_spec": {"type": "enable_feature", "feature": "kelly_unit_sizer", "enabled": True, "category": "RISK & BANKROLL"},
-            "visual_preview_html": "<div style='background:#0b1220;border:1px solid #00d285;border-radius:10px;padding:10px;font-size:11px;'><b>FanDuel +4.2% EV</b> · Recommended Stake: <span style='color:#00d285;'>1.25 Units ($62.50)</span></div>",
-        })
-
-    # 4. VISUAL / UX (Model % vs Market % Edge Badge)
+    # 2. AGENT_AUTO: Edge Badge Toggle
     if not active_feats.get("edge_badge_cards") and not is_done("prop_edge_badge_v1"):
         proposals.append({
             "id": "prop_edge_badge_v1",
+            "execution_type": "AGENT_AUTO",
             "category": "VISUAL / UX",
             "priority": "MEDIUM",
-            "title": "Activate 'Model % vs Market %' Edge Badge on Feed Cards",
-            "description": "Displays a compact green Edge pill (e.g., +8.0% EDGE) below the CONF % badge whenever AlignIQ beats no-vig market consensus.",
+            "title": "Turn On '+EDGE' Badges on Feed Cards",
+            "description": "Adds a clean blue pill right under CONF % whenever our model beats the Vegas no-vig consensus by 1.5%+, so you can spot value plays in 1 second.",
             "change_spec": {"type": "enable_feature", "feature": "edge_badge_cards", "enabled": True, "category": "VISUAL / UX"},
             "visual_preview_html": "<div style='background:#0b1220;border:1px solid #38bdf8;border-radius:10px;padding:10px;font-size:11px;'><b>BOS Celtics @ NY Knicks</b> · <span style='color:#00d285;'>72% CONF</span> · <span style='background:#38bdf8;color:#000;padding:1px 6px;border-radius:99px;font-weight:800;'>+8.0% EDGE</span></div>",
         })
 
-    # 5. INFORMATIONAL (Underdog Guardrail)
-    dog = analysis.get("underdogs", {})
-    if dog.get("n", 0) >= 10 and dog.get("win_rate", 100) < 35.0 and not active_feats.get("strict_underdog_filter") and not is_done("prop_dog_guardrail_v1"):
+    # 3. AGENT_AUTO: Fractional Kelly Sizer Toggle
+    if not active_feats.get("kelly_unit_sizer") and not is_done("prop_kelly_sizer_v1"):
         proposals.append({
-            "id": "prop_dog_guardrail_v1",
+            "id": "prop_kelly_sizer_v1",
+            "execution_type": "AGENT_AUTO",
+            "category": "RISK & BANKROLL",
+            "priority": "MEDIUM",
+            "title": "Turn On Quarter-Kelly Stake Sizer in Best Odds",
+            "description": "Automatically calculates the exact recommended unit & dollar size next to every +EV sportsbook line so you never over-bet a single game.",
+            "change_spec": {"type": "enable_feature", "feature": "kelly_unit_sizer", "enabled": True, "category": "RISK & BANKROLL"},
+            "visual_preview_html": "<div style='background:#0b1220;border:1px solid #00d285;border-radius:10px;padding:10px;font-size:11px;'><b>FanDuel +4.2% EV</b> · Recommended Stake: <span style='color:#00d285;'>1.25u ($12.50)</span></div>",
+        })
+
+    # 4. OWNER_CODE: Custom Bankroll Input in Settings
+    if not is_done("code_bankroll_settings_v1"):
+        proposals.append({
+            "id": "code_bankroll_settings_v1",
+            "execution_type": "OWNER_CODE",
+            "category": "STRUCTURAL / UI",
+            "priority": "MEDIUM",
+            "title": "Add Custom Bankroll Input Field in Settings Modal",
+            "description": "Right now the Kelly Sizer defaults to a $1,000 bankroll. Adding a simple Bankroll ($) input box in Settings lets every user plug in their real bankroll.",
+            "change_spec": {"type": "manual_code", "target_files": ["app.js"]},
+            "visual_preview_html": "<div style='background:#0b1220;border:1px solid #f59e0b;border-radius:10px;padding:10px;font-size:11px;'><b>Settings → Bankroll:</b> <code>[ $ 1000 ]</code> → Updates Kelly dollar stakes live.</div>",
+        })
+
+    # 5. OWNER_CODE: Closing Line Value (CLV) Tracker Column
+    ml_logged = sum(1 for g in all_games if g.get("home_ml") is not None and g.get("away_ml") is not None)
+    if ml_logged < 50 and not is_done("code_clv_tracker_v1"):
+        proposals.append({
+            "id": "code_clv_tracker_v1",
+            "execution_type": "OWNER_CODE",
             "category": "INFORMATIONAL",
             "priority": "HIGH",
-            "title": "Enforce Strict Underdog Confidence Gate",
-            "description": f"Underdogs are hitting {dog.get('win_rate', 0)}% ({dog.get('w', 0)}-{dog.get('losses', 0)}). Flags low-conviction underdog picks with a high-variance warning.",
-            "change_spec": {"type": "enable_feature", "feature": "strict_underdog_filter", "enabled": True, "category": "INFORMATIONAL"},
-            "visual_preview_html": "<div style='background:#0b1220;border:1px solid #ef4444;border-radius:10px;padding:10px;font-size:11px;color:#fca5a5;'><b>⚠ High-Variance Underdog Flag:</b> Auto-warns users when model underdog conviction is below threshold.</div>",
+            "title": "Build Pre-Game Odds Snapshotter for Verified ROI & CLV",
+            "description": f"Only {ml_logged}/50 archived games have moneylines saved. Adding an evening pre-game GitHub Action run locks in closing odds before tip-off so we can prove real profit to investors.",
+            "change_spec": {"type": "manual_code", "target_files": [".github/workflows/daily_agents.yml", "agent.py"]},
+            "visual_preview_html": "<div style='background:#0b1220;border:1px solid #f59e0b;border-radius:10px;padding:10px;font-size:11px;'><b>Scheduled Pre-Game Capture:</b> Saves closing ML → unlocks verified <b>Net Units &amp; CLV %</b>.</div>",
         })
 
     return proposals
+
+
+def build_plain_english_brief(wr_60d, total_60d, analysis, health_score, executed_ids, proposals):
+    """Writes a friendly, easy-to-read explanation of what happened and what matters most."""
+    over = analysis.get("overvalued_factors", [])
+    under = analysis.get("undervalued_factors", [])
+    weak = analysis.get("recurring_weaknesses", [])
+
+    if total_60d == 0:
+        headline = "We're just getting started—no completed games have been graded in the last 60 days yet."
+    elif wr_60d >= 65:
+        headline = f"The model is rolling right now—hitting {wr_60d}% across {total_60d} completed games over the last 60 days."
+    elif wr_60d >= 55:
+        headline = f"Solid, profitable territory—we're hitting {wr_60d}% across {total_60d} games, with room to tighten up weak spots."
+    else:
+        headline = f"Accuracy has dipped to {wr_60d}% across {total_60d} games, so we need to pay close attention to what's dragging us down."
+
+    what_worked = (
+        f"Our strongest signal lately is {under[0]}." if under
+        else "All three core pillars (Market Odds, Form/Rest, and Signals) are pulling their weight without major imbalance."
+    )
+    watch_out = (
+        f"Heads up: {over[0]} has been over-confident on losses." if over
+        else (f"Main weak spot to watch: {weak[0]}." if weak else "No major red flags or recurring blind spots popped up today.")
+    )
+    next_step = (
+        f"I automatically applied {len(executed_ids)} approved update(s) to your live config, and queued {len(proposals)} new idea(s) in your Approvals tab."
+        if executed_ids else
+        f"You have {len(proposals)} suggestion(s) waiting in Approvals—auto-updates apply in 45 seconds, and manual code ideas go straight to your Dev Queue."
+    )
+    return {
+        "headline": headline,
+        "what_worked": what_worked,
+        "watch_out": watch_out,
+        "next_step": next_step,
+    }
 
 
 def main():
@@ -245,13 +289,11 @@ def main():
     opt_result = walk_forward_optimize(all_games, cfg["weights"])
     proposals = build_council_proposals(cfg, analysis, opt_result, approvals, all_games)
 
-    # Data integrity metrics for investor audit
     legacy_numeric = sum(1 for g in all_games if not g.get("matchup") or str(g.get("matchup", "")).startswith("Game #"))
     ml_logged = sum(1 for g in all_games if g.get("home_ml") is not None and g.get("away_ml") is not None)
     total_60d = analysis.get("total_completed_60d", 0)
     wr_60d = analysis.get("win_rate_60d", 0.0)
 
-    # Investor Health Score (0-100)
     health_score = 100
     if total_60d < 100:
         health_score -= 15
@@ -263,7 +305,6 @@ def main():
         health_score -= 10
     health_score = max(40, health_score)
 
-    # Before-and-after impact
     before_after = []
     for ch in cfg.get("change_log", [])[-5:]:
         delta = round(wr_60d - ch.get("baseline_win_rate", 0.0), 1)
@@ -277,6 +318,8 @@ def main():
             "impact": f"{delta:+.1f}% ({'Improved' if delta > 0 else 'Reduced' if delta < 0 else 'Neutral'})",
         })
 
+    plain_brief = build_plain_english_brief(wr_60d, total_60d, analysis, health_score, executed_ids, proposals)
+
     daily_report = {
         "date": today_str,
         "generated_at": now.isoformat(),
@@ -284,6 +327,7 @@ def main():
         "active_weights": cfg["weights"],
         "active_features": cfg.get("active_features", {}),
         "investor_audit_score": health_score,
+        "plain_english_brief": plain_brief,
         "execution_summary": {
             "agent1_status": analysis.get("status", "UNKNOWN"),
             "agent1_ran_at": analysis.get("generated_at"),
@@ -324,11 +368,7 @@ def main():
                 },
             ]
         },
-        "chief_auditor_critique": (
-            f"Investor Audit Score: {health_score}/100. Evaluated {total_60d} completed games ({wr_60d}% WR). "
-            f"Executed {len(executed_ids)} approved change(s) into algo_config.json. "
-            f"{len(proposals)} multi-category upgrade(s) queued for Owner review."
-        ),
+        "chief_auditor_critique": plain_brief["headline"] + " " + plain_brief["next_step"],
         "app_health_audit": {
             "status": "HEALTHY" if health_score >= 85 else "ATTENTION NEEDED",
             "passed": [
@@ -346,9 +386,10 @@ def main():
 
     save_json(os.path.join(DAILY_DIR, f"{today_str}.json"), daily_report)
 
+    # Archive up to 365 days of Daily Reports in index.json
     idx_path = os.path.join(DAILY_DIR, "index.json")
     idx = load_json(idx_path, {"dates": []})
-    dates_set = sorted(set(idx.get("dates", []) + [today_str]), reverse=True)[:90]
+    dates_set = sorted(set(idx.get("dates", []) + [today_str]), reverse=True)[:365]
     save_json(idx_path, {"dates": dates_set, "updated_at": now.isoformat()})
     print(f"Investor Council complete | Score: {health_score}/100 | Executed: {executed_ids} | Proposals: {len(proposals)}")
 
