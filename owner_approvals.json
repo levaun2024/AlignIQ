@@ -4,7 +4,12 @@
     "decision": "APPROVED",
     "notes": "",
     "updated_at": "2026-11-28T05:26:24.005Z",
-    "change_spec": null,
-    "status": "QUEUED_FOR_EXECUTION"
+    "change_spec": {
+      "type": "enable_feature",
+      "feature": "kelly_unit_sizer",
+      "enabled": true
+    },
+    "status": "IMPLEMENTED",
+    "implemented_at": "2026-11-28T06:24:53.329813+00:00"
   }
 }

@@ -1,0 +1,261 @@
+{
+  "date": "2026-11-28",
+  "generated_at": "2026-11-28T06:24:53.329813+00:00",
+  "algo_version": "phase5-baseline",
+  "active_weights": {
+    "gem": 10,
+    "h2h": 60,
+    "ros": 30
+  },
+  "active_features": {
+    "kelly_unit_sizer": true
+  },
+  "investor_audit_score": 75,
+  "plain_english_brief": {
+    "headline": "The model is rolling right now\u2014hitting 66.7% across 415 completed games over the last 60 days.",
+    "what_worked": "Our strongest signal lately is Market Fair Odds (85.0% WR, +18.3% vs avg).",
+    "watch_out": "Heads up: Pattern Signals (53.3% WR, -13.4% vs avg) has been over-confident on losses.",
+    "next_step": "I automatically applied 1 approved update(s) to your live config, and queued 3 new idea(s) in your Approvals tab."
+  },
+  "execution_summary": {
+    "agent1_status": "SUCCESS",
+    "agent1_ran_at": "2026-11-28T06:24:47.978654+00:00",
+    "agent2_status": "SUCCESS",
+    "newly_executed_approvals": [
+      "prop_kelly_sizer_v1"
+    ]
+  },
+  "performance_analysis": {
+    "completed_games_analyzed": 415,
+    "newly_analyzed_games": 415,
+    "win_rate_60d": 66.7,
+    "record_60d": "277-138",
+    "roi_pct_60d": null,
+    "net_units_60d": null,
+    "factor_attribution": {
+      "gem": {
+        "label": "Pattern Signals",
+        "agree_w": 8,
+        "agree_n": 15,
+        "misled_losses": 7,
+        "win_rate": 53.3,
+        "lift_vs_avg": -13.4
+      },
+      "h2h": {
+        "label": "Market Fair Odds",
+        "agree_w": 136,
+        "agree_n": 160,
+        "misled_losses": 24,
+        "win_rate": 85.0,
+        "lift_vs_avg": 18.3
+      },
+      "ros": {
+        "label": "Form, Rest & Health",
+        "agree_w": 251,
+        "agree_n": 386,
+        "misled_losses": 135,
+        "win_rate": 65.0,
+        "lift_vs_avg": -1.7
+      }
+    },
+    "overvalued_factors": [
+      "Pattern Signals (53.3% WR, -13.4% vs avg)"
+    ],
+    "undervalued_factors": [
+      "Market Fair Odds (85.0% WR, +18.3% vs avg)"
+    ],
+    "recurring_weaknesses": [],
+    "calibration": {
+      "50-59%": {
+        "wins": 206,
+        "total": 335,
+        "win_rate": 61.5
+      },
+      "60-69%": {
+        "wins": 52,
+        "total": 60,
+        "win_rate": 86.7
+      },
+      "70%+": {
+        "wins": 19,
+        "total": 20,
+        "win_rate": 95.0
+      }
+    },
+    "biggest_successes": [
+      {
+        "date": "2026-11-21",
+        "league": "NBA",
+        "matchup": "401910023",
+        "pick": "home",
+        "confidence": 85.0,
+        "score": ""
+      },
+      {
+        "date": "2026-11-20",
+        "league": "NBA",
+        "matchup": "401910022",
+        "pick": "home",
+        "confidence": 82.5,
+        "score": ""
+      },
+      {
+        "date": "2026-11-19",
+        "league": "NCAAW",
+        "matchup": "401916196",
+        "pick": "home",
+        "confidence": 75.9,
+        "score": ""
+      },
+      {
+        "date": "2026-11-21",
+        "league": "NCAAB",
+        "matchup": "401920427",
+        "pick": "home",
+        "confidence": 73.8,
+        "score": ""
+      },
+      {
+        "date": "2026-11-21",
+        "league": "NCAAB",
+        "matchup": "401925756",
+        "pick": "home",
+        "confidence": 73.8,
+        "score": ""
+      }
+    ],
+    "biggest_failures": [
+      {
+        "date": "2026-11-19",
+        "league": "NBA",
+        "matchup": "401910017",
+        "pick": "home",
+        "confidence": 75.2,
+        "score": ""
+      },
+      {
+        "date": "2026-11-21",
+        "league": "NBA",
+        "matchup": "401909308",
+        "pick": "home",
+        "confidence": 66.4,
+        "score": ""
+      },
+      {
+        "date": "2026-11-22",
+        "league": "NBA",
+        "matchup": "401910028",
+        "pick": "away",
+        "confidence": 64.9,
+        "score": ""
+      },
+      {
+        "date": "2026-11-22",
+        "league": "NHL",
+        "matchup": "401892766",
+        "pick": "away",
+        "confidence": 64.6,
+        "score": ""
+      },
+      {
+        "date": "2026-11-21",
+        "league": "NCAAF",
+        "matchup": "401858304",
+        "pick": "home",
+        "confidence": 63.1,
+        "score": ""
+      }
+    ]
+  },
+  "before_and_after_performance": [
+    {
+      "proposal_id": "prop_kelly_sizer_v1",
+      "category": "STRUCTURAL/UI",
+      "title": "Add Fractional Kelly Unit Sizer in Best Odds Tab",
+      "applied_at": "2026-11-28T06:24:53.329813+00:00",
+      "baseline_wr": 66.7,
+      "current_wr": 66.7,
+      "impact": "+0.0% (Neutral)"
+    }
+  ],
+  "implemented_adjustments": [
+    "prop_kelly_sizer_v1"
+  ],
+  "pending_proposals": [
+    {
+      "id": "prop_edge_badge_v1",
+      "execution_type": "AGENT_AUTO",
+      "category": "VISUAL / UX",
+      "priority": "MEDIUM",
+      "title": "Turn On '+EDGE' Badges on Feed Cards",
+      "description": "Adds a clean blue pill right under CONF % whenever our model beats the Vegas no-vig consensus by 1.5%+, so you can spot value plays in 1 second.",
+      "change_spec": {
+        "type": "enable_feature",
+        "feature": "edge_badge_cards",
+        "enabled": true,
+        "category": "VISUAL / UX"
+      },
+      "visual_preview_html": "<div style='background:#0b1220;border:1px solid #38bdf8;border-radius:10px;padding:10px;font-size:11px;'><b>BOS Celtics @ NY Knicks</b> \u00b7 <span style='color:#00d285;'>72% CONF</span> \u00b7 <span style='background:#38bdf8;color:#000;padding:1px 6px;border-radius:99px;font-weight:800;'>+8.0% EDGE</span></div>"
+    },
+    {
+      "id": "code_bankroll_settings_v1",
+      "execution_type": "OWNER_CODE",
+      "category": "STRUCTURAL / UI",
+      "priority": "MEDIUM",
+      "title": "Add Custom Bankroll Input Field in Settings Modal",
+      "description": "Right now the Kelly Sizer defaults to a $1,000 bankroll. Adding a simple Bankroll ($) input box in Settings lets every user plug in their real bankroll.",
+      "change_spec": {
+        "type": "manual_code",
+        "target_files": [
+          "app.js"
+        ]
+      },
+      "visual_preview_html": "<div style='background:#0b1220;border:1px solid #f59e0b;border-radius:10px;padding:10px;font-size:11px;'><b>Settings \u2192 Bankroll:</b> <code>[ $ 1000 ]</code> \u2192 Updates Kelly dollar stakes live.</div>"
+    },
+    {
+      "id": "code_clv_tracker_v1",
+      "execution_type": "OWNER_CODE",
+      "category": "INFORMATIONAL",
+      "priority": "HIGH",
+      "title": "Build Pre-Game Odds Snapshotter for Verified ROI & CLV",
+      "description": "Only 0/50 archived games have moneylines saved. Adding an evening pre-game GitHub Action run locks in closing odds before tip-off so we can prove real profit to investors.",
+      "change_spec": {
+        "type": "manual_code",
+        "target_files": [
+          ".github/workflows/daily_agents.yml",
+          "agent.py"
+        ]
+      },
+      "visual_preview_html": "<div style='background:#0b1220;border:1px solid #f59e0b;border-radius:10px;padding:10px;font-size:11px;'><b>Scheduled Pre-Game Capture:</b> Saves closing ML \u2192 unlocks verified <b>Net Units &amp; CLV %</b>.</div>"
+    }
+  ],
+  "competitor_intel": {
+    "competitors_tracked": [
+      {
+        "name": "OddsJam / OddsShopper",
+        "what_they_do": "Real-time +EV scanning, Kelly stake sizing, and closing line value (CLV) tracking.",
+        "aligniq_edge": "Combines market consensus with proprietary Pattern + Form/Rest composite modeling.",
+        "gap_to_close": "Capture closing moneylines on every archived slate to publish verified CLV & ROI."
+      },
+      {
+        "name": "Rithmm / Action Network",
+        "what_they_do": "Displays instant Model % vs Market % edge pills and confidence tiers on the main feed.",
+        "aligniq_edge": "Transparent post-game autopsies and walk-forward self-auditing Agent Council.",
+        "gap_to_close": "Surface Edge Badges and live feature flags directly on feed cards."
+      }
+    ]
+  },
+  "chief_auditor_critique": "The model is rolling right now\u2014hitting 66.7% across 415 completed games over the last 60 days. I automatically applied 1 approved update(s) to your live config, and queued 3 new idea(s) in your Approvals tab.",
+  "app_health_audit": {
+    "status": "ATTENTION NEEDED",
+    "passed": [
+      "Active config loaded (phase5-baseline)",
+      "Agent 1 & Agent 2 synced (2026-11-28 06:24 UTC)",
+      "Active live feature flags: 1"
+    ],
+    "issues": [
+      "Only 0/50 games have logged moneylines for ROI-first tuning.",
+      "186 legacy archived games still use numeric IDs."
+    ]
+  }
+}

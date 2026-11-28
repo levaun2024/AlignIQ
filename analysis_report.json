@@ -1,0 +1,270 @@
+{
+  "generated_at": "2026-11-28T06:24:47.978654+00:00",
+  "agent": "Agent 1: Historical Game Analysis",
+  "status": "SUCCESS",
+  "newly_analyzed_games": 415,
+  "total_completed_60d": 415,
+  "wins_60d": 277,
+  "losses_60d": 138,
+  "win_rate_60d": 66.7,
+  "roi_pct_60d": null,
+  "net_units_60d": null,
+  "underdogs": {
+    "w": 1,
+    "n": 6,
+    "losses": 5,
+    "win_rate": 16.7
+  },
+  "factor_attribution": {
+    "gem": {
+      "label": "Pattern Signals",
+      "agree_w": 8,
+      "agree_n": 15,
+      "misled_losses": 7,
+      "win_rate": 53.3,
+      "lift_vs_avg": -13.4
+    },
+    "h2h": {
+      "label": "Market Fair Odds",
+      "agree_w": 136,
+      "agree_n": 160,
+      "misled_losses": 24,
+      "win_rate": 85.0,
+      "lift_vs_avg": 18.3
+    },
+    "ros": {
+      "label": "Form, Rest & Health",
+      "agree_w": 251,
+      "agree_n": 386,
+      "misled_losses": 135,
+      "win_rate": 65.0,
+      "lift_vs_avg": -1.7
+    }
+  },
+  "overvalued_factors": [
+    "Pattern Signals (53.3% WR, -13.4% vs avg)"
+  ],
+  "undervalued_factors": [
+    "Market Fair Odds (85.0% WR, +18.3% vs avg)"
+  ],
+  "recurring_weaknesses": [],
+  "calibration": {
+    "50-59%": {
+      "wins": 206,
+      "total": 335,
+      "win_rate": 61.5
+    },
+    "60-69%": {
+      "wins": 52,
+      "total": 60,
+      "win_rate": 86.7
+    },
+    "70%+": {
+      "wins": 19,
+      "total": 20,
+      "win_rate": 95.0
+    }
+  },
+  "biggest_successes": [
+    {
+      "date": "2026-11-21",
+      "league": "NBA",
+      "matchup": "401910023",
+      "pick": "home",
+      "confidence": 85.0,
+      "score": ""
+    },
+    {
+      "date": "2026-11-20",
+      "league": "NBA",
+      "matchup": "401910022",
+      "pick": "home",
+      "confidence": 82.5,
+      "score": ""
+    },
+    {
+      "date": "2026-11-19",
+      "league": "NCAAW",
+      "matchup": "401916196",
+      "pick": "home",
+      "confidence": 75.9,
+      "score": ""
+    },
+    {
+      "date": "2026-11-21",
+      "league": "NCAAB",
+      "matchup": "401920427",
+      "pick": "home",
+      "confidence": 73.8,
+      "score": ""
+    },
+    {
+      "date": "2026-11-21",
+      "league": "NCAAB",
+      "matchup": "401925756",
+      "pick": "home",
+      "confidence": 73.8,
+      "score": ""
+    }
+  ],
+  "biggest_failures": [
+    {
+      "date": "2026-11-19",
+      "league": "NBA",
+      "matchup": "401910017",
+      "pick": "home",
+      "confidence": 75.2,
+      "score": ""
+    },
+    {
+      "date": "2026-11-21",
+      "league": "NBA",
+      "matchup": "401909308",
+      "pick": "home",
+      "confidence": 66.4,
+      "score": ""
+    },
+    {
+      "date": "2026-11-22",
+      "league": "NBA",
+      "matchup": "401910028",
+      "pick": "away",
+      "confidence": 64.9,
+      "score": ""
+    },
+    {
+      "date": "2026-11-22",
+      "league": "NHL",
+      "matchup": "401892766",
+      "pick": "away",
+      "confidence": 64.6,
+      "score": ""
+    },
+    {
+      "date": "2026-11-21",
+      "league": "NCAAF",
+      "matchup": "401858304",
+      "pick": "home",
+      "confidence": 63.1,
+      "score": ""
+    }
+  ],
+  "leagues": {
+    "EPL": {
+      "wins": 6,
+      "losses": 2,
+      "total": 8,
+      "win_rate": 75.0
+    },
+    "MLS": {
+      "wins": 7,
+      "losses": 4,
+      "total": 11,
+      "win_rate": 63.6
+    },
+    "NBA": {
+      "wins": 42,
+      "losses": 29,
+      "total": 71,
+      "win_rate": 59.2
+    },
+    "NCAAB": {
+      "wins": 50,
+      "losses": 24,
+      "total": 74,
+      "win_rate": 67.6
+    },
+    "NCAAF": {
+      "wins": 61,
+      "losses": 22,
+      "total": 83,
+      "win_rate": 73.5
+    },
+    "NCAAW": {
+      "wins": 49,
+      "losses": 16,
+      "total": 65,
+      "win_rate": 75.4
+    },
+    "NFL": {
+      "wins": 15,
+      "losses": 3,
+      "total": 18,
+      "win_rate": 83.3
+    },
+    "NHL": {
+      "wins": 39,
+      "losses": 32,
+      "total": 71,
+      "win_rate": 54.9
+    },
+    "UCL": {
+      "wins": 8,
+      "losses": 6,
+      "total": 14,
+      "win_rate": 57.1
+    }
+  },
+  "daily_trend": [
+    {
+      "date": "2026-11-18",
+      "wins": 3,
+      "total": 3,
+      "win_rate": 100.0
+    },
+    {
+      "date": "2026-11-19",
+      "wins": 28,
+      "total": 36,
+      "win_rate": 77.8
+    },
+    {
+      "date": "2026-11-20",
+      "wins": 23,
+      "total": 30,
+      "win_rate": 76.7
+    },
+    {
+      "date": "2026-11-21",
+      "wins": 64,
+      "total": 82,
+      "win_rate": 78.0
+    },
+    {
+      "date": "2026-11-22",
+      "wins": 56,
+      "total": 76,
+      "win_rate": 73.7
+    },
+    {
+      "date": "2026-11-23",
+      "wins": 20,
+      "total": 30,
+      "win_rate": 66.7
+    },
+    {
+      "date": "2026-11-24",
+      "wins": 18,
+      "total": 33,
+      "win_rate": 54.5
+    },
+    {
+      "date": "2026-11-25",
+      "wins": 23,
+      "total": 43,
+      "win_rate": 53.5
+    },
+    {
+      "date": "2026-11-26",
+      "wins": 8,
+      "total": 17,
+      "win_rate": 47.1
+    },
+    {
+      "date": "2026-11-27",
+      "wins": 34,
+      "total": 65,
+      "win_rate": 52.3
+    }
+  ]
+}

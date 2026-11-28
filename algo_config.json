@@ -1,0 +1,85 @@
+{
+  "version": "phase5-baseline",
+  "weights": {
+    "gem": 10,
+    "h2h": 60,
+    "ros": 30
+  },
+  "league_weights": {
+    "NBA": {
+      "gem": 10,
+      "h2h": 60,
+      "ros": 30
+    },
+    "NFL": {
+      "gem": 10,
+      "h2h": 60,
+      "ros": 30
+    },
+    "MLB": {
+      "gem": 10,
+      "h2h": 60,
+      "ros": 30
+    },
+    "WNBA": {
+      "gem": 10,
+      "h2h": 60,
+      "ros": 30
+    },
+    "UFC": {
+      "gem": 10,
+      "h2h": 60,
+      "ros": 30
+    },
+    "NHL": {
+      "gem": 10,
+      "h2h": 55,
+      "ros": 35
+    },
+    "EPL": {
+      "gem": 10,
+      "h2h": 55,
+      "ros": 35
+    },
+    "MLS": {
+      "gem": 10,
+      "h2h": 55,
+      "ros": 35
+    },
+    "UCL": {
+      "gem": 10,
+      "h2h": 55,
+      "ros": 35
+    },
+    "NCAAF": {
+      "gem": 8,
+      "h2h": 68,
+      "ros": 24
+    },
+    "NCAAB": {
+      "gem": 8,
+      "h2h": 68,
+      "ros": 24
+    },
+    "NCAAW": {
+      "gem": 8,
+      "h2h": 68,
+      "ros": 24
+    }
+  },
+  "change_log": [
+    {
+      "proposal_id": "prop_kelly_sizer_v1",
+      "category": "STRUCTURAL/UI",
+      "title": "Add Fractional Kelly Unit Sizer in Best Odds Tab",
+      "applied_at": "2026-11-28T06:24:53.329813+00:00",
+      "feature_flag": "kelly_unit_sizer",
+      "baseline_win_rate": 66.7,
+      "owner_notes": ""
+    }
+  ],
+  "updated_at": "2026-11-28T06:24:53.329813+00:00",
+  "active_features": {
+    "kelly_unit_sizer": true
+  }
+}

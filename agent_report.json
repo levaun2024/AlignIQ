@@ -1,12 +1,10 @@
 {
-  "last_updated": "2026-11-22",
-  "total_games_graded": 186,
-  "overall_record": "137-49",
-  "overall_win_rate": 73.7,
-  "active_weights": {
-    "gem": 22,
-    "h2h": 41,
-    "ros": 37
+  "algo_version": "phase5-baseline",
+  "updated_at": "2026-11-28T06:24:53.329813+00:00",
+  "weights": {
+    "gem": 10,
+    "h2h": 60,
+    "ros": 30
   },
   "league_weights": {
     "NBA": {
@@ -70,460 +68,145 @@
       "ros": 24
     }
   },
-  "adjustment_reason": "Retuned global weights from 32/31/37 to 22/41/37 (capped at \u00b110%) to maximize 60-day win rate.",
-  "biweekly_reports": [
-    {
-      "period_start": "2026-11-09",
-      "period_end": "2026-11-23",
-      "algo_version": "2026-11",
-      "weights_active": {
-        "gem": 42,
-        "h2h": 21,
-        "ros": 37
-      },
-      "games_graded": 0,
-      "record": "0-0",
-      "win_rate": 0.0,
-      "what_changed": "Next scheduled weight adjustment: 1st of next month.",
-      "whats_working": [
-        "Baseline multi-pillar balance is holding steady; gathering more graded samples."
-      ],
-      "whats_not_working": [
-        "No major pillar breakdowns detected in the current sample."
-      ],
-      "suggestions": [
-        "Current win rate is 0.0% (95.0% below 95.0% target). Prioritize 2+ pillar convergence and filter out sub-60% edge spots."
-      ]
-    }
-  ],
-  "updated_at": "2026-11-27T14:17:49.015963+00:00",
-  "rebalance_cadence": "monthly",
-  "target_win_rate": 95.0,
-  "weights": {
-    "gem": 10,
-    "h2h": 60,
-    "ros": 30
-  },
-  "summary_60d": {
-    "wins": 249,
-    "losses": 101,
-    "total": 350,
-    "win_rate": 71.1,
-    "graded_with_odds": 0,
-    "net_units": null,
-    "roi_pct": null,
-    "gap_to_target": 23.9,
-    "underdogs": {
-      "label": "Underdog Gate Picks",
-      "wins": 1,
-      "losses": 0,
-      "total": 1,
-      "win_rate": 100.0,
-      "lift_vs_avg": 28.9,
-      "net_units": null,
-      "roi_pct": null
-    },
-    "factors": {
-      "gematria": {
-        "label": "Pattern Signals (2+ Hits)",
-        "wins": 0,
-        "losses": 0,
-        "total": 0,
-        "win_rate": 0.0,
-        "lift_vs_avg": 0.0,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "odds": {
-        "label": "Fair Odds / +EV Edge",
-        "wins": 0,
-        "losses": 0,
-        "total": 0,
-        "win_rate": 0.0,
-        "lift_vs_avg": 0.0,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "form_health": {
-        "label": "Form, Rest & Health",
-        "wins": 0,
-        "losses": 0,
-        "total": 0,
-        "win_rate": 0.0,
-        "lift_vs_avg": 0.0,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "high_conf": {
-        "label": "70%+ High Confidence",
-        "wins": 78,
-        "losses": 5,
-        "total": 83,
-        "win_rate": 94.0,
-        "lift_vs_avg": 22.9,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "underdogs": {
-        "label": "Underdog Gate Picks",
-        "wins": 1,
-        "losses": 0,
-        "total": 1,
-        "win_rate": 100.0,
-        "lift_vs_avg": 28.9,
-        "net_units": null,
-        "roi_pct": null
-      }
-    },
-    "leagues": {
-      "EPL": {
-        "wins": 5,
-        "losses": 2,
-        "total": 7,
-        "win_rate": 71.4,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "MLS": {
-        "wins": 6,
-        "losses": 3,
-        "total": 9,
-        "win_rate": 66.7,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NBA": {
-        "wins": 39,
-        "losses": 21,
-        "total": 60,
-        "win_rate": 65.0,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NCAAB": {
-        "wins": 42,
-        "losses": 20,
-        "total": 62,
-        "win_rate": 67.7,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NCAAF": {
-        "wins": 58,
-        "losses": 12,
-        "total": 70,
-        "win_rate": 82.9,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NCAAW": {
-        "wins": 42,
-        "losses": 13,
-        "total": 55,
-        "win_rate": 76.4,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NFL": {
-        "wins": 14,
-        "losses": 3,
-        "total": 17,
-        "win_rate": 82.4,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NHL": {
-        "wins": 35,
-        "losses": 21,
-        "total": 56,
-        "win_rate": 62.5,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "UCL": {
-        "wins": 8,
-        "losses": 6,
-        "total": 14,
-        "win_rate": 57.1,
-        "net_units": null,
-        "roi_pct": null
-      }
-    },
-    "daily_trend": [
-      {
-        "date": "2026-11-18",
-        "wins": 3,
-        "total": 3,
-        "win_rate": 100.0
-      },
-      {
-        "date": "2026-11-19",
-        "wins": 29,
-        "total": 36,
-        "win_rate": 80.6
-      },
-      {
-        "date": "2026-11-20",
-        "wins": 23,
-        "total": 30,
-        "win_rate": 76.7
-      },
-      {
-        "date": "2026-11-21",
-        "wins": 69,
-        "total": 82,
-        "win_rate": 84.1
-      },
-      {
-        "date": "2026-11-22",
-        "wins": 56,
-        "total": 76,
-        "win_rate": 73.7
-      },
-      {
-        "date": "2026-11-23",
-        "wins": 20,
-        "total": 30,
-        "win_rate": 66.7
-      },
-      {
-        "date": "2026-11-24",
-        "wins": 18,
-        "total": 33,
-        "win_rate": 54.5
-      },
-      {
-        "date": "2026-11-25",
-        "wins": 23,
-        "total": 43,
-        "win_rate": 53.5
-      },
-      {
-        "date": "2026-11-26",
-        "wins": 8,
-        "total": 17,
-        "win_rate": 47.1
-      }
-    ]
-  },
-  "summary_14d": {
-    "wins": 249,
-    "losses": 101,
-    "total": 350,
-    "win_rate": 71.1,
-    "graded_with_odds": 0,
-    "net_units": null,
-    "roi_pct": null,
-    "gap_to_target": 23.9,
-    "underdogs": {
-      "label": "Underdog Gate Picks",
-      "wins": 1,
-      "losses": 0,
-      "total": 1,
-      "win_rate": 100.0,
-      "lift_vs_avg": 28.9,
-      "net_units": null,
-      "roi_pct": null
-    },
-    "factors": {
-      "gematria": {
-        "label": "Pattern Signals (2+ Hits)",
-        "wins": 0,
-        "losses": 0,
-        "total": 0,
-        "win_rate": 0.0,
-        "lift_vs_avg": 0.0,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "odds": {
-        "label": "Fair Odds / +EV Edge",
-        "wins": 0,
-        "losses": 0,
-        "total": 0,
-        "win_rate": 0.0,
-        "lift_vs_avg": 0.0,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "form_health": {
-        "label": "Form, Rest & Health",
-        "wins": 0,
-        "losses": 0,
-        "total": 0,
-        "win_rate": 0.0,
-        "lift_vs_avg": 0.0,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "high_conf": {
-        "label": "70%+ High Confidence",
-        "wins": 78,
-        "losses": 5,
-        "total": 83,
-        "win_rate": 94.0,
-        "lift_vs_avg": 22.9,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "underdogs": {
-        "label": "Underdog Gate Picks",
-        "wins": 1,
-        "losses": 0,
-        "total": 1,
-        "win_rate": 100.0,
-        "lift_vs_avg": 28.9,
-        "net_units": null,
-        "roi_pct": null
-      }
-    },
-    "leagues": {
-      "EPL": {
-        "wins": 5,
-        "losses": 2,
-        "total": 7,
-        "win_rate": 71.4,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "MLS": {
-        "wins": 6,
-        "losses": 3,
-        "total": 9,
-        "win_rate": 66.7,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NBA": {
-        "wins": 39,
-        "losses": 21,
-        "total": 60,
-        "win_rate": 65.0,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NCAAB": {
-        "wins": 42,
-        "losses": 20,
-        "total": 62,
-        "win_rate": 67.7,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NCAAF": {
-        "wins": 58,
-        "losses": 12,
-        "total": 70,
-        "win_rate": 82.9,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NCAAW": {
-        "wins": 42,
-        "losses": 13,
-        "total": 55,
-        "win_rate": 76.4,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NFL": {
-        "wins": 14,
-        "losses": 3,
-        "total": 17,
-        "win_rate": 82.4,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "NHL": {
-        "wins": 35,
-        "losses": 21,
-        "total": 56,
-        "win_rate": 62.5,
-        "net_units": null,
-        "roi_pct": null
-      },
-      "UCL": {
-        "wins": 8,
-        "losses": 6,
-        "total": 14,
-        "win_rate": 57.1,
-        "net_units": null,
-        "roi_pct": null
-      }
-    },
-    "daily_trend": [
-      {
-        "date": "2026-11-18",
-        "wins": 3,
-        "total": 3,
-        "win_rate": 100.0
-      },
-      {
-        "date": "2026-11-19",
-        "wins": 29,
-        "total": 36,
-        "win_rate": 80.6
-      },
-      {
-        "date": "2026-11-20",
-        "wins": 23,
-        "total": 30,
-        "win_rate": 76.7
-      },
-      {
-        "date": "2026-11-21",
-        "wins": 69,
-        "total": 82,
-        "win_rate": 84.1
-      },
-      {
-        "date": "2026-11-22",
-        "wins": 56,
-        "total": 76,
-        "win_rate": 73.7
-      },
-      {
-        "date": "2026-11-23",
-        "wins": 20,
-        "total": 30,
-        "win_rate": 66.7
-      },
-      {
-        "date": "2026-11-24",
-        "wins": 18,
-        "total": 33,
-        "win_rate": 54.5
-      },
-      {
-        "date": "2026-11-25",
-        "wins": 23,
-        "total": 43,
-        "win_rate": 53.5
-      },
-      {
-        "date": "2026-11-26",
-        "wins": 8,
-        "total": 17,
-        "win_rate": 47.1
-      }
-    ]
-  },
-  "whats_working": [
-    "60-day model win rate is 71.1% (249-101).",
-    "ESPN post-game enrichment & per-game autopsy learning active."
-  ],
-  "whats_not_working": [
-    "Sample guardrail active (350/500 games) before auto-tuning unlocks."
-  ],
-  "suggestions": [
-    "Sample guardrail active: 186/500 total games logged before global auto-tuning unlocks.",
-    "Log home_ml/away_ml on upcoming slates (0/50) to activate ROI-first tuning."
-  ],
-  "last_rebalance_note": "Phase 4 active (10/60/30 + League Profiles + Post-Game Autopsy). Guardrail: 350/500 games.",
-  "algo_version": "2026-11-phase4",
   "guardrails": {
     "min_global_games": 500,
     "min_league_games": 100,
     "min_odds_for_roi": 50
+  },
+  "summary_60d": {
+    "wins": 277,
+    "losses": 138,
+    "total": 415,
+    "win_rate": 66.7,
+    "roi_pct": null,
+    "net_units": null,
+    "underdogs": {
+      "w": 1,
+      "n": 6,
+      "losses": 5,
+      "win_rate": 16.7
+    },
+    "leagues": {
+      "EPL": {
+        "wins": 6,
+        "losses": 2,
+        "total": 8,
+        "win_rate": 75.0
+      },
+      "MLS": {
+        "wins": 7,
+        "losses": 4,
+        "total": 11,
+        "win_rate": 63.6
+      },
+      "NBA": {
+        "wins": 42,
+        "losses": 29,
+        "total": 71,
+        "win_rate": 59.2
+      },
+      "NCAAB": {
+        "wins": 50,
+        "losses": 24,
+        "total": 74,
+        "win_rate": 67.6
+      },
+      "NCAAF": {
+        "wins": 61,
+        "losses": 22,
+        "total": 83,
+        "win_rate": 73.5
+      },
+      "NCAAW": {
+        "wins": 49,
+        "losses": 16,
+        "total": 65,
+        "win_rate": 75.4
+      },
+      "NFL": {
+        "wins": 15,
+        "losses": 3,
+        "total": 18,
+        "win_rate": 83.3
+      },
+      "NHL": {
+        "wins": 39,
+        "losses": 32,
+        "total": 71,
+        "win_rate": 54.9
+      },
+      "UCL": {
+        "wins": 8,
+        "losses": 6,
+        "total": 14,
+        "win_rate": 57.1
+      }
+    },
+    "daily_trend": [
+      {
+        "date": "2026-11-18",
+        "wins": 3,
+        "total": 3,
+        "win_rate": 100.0
+      },
+      {
+        "date": "2026-11-19",
+        "wins": 28,
+        "total": 36,
+        "win_rate": 77.8
+      },
+      {
+        "date": "2026-11-20",
+        "wins": 23,
+        "total": 30,
+        "win_rate": 76.7
+      },
+      {
+        "date": "2026-11-21",
+        "wins": 64,
+        "total": 82,
+        "win_rate": 78.0
+      },
+      {
+        "date": "2026-11-22",
+        "wins": 56,
+        "total": 76,
+        "win_rate": 73.7
+      },
+      {
+        "date": "2026-11-23",
+        "wins": 20,
+        "total": 30,
+        "win_rate": 66.7
+      },
+      {
+        "date": "2026-11-24",
+        "wins": 18,
+        "total": 33,
+        "win_rate": 54.5
+      },
+      {
+        "date": "2026-11-25",
+        "wins": 23,
+        "total": 43,
+        "win_rate": 53.5
+      },
+      {
+        "date": "2026-11-26",
+        "wins": 8,
+        "total": 17,
+        "win_rate": 47.1
+      },
+      {
+        "date": "2026-11-27",
+        "wins": 34,
+        "total": 65,
+        "win_rate": 52.3
+      }
+    ]
+  },
+  "last_rebalance_note": "Active Config: phase5-baseline | 415 new games analyzed.",
+  "active_features": {
+    "kelly_unit_sizer": true
   }
 }
